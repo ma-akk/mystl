@@ -4,37 +4,87 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <exception>
+
+
+using std::allocator;
+
 
 namespace ft {
-	template <class T, class Allocator = std::allocator<T>>
+	template <class T, class Alloc = std::allocator<T>>
 	class vector {
 	 public:
 		vector();
 		~vector();
 		vector(const vector &source);
 		vector &operator=(const vector &source);
-		allocator_type get_allocator() const;
-		void assign( size_type count, const T& value );
+		
+		Alloc get_allocator() const {
+			return _alloc;
+		}
+
+		void assign(size_type count, const T& value);
 
 		template< class InputIt >
 		void assign( InputIt first, InputIt last );
 
 		//capacity
-		size_t size() const;
-		size_t capacity() const;
-		bool empty() const;
+		size_t size() const {
+			return _size;
+		}
+
+		size_t capacity() const {
+			return _cap;
+		}
+
+		bool empty() const {
+			bool res = _size == 0 ? true : false;
+			return res;
+		}
+
 		void reserve(size_t n);			//увеличивает capasity до n
-		size_t max_size() const;		//???предельно допустимый размер, определяется системой
+
+		size_t max_size() const {
+			return 2^(64 - sizeof(T)) - 1;
+		}
 		
 		//access
-		T& operator[](size_t n);
-		const T& operator[](size_t n) const;
-		T& at(size_t n);
-		const T& at(size_t n) const;
-		T& front();
-		const T& front() const;
-		T& back();
-		const T& back() const;
+		T& operator[](size_t n) {
+			return _array[n];
+		}
+
+		const T& operator[](size_t n) const {
+			return _array[n];
+		}
+
+		T& at(size_t n) {
+			if(n > _size || n < 0)
+				throw std::out_of_range("range_check it >= size");
+			return _array[n];
+		}
+
+		const T& at(size_t n) const {
+			if(n > _size || n < 0)
+				throw std::out_of_range("range_check it >= size");
+			return _array[n];
+		}
+
+		T& front() {
+			return _array[0];
+		}
+
+		const T& front() const {
+			return _array[0];
+		}
+
+		T& back() {
+			return _array[_size - 1];
+		}
+
+		const T& back() const {
+			return _array[_size - 1];
+		}
+
 		T* data();
 		const T* data() const;
 
@@ -64,7 +114,6 @@ namespace ft {
 		reverse_iterator rend();
 		const_reverse_iterator rend() const;
 
-
 		//non-member function
 		template< class T, class Alloc >
 		bool operator==( const std::vector<T,Alloc>& lhs,
@@ -91,10 +140,10 @@ namespace ft {
 						const std::vector<T,Alloc>& rhs );
 
 	 private:
-		T *_array;
-		size_t _size;
-		size_t _cap;
-		Alloc _alloc;
+		T *		_array;
+		size_t	_size;
+		size_t	_cap;
+		Alloc	_alloc;
 	};
 }
 
