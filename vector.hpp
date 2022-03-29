@@ -12,16 +12,54 @@ using std::allocator;
 using std::cout;
 using std::endl;
 
-#define MAXSIZE std::numeric_limits<size_t>::max();
+#define MAXSIZE std::numeric_limits<size_t>::max()
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T>>
 	class vector {
 	 public:
-		vector() {
-
+		vector() : _size(0), _cap(0) {
+			_array = NULL;
+			//назначить итераторы
 		}
-		~vector();
+
+  		explicit vector(const Alloc& alloc) : _alloc(alloc) {
+			_size = 0;
+			_cap = 0;
+			_array = NULL;
+			//назначить итераторы
+		}
+
+  		// explicit vector( size_t count,
+        //            const T& value = T(),
+        //            const Alloc& alloc = Allocator())
+        //            : _size(count), _cap(count), _alloc(alloc) {
+		// 	_array = _alloc.allocate(); // -> _alloc.construct(value);
+		// 	//назначить итераторы
+  		// }
+
+  		explicit vector(size_t count) : _size(count), _cap(count) {
+			_array = _alloc.allocate(count);
+			for(int i = 0; i < count; i++) {
+				_alloc.construct(_array + i, T());
+			}
+			//назначить итераторы
+		}
+
+  		// template< class InputIt >
+  		// vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
+		// vector(const vector& other);
+
+		~vector() {
+			if(_array != NULL) {
+				for(int i = 0; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+				_alloc.deallocate(_array, _cap);
+			}
+			//требуется ли действие с итератором???
+		}
+
 		// vector(const vector &value);
 		// vector &operator=(const vector &value);
 		
@@ -49,6 +87,7 @@ namespace ft {
 
 		void reserve(size_t n) {
 			if(n > _cap) {
+				cout << "reserve: n = " << n << " cap = " << _cap << endl;
 				T* newarr = _alloc.allocate(n);
 				for(int i = 0; i < _cap; i++) {
 					_alloc.construct(newarr + i, _array[i]);
@@ -57,15 +96,17 @@ namespace ft {
 				for(int i = 0; i < _cap; i++) {
 					_alloc.destroy(_array + i);
 				}
-				_alloc.deallocate(_array, _cap);
+				if (_array != NULL) {
+					_alloc.deallocate(_array, _cap);
+				}
 				_array = newarr;
 				_cap = n;
 			}
 		}
 
 		size_t max_size() const {
-			// size_t res = MAXSIZE / (size_t)sizeof(T);
-			return 0;
+			size_t res = MAXSIZE / (size_t)sizeof(T);
+			return res;
 		}
 		
 		//access
@@ -105,8 +146,13 @@ namespace ft {
 			return _array[_size - 1];
 		}
 
-		// T* data();
-		// const T* data() const;
+		T* data() {
+			return _array;
+		}
+
+		const T* data() const {
+			return _array;
+		}
 
 
 		//modify
@@ -126,15 +172,15 @@ namespace ft {
 		// iterator erase(iterator pos);
 		// iterator erase(iterator first, iterator last);
 
-		void resize(size_t n, T val = T()) {
+		void resize(size_t n, const T& val = T()) { //ИСПРАВИТЬ НАСТЁНЕ
 			if(n < _size) {
-				
+
 				for(int i = n; i < _size; i++) {
 					_alloc.destroy(_array + i);
 				}
 			} else {
 				if (n > _cap) {
-					this->reserve(n);
+					this->reserve(_size == 0 ? n : _size * 2);
 				}
 				for(int i = _size; i < n; i++) {
 					_alloc.construct(_array + i, val);
@@ -149,15 +195,16 @@ namespace ft {
 		void push_back(const T& value) {
 			
 			if(_size == _cap) {
-				this->reserve(_cap * 2);
+				this->reserve(_cap == 0 ? 1 : _cap * 2);
 			}
 			_alloc.construct(_array + _size, value);
 			_size++;
 			//переназначить iterator last
 		}
 
-		void pop_back(const T& value) {
+		void pop_back() {
 			_alloc.destroy(_array + _size);
+			--_size;
 			//переназначить iterator last
 		}
 
@@ -203,7 +250,5 @@ namespace ft {
 	// bool operator>=( const vector<T,Alloc>& lhs,
 	// 				const vector<T,Alloc>& rhs );
 }
-
-
 
 #endif	//VECTOR_HPP
