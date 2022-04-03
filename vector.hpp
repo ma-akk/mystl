@@ -7,6 +7,7 @@
 #include <exception>
 #include <cmath>
 #include <limits>
+#include "iterator.hpp"
 
 using std::allocator;
 using std::cout;
@@ -31,10 +32,13 @@ namespace ft {
 		}
 
   		// explicit vector( size_t count,
-        //            const T& value = T(),
-        //            const Alloc& alloc = Allocator())
-        //            : _size(count), _cap(count), _alloc(alloc) {
-		// 	_array = _alloc.allocate(); // -> _alloc.construct(value);
+        //         		const T& value = T(),
+        //         		const Alloc& alloc = Alloc())
+        //         		: _size(count), _cap(count), _alloc(alloc) {
+		// 	_array = _alloc.allocate(count);
+		// 	for(int i = 0; i < count; i++) {
+		// 		_alloc.construct(_array + i, value);
+		// 	}
 		// 	//назначить итераторы
   		// }
 
@@ -68,6 +72,7 @@ namespace ft {
 		}
 
 		// void assign(size_type count, const T& value);
+
 		// template< class InputIt >
 		// void assign( InputIt first, InputIt last );
 
@@ -190,7 +195,7 @@ namespace ft {
 			_size = n;
 		}
 
-		// void swap(vector& other);
+		// void swap(vector& other)
 
 		void push_back(const T& value) {
 			
@@ -224,31 +229,6 @@ namespace ft {
 		size_t	_cap;
 		Alloc	_alloc;
 	};
-
-//non-member function
-	// template< class T, class Alloc >
-	// bool operator==( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
-
-	// template< class T, class Alloc >
-	// bool operator!=(const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs);
-
-	// template< class T, class Alloc >
-	// bool operator<( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
-
-	// template< class T, class Alloc >
-	// bool operator<=( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
-
-	// template< class T, class Alloc >
-	// bool operator>( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
-
-	// template< class T, class Alloc >
-	// bool operator>=( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
 }
 
 #endif	//VECTOR_HPP
