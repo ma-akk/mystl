@@ -1,20 +1,17 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <memory>
-#include <exception>
-#include <cmath>
-#include <limits>
+#include <stack>
 #include "vector.hpp"
 #include "iterator.hpp"
+#include "stack.hpp"
 #include "utils.hpp"
 
 using std::cout;
 using std::endl;
 
 int main() {
-	// std::vector<int> v;
-	// ft::vector<int> v1;
+	std::vector<int> v;
+	ft::vector<int> v1;
 
 	// ft::iterator_traits<char * > it;
 	
@@ -23,17 +20,17 @@ int main() {
 	// cout << "std: empty = " << v.empty() << endl << "ft:  empty = " << v1.empty() << endl;
 	// cout << "std: max_size = " << v.max_size() << endl << "ft:  max_size = " << v1.max_size() << endl;
 	// // cout << "std: data = " << *(v.data()) << endl << "ft:  data = " << *(v1.data()) << endl;
-	// v.push_back(1);
-	// v.push_back(2);
-	// v.push_back(3);
-	// v.push_back(5);
-	// v.push_back(12);
+	v.push_back(1);
+	v.push_back(2);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(12);
 
-	// v1.push_back(1);
-	// v1.push_back(2);
-	// v1.push_back(3);
-	// v1.push_back(5);
-	// v1.push_back(12);
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(5);
+	v1.push_back(12);
 	// for(int i = 0; i < 5; i++) {
 	// 	cout << v[i] << " " << v1[i] << endl;
 	// }
@@ -110,6 +107,30 @@ int main() {
 	ft::vector<int> v6;
 	ft::vector<int> v7;
 
-	cout << (v4 == v5 ? "true" : "false") << endl;
-	cout << (v6 == v7 ? "true" : "false") << endl;
+	// std::vector<int>::iterator it;
+	// ft::vector<int>::iterator it1;
+
+	// cout << (v4 == v5 ? "true" : "false") << endl;
+	// cout << (v6 == v7 ? "true" : "false") << endl;
+
+
+	cout << endl << " ============= STACK ================  " << endl;
+	ft::stack<int> s1;
+	cout << "empty = " << s1.empty() << endl;
+	cout << "size = " << s1.size() << endl;
+	s1.push(1);
+	s1.push(4);
+	s1.push(5);
+	s1.push(7);
+	s1.push(10);
+
+	cout << "top = " << s1.top() << endl;
+	cout << "empty = " << s1.empty() << endl;
+	cout << "size = " << s1.size() << endl;
+	for(int i = 0; i < 5; i++) {
+		cout << s1.top() << " ";
+		s1.pop();
+	}
+	cout << endl << "empty = " << s1.empty() << endl;
+	cout << "size = " << s1.size() << endl;
 }
