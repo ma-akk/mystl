@@ -64,6 +64,26 @@ namespace ft {
 			//требуется ли действие с итератором???
 		}
 
+		// class iterator : public iterator_traits {
+		//  public:
+		// 	iteartor() {}
+		// 	~iterator() {}
+
+		// 	iterator& operator++() {
+		// 		pointer++;
+		// 		return *this;
+		// 	}
+
+			// iterator& operator=(iterator& const value) {
+			// 	this->pointer = value.pointer;
+			// 	this->reference = value.reference;
+			// 	this->value_type = value.value_type;
+			// 	this->iterator_category = value.iterator_category;
+			// 	this->difference_type = value.difference_type;
+			// 	return *this;
+			// }
+		// };
+
 		// vector(const vector &value);
 		// vector &operator=(const vector &value);
 		
@@ -229,6 +249,44 @@ namespace ft {
 		size_t	_cap;
 		Alloc	_alloc;
 	};
+
+	//non-member function
+	template< class T, class Alloc >
+	bool operator==( const vector<T,Alloc>& lhs,
+					const vector<T,Alloc>& rhs ) {
+		if (lhs.size() == rhs.size()) {
+			for(int i = 0; i < rhs.size(); i++) {
+				if(lhs[i] != rhs[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	template< class T, class Alloc >
+	bool operator!=(const vector<T,Alloc>& lhs,
+					const vector<T,Alloc>& rhs) {
+		return !(lhs == rhs);
+	}
+
+	// template< class T, class Alloc >
+	// bool operator<( const vector<T,Alloc>& lhs,
+	// 				const vector<T,Alloc>& rhs ) {
+		
+	// }
+
+	// template< class T, class Alloc >
+	// bool operator<=( const vector<T,Alloc>& lhs,
+	// 				const vector<T,Alloc>& rhs );
+
+	// template< class T, class Alloc >
+	// bool operator>( const vector<T,Alloc>& lhs,
+	// 				const vector<T,Alloc>& rhs );
+
+	// template< class T, class Alloc >
+	// bool operator>=( const vector<T,Alloc>& lhs,
+	// 				const vector<T,Alloc>& rhs );
 }
 
 #endif	//VECTOR_HPP

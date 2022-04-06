@@ -64,6 +64,47 @@ namespace ft {
 		typedef const T						reference;
 	};
 
+	//шаблонная функция, которая может быть использована вместо класса iterator_traits
+	template < class Cat, class T, class Dist >   //iterator_traits<It>::iterator_category
+	Cat Iter_cat(const iterator<Cat, T, Dist>& ) {
+		Cat x;
+		return x;
+	}
+
+	template < class T >
+	random_access_iterator_tag Iter_cat(const T* ) {
+		random_access_iterator_tag x;
+		return x;
+	}
+
+	template < class Cat, class T, class Dist, class Ptr, class Ref >  //iterator_traits<It>::value_type
+	T* Val_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
+		return 0;
+	}
+
+	template < class T >
+	T* Val_type(const T* ) {
+		return 0;
+	}
+
+	template < class Cat, class T, class Dist, class Ptr, class Ref >  //iterator_traits<It>::distance_type
+	Dist* Dist_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
+		return 0;
+	}
+
+	template < class T >
+	ptrdiff_t* Dist_type(const T* ) {
+		return 0;
+	}
+
+
+
+
+
+	
+
+
+
 };
 
 #endif	//ITERATOR_HPP
