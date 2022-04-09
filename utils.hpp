@@ -29,16 +29,16 @@ namespace ft {
 
 		pair(const T1& x, const T2& y) : first(x), second(y) { }
 		
-		template< class T2, class U2 >
+		template< class U1, class U2 >
 		pair(const pair<U1, U2>& p)
 			: first(p.first), second(p.second) { }
 
 		~pair() { }
 
-		pair& operator=(const pair& other) {
+		pair& operator=(const pair& value) {
 			if (*this != value) {
-				this->first = other.first;
-				this->second = other.second;
+				this->first = value.first;
+				this->second = value.second;
 			}
 			return *this;
 		}

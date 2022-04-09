@@ -34,6 +34,18 @@ namespace ft {
 		typedef Reference	reference;
 	};
 
+	template < class T, class Dist, class Ptr, class Ref >
+	class BidIt : public iterator< bidirectional_iterator_tag
+										T, Dist, Ptr, Ref > { };
+
+	template < class T, class Dist, class Ptr, class Ref >
+	class RanIt : public iterator< random_access_iterator_tag
+										T, Dist, Ptr, Ref > { };
+
+	template < class T, class Dist, class Ptr, class Ref >
+	class OutIt : public iterator< output_iterator_tag
+										void, void, void, void > { };
+
 	template<class Iter>
 	class iterator_traits {
 	 public:
@@ -64,8 +76,9 @@ namespace ft {
 		typedef const T						reference;
 	};
 
-	//шаблонная функция, которая может быть использована вместо класса iterator_traits
-	template < class Cat, class T, class Dist >   //iterator_traits<It>::iterator_category
+	//шаблонные функции, которые могут быть использованы вместо полей класса iterator_traits
+	//iterator_traits<It>::iterator_category
+	template < class Cat, class T, class Dist >  
 	Cat Iter_cat(const iterator<Cat, T, Dist>& ) {
 		Cat x;
 		return x;
@@ -77,7 +90,8 @@ namespace ft {
 		return x;
 	}
 
-	template < class Cat, class T, class Dist, class Ptr, class Ref >  //iterator_traits<It>::value_type
+	//iterator_traits<It>::value_type
+	template < class Cat, class T, class Dist, class Ptr, class Ref >
 	T* Val_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
 		return 0;
 	}
@@ -87,7 +101,8 @@ namespace ft {
 		return 0;
 	}
 
-	template < class Cat, class T, class Dist, class Ptr, class Ref >  //iterator_traits<It>::distance_type
+	//iterator_traits<It>::difference_type
+	template < class Cat, class T, class Dist, class Ptr, class Ref >
 	Dist* Dist_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
 		return 0;
 	}
@@ -97,13 +112,62 @@ namespace ft {
 		return 0;
 	}
 
+	//inline namespace for encapsulation func *_imlp
+	namespace {
+		template < class InIt, class Dist = ptrdiff_t, class Cat >
+		void advance_impl(InIt& iter, Dist n, Cat iter_cat) {
+			cout << "it is InIt" << endl;
+			for(int i = 0; i < n; i++) {
+				++iter;
+			}
+		}
 
+		template < class InIt, class Dist = ptrdiff_t >
+		void advance_impl(InIt& iter, Dist n, random_access_iterator_tag) {
+			cout << "it is RanIt" << endl;
+			iter += n;
+		}
 
+		template < class InIt, class Dist, class Cat >
+		Dist distance_impl(InIt& first, InIt& last, Cat iter_cat) {
+			Dist n;
+			for(n = 0; first != last; n++) {
+				++first;
+			}
+			return n;
+		}
 
-
+		template < class InIt, class Dist = ptrdiff_t >
+		Dist distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
+			Dist n;
+			n = Dist(last - first);
+			return n;
+		}
+	};
 	
+	template < class InIt, class Dist = ptrdiff_t >
+	void advance(InIt& iter, Dist n) {
+		advance_impl(iter, n, typename iterator_traits <InIt>::iterator_category());
+	}
 
+	template < class InIt >
+	typename iterator_traits<InIt>::difference_type
+	distance(InIt& first, InIt& last) {
+		distance_impl(first, last, typename iterator_traits <InIt>::iterator_category()); 
+	}
 
+	template < class RanIt >
+	class reverse_iterator : public iterator <
+							typename iterator_traits<RanIt>::iterator_category,
+							typename iterator_traits<RanIt>::value_type,
+							typename iterator_traits<RanIt>::difference_type,
+							typename iterator_traits<RanIt>::pointer,
+							typename iterator_traits<RanIt>::reference > {
+	 public:
+
+	 protected:
+
+	};
 
 };
 
