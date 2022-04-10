@@ -53,6 +53,10 @@ namespace ft {
   		// template< class InputIt >
   		// vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
 		// vector(const vector& other);
+		// vector& operator=(const vector& value) {
+		// 	if (*this != value) {
+		// 	}
+		// }
 
 		~vector() {
 			if(_array != NULL) {
@@ -248,6 +252,7 @@ namespace ft {
 		size_t	_size;
 		size_t	_cap;
 		Alloc	_alloc;
+
 	};
 
 	//non-member function
@@ -287,6 +292,10 @@ namespace ft {
 	// template< class T, class Alloc >
 	// bool operator>=( const vector<T,Alloc>& lhs,
 	// 				const vector<T,Alloc>& rhs );
+
+	// template< class T, class Alloc >
+	// void swap( std::vector<T,Alloc>& lhs,
+    //        std::vector<T,Alloc>& rhs );
 }
 
 #endif	//VECTOR_HPP
