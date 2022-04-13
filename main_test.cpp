@@ -2,7 +2,7 @@
 #include <vector>
 #include <stack>
 #include "vector.hpp"
-#include "iterator.hpp"
+// #include "iteraiterator.hpp"
 #include "stack.hpp"
 #include "utils.hpp"
 
@@ -114,23 +114,26 @@ int main() {
 	// cout << (v6 == v7 ? "true" : "false") << endl;
 
 
-	cout << endl << " ============= STACK ================  " << endl;
-	ft::stack<int> s1;
-	cout << "empty = " << s1.empty() << endl;
-	cout << "size = " << s1.size() << endl;
-	s1.push(1);
-	s1.push(4);
-	s1.push(5);
-	s1.push(7);
-	s1.push(10);
+	// cout << endl << " ============= STACK ================  " << endl;
+	// ft::stack<int> s1;
+	// cout << "empty = " << s1.empty() << endl;
+	// cout << "size = " << s1.size() << endl;
+	// s1.push(1);
+	// s1.push(4);
+	// s1.push(5);
+	// s1.push(7);
+	// s1.push(10);
 
-	cout << "top = " << s1.top() << endl;
-	cout << "empty = " << s1.empty() << endl;
-	cout << "size = " << s1.size() << endl;
-	for(int i = 0; i < 5; i++) {
-		cout << s1.top() << " ";
-		s1.pop();
-	}
-	cout << endl << "empty = " << s1.empty() << endl;
-	cout << "size = " << s1.size() << endl;
+	// cout << "top = " << s1.top() << endl;
+	// cout << "empty = " << s1.empty() << endl;
+	// cout << "size = " << s1.size() << endl;
+	// for(int i = 0; i < 5; i++) {
+	// 	cout << s1.top() << " ";
+	// 	s1.pop();
+	// }
+	// cout << endl << "empty = " << s1.empty() << endl;
+	// cout << "size = " << s1.size() << endl;
+
+
+	cout << *(v1.end()) << endl;
 }

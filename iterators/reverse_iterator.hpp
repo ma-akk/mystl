@@ -7,19 +7,19 @@
 
 namespace ft {
 
-	template < class RanIt >
+	template < class ran_it >
 	class reverse_iterator : public iterator <
-							typename iterator_traits<RanIt>::iterator_category,
-							typename iterator_traits<RanIt>::value_type,
-							typename iterator_traits<RanIt>::difference_type,
-							typename iterator_traits<RanIt>::pointer,
-							typename iterator_traits<RanIt>::reference > {
+							typename iterator_traits<ran_it>::iterator_category,
+							typename iterator_traits<ran_it>::value_type,
+							typename iterator_traits<ran_it>::difference_type,
+							typename iterator_traits<ran_it>::pointer,
+							typename iterator_traits<ran_it>::reference > {
 	 public:
-		typedef reverse_iterator<RanIt> rev_it;
-		typedef iterator_traits<RanIt>::difference_type D;
-		typedef iterator_traits<RanIt>::pointer Ptr;
-		typedef iterator_traits<RanIt>::reference Ref;
-		typedef RanIt iterator_type;
+		typedef reverse_iterator<ran_it> rev_it;
+		typedef iterator_traits<ran_it>::difference_type D;
+		typedef iterator_traits<ran_it>::pointer Ptr;
+		typedef iterator_traits<ran_it>::reference Ref;
+		typedef ran_it iterator_type;
 
 		reverse_iterator() { }
 
@@ -39,12 +39,12 @@ namespace ft {
 			return *this;
 		}
 
-		RanIt base() const {
+		ran_it base() const {
 			return current;
 		}
 
 		Ref operator*() const {
-			RanIt tmp = current;
+			ran_it tmp = current;
 			return (*--tmp);
 		}
 
@@ -95,7 +95,7 @@ namespace ft {
 		}
 			
 	 protected:
-	 	RanIt current;
+	 	ran_it current;
 
 	};
 

@@ -7,7 +7,8 @@
 #include <exception>
 #include <cmath>
 #include <limits>
-#include "iterator.hpp"
+#include "iterators/ran_it.hpp"
+// #include "iterators/reverse_iterator.hpp"
 
 using std::allocator;
 using std::cout;
@@ -19,16 +20,30 @@ namespace ft {
 	template <class T, class Alloc = std::allocator<T>>
 	class vector {
 	 public:
+		typedef T									value_type;
+		typedef size_t								size_type;
+		typedef std::ptrdiff_t						difference_type;
+		typedef T*									pointer;
+		typedef T&									reference;
+	 	typedef const T*							const_pointer;
+		typedef const T&							const_reference;
+	 	typedef ran_it< T >							iterator;
+		// typedef ran_it< const T >					const_iterator;
+		// typedef reverse_iterator< iterator >		reverse_iterator;
+		// typedef reverse_iterator< const iterator >	const_reverse_iterator; 
+		
 		vector() : _size(0), _cap(0) {
 			_array = NULL;
-			//назначить итераторы
+			_last = NULL;
+			_first = NULL;
 		}
 
   		explicit vector(const Alloc& alloc) : _alloc(alloc) {
 			_size = 0;
 			_cap = 0;
 			_array = NULL;
-			//назначить итераторы
+			_last = NULL;
+			_first = NULL;
 		}
 
   		// explicit vector( size_t count,
@@ -47,7 +62,9 @@ namespace ft {
 			for(int i = 0; i < count; i++) {
 				_alloc.construct(_array + i, T());
 			}
-			//назначить итераторы
+			_first = _array - 1;
+			_last = _array + count;
+
 		}
 
   		// template< class InputIt >
@@ -65,37 +82,13 @@ namespace ft {
 				}
 				_alloc.deallocate(_array, _cap);
 			}
-			//требуется ли действие с итератором???
 		}
-
-		// class iterator : public iterator_traits {
-		//  public:
-		// 	iteartor() {}
-		// 	~iterator() {}
-
-		// 	iterator& operator++() {
-		// 		pointer++;
-		// 		return *this;
-		// 	}
-
-			// iterator& operator=(iterator& const value) {
-			// 	this->pointer = value.pointer;
-			// 	this->reference = value.reference;
-			// 	this->value_type = value.value_type;
-			// 	this->iterator_category = value.iterator_category;
-			// 	this->difference_type = value.difference_type;
-			// 	return *this;
-			// }
-		// };
-
-		// vector(const vector &value);
-		// vector &operator=(const vector &value);
 		
 		Alloc get_allocator() const {
 			return _alloc;
 		}
 
-		// void assign(size_type count, const T& value);
+		// void assign(size_t count, const T& value);
 
 		// template< class InputIt >
 		// void assign( InputIt first, InputIt last );
@@ -238,20 +231,49 @@ namespace ft {
 		}
 
 		//iterators
-		// iterator begin();
-		// const_iterator begin() const;
-		// iterator end();
-		// const_iterator end() const;
-		// reverse_iterator rbegin();
-		// const_reverse_iterator rbegin() const;
-		// reverse_iterator rend();
-		// const_reverse_iterator rend() const;
+		iterator begin() {
+			return ++_first;
+		}
+
+		// const_iterator begin() const {
+		// 	return ++_first;
+		// }
+
+		iterator end() {
+			return _last;
+		}
+
+		// const_iterator end() const {
+		// 	return _last;
+		// }
+
+		// reverse_iterator rbegin() {
+		// 	return --_last;
+		// }
+
+		// const_reverse_iterator rbegin() const {
+		// 	return --_last;
+		// }
+
+		// reverse_iterator rend() {
+		// 	return _first;
+		// }
+		
+		// const_reverse_iterator rend() const {
+		// 	return _first;
+		// }
 
 	 private:
-		T*		_array;
-		size_t	_size;
-		size_t	_cap;
-		Alloc	_alloc;
+		T*			_array;
+		size_t		_size;
+		size_t		_cap;
+		Alloc		_alloc;
+
+		//_first указывает на некоторую область до начала вектора
+		iterator	_first;
+
+		//_last указывает на некоторую область после конца вектора
+		iterator	_last;
 
 	};
 

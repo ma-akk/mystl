@@ -36,8 +36,8 @@ namespace ft {
 
 	//за ненадобностью удалить
 	template < class T, class Dist, class Ptr, class Ref >
-	class OutIt : public iterator< output_iterator_tag
-										void, void, void, void > { };
+	class OutIt : public iterator< output_iterator_tag,
+								void, void, void, void > { };
 
 	template<class Iter>
 	class iterator_traits {
@@ -66,7 +66,7 @@ namespace ft {
 		typedef const T						value_type;
 		typedef std::ptrdiff_t				difference_type;
 		typedef const T*					pointer;
-		typedef const T						reference;
+		typedef const T&					reference;
 	};
 
 	//шаблонные функции, которые могут быть использованы вместо полей класса iterator_traits
