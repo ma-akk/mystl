@@ -28,22 +28,24 @@ namespace ft {
 	 	typedef const T*							const_pointer;
 		typedef const T&							const_reference;
 	 	typedef ran_it< T >							iterator;
-		// typedef ran_it< const T >					const_iterator;
+		typedef ran_it< const T >					const_iterator;
 		// typedef reverse_iterator< iterator >		reverse_iterator;
-		// typedef reverse_iterator< const iterator >	const_reverse_iterator; 
+		// typedef reverse_iterator< const iterator >	const_reverse_iterator;
 		
+		/*constructors*/
 		vector() : _size(0), _cap(0) {
 			_array = NULL;
-			_last = NULL;
 			_first = NULL;
+			_last = _first;
+			
 		}
 
   		explicit vector(const Alloc& alloc) : _alloc(alloc) {
 			_size = 0;
 			_cap = 0;
 			_array = NULL;
-			_last = NULL;
 			_first = NULL;
+			_last = _first;
 		}
 
   		// explicit vector( size_t count,
@@ -54,7 +56,8 @@ namespace ft {
 		// 	for(int i = 0; i < count; i++) {
 		// 		_alloc.construct(_array + i, value);
 		// 	}
-		// 	//назначить итераторы
+		// 	_first = _array;
+		// 	_last = _array + count;
   		// }
 
   		explicit vector(size_t count) : _size(count), _cap(count) {
@@ -62,7 +65,7 @@ namespace ft {
 			for(int i = 0; i < count; i++) {
 				_alloc.construct(_array + i, T());
 			}
-			_first = _array - 1;
+			_first = _array;
 			_last = _array + count;
 
 		}
@@ -75,6 +78,7 @@ namespace ft {
 		// 	}
 		// }
 
+		/*destructor*/
 		~vector() {
 			if(_array != NULL) {
 				for(int i = 0; i < _size; i++) {
@@ -88,12 +92,30 @@ namespace ft {
 			return _alloc;
 		}
 
-		// void assign(size_t count, const T& value);
+		void assign(size_t count, const T& value) {
+			if(count < _size) {
+				for(int i = count; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+			} else {
+				if (count > _cap)
+					this->reserve(count);
+			}
+			for(int i = 0; i < count; i++) {
+				_alloc.destroy(_array + i);
+				_alloc.construct(_array + i, value);
+			}
+			_size = count;
+			_first = _array;
+			_last = _array + _size;
+		}
 
 		// template< class InputIt >
-		// void assign( InputIt first, InputIt last );
+		// void assign( InputIt first, InputIt last ) {
 
-		//capacity
+		// }
+
+		/*capacity*/
 		size_t size() const {
 			return _size;
 		}
@@ -114,7 +136,6 @@ namespace ft {
 				for(int i = 0; i < _cap; i++) {
 					_alloc.construct(newarr + i, _array[i]);
 				}
-				//переназначить все итераторы
 				for(int i = 0; i < _cap; i++) {
 					_alloc.destroy(_array + i);
 				}
@@ -122,6 +143,8 @@ namespace ft {
 					_alloc.deallocate(_array, _cap);
 				}
 				_array = newarr;
+				_first = _array;
+				_last = (_array + _cap);
 				_cap = n;
 			}
 		}
@@ -131,7 +154,7 @@ namespace ft {
 			return res;
 		}
 		
-		//access
+		/*access*/
 		T& operator[](size_t n) {
 			return _array[n];
 		}
@@ -177,13 +200,14 @@ namespace ft {
 		}
 
 
-		//modify
+		/*modify*/
 		void clear() {
 			for(int i = 0; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 			_size = 0;
-			//переназначить все итераторы
+			_first = _array;
+			_last = _first;
 		}
 
 		// iterator insert( iterator pos, const T& value);
@@ -194,7 +218,7 @@ namespace ft {
 		// iterator erase(iterator pos);
 		// iterator erase(iterator first, iterator last);
 
-		void resize(size_t n, const T& val = T()) { //ИСПРАВИТЬ НАСТЁНЕ
+		void resize(size_t n, const T& val = T()) { //заполняет только "пустые" элементы
 			if(n < _size) {
 
 				for(int i = n; i < _size; i++) {
@@ -202,17 +226,21 @@ namespace ft {
 				}
 			} else {
 				if (n > _cap) {
-					this->reserve(_size == 0 ? n : _size * 2);
+					this->reserve(n);
 				}
 				for(int i = _size; i < n; i++) {
 					_alloc.construct(_array + i, val);
 				}
 			}
-			//переназначить iterator last
 			_size = n;
+			_last = _array + _size;
 		}
 
-		// void swap(vector& other)
+		// void swap(vector& other) {
+		// 	if (this != &other) {
+				
+		// 	}
+		// }
 
 		void push_back(const T& value) {
 			
@@ -221,31 +249,31 @@ namespace ft {
 			}
 			_alloc.construct(_array + _size, value);
 			_size++;
-			//переназначить iterator last
+			_last = _array + _size;
 		}
 
 		void pop_back() {
 			_alloc.destroy(_array + _size);
 			--_size;
-			//переназначить iterator last
+			_last = _array + _size;
 		}
 
-		//iterators
+		/*iterators*/
 		iterator begin() {
-			return ++_first;
+			return _first;
 		}
 
-		// const_iterator begin() const {
-		// 	return ++_first;
-		// }
+		const_iterator begin() const {
+			return _first;
+		}
 
 		iterator end() {
 			return _last;
 		}
 
-		// const_iterator end() const {
-		// 	return _last;
-		// }
+		const_iterator end() const {
+			return _last;
+		}
 
 		// reverse_iterator rbegin() {
 		// 	return --_last;
@@ -269,11 +297,11 @@ namespace ft {
 		size_t		_cap;
 		Alloc		_alloc;
 
-		//_first указывает на некоторую область до начала вектора
-		iterator	_first;
+		/*_first указывает на первый элемент вектора*/
+		T*			_first;
 
-		//_last указывает на некоторую область после конца вектора
-		iterator	_last;
+		/*_last указывает на некоторую область после конца вектора*/
+		T*			_last;
 
 	};
 

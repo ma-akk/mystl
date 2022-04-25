@@ -10,9 +10,15 @@ class iterator_traits;
 namespace ft {
 
 	template < class T >
-	class ran_it : public iterator_traits< T* > {
-	 public:	 	
-		ran_it() { }
+	class ran_it : public iterator<random_access_iterator_tag, T> {
+	 public:
+	 	typedef typename iterator<random_access_iterator_tag, T>::iterator_category	iterator_category ;
+		typedef typename iterator<random_access_iterator_tag, T>::value_type		value_type;
+		typedef typename iterator<random_access_iterator_tag, T>::difference_type	difference_type;
+		typedef T*		pointer;
+		typedef T&		reference;
+
+		ran_it() : _element(NULL) { }
 
 		ran_it(T* elem) : _element(elem) { }
 
@@ -30,12 +36,11 @@ namespace ft {
 		}
 
 		T& operator*() const {
-			ran_it tmp = *this;
-			return (*++tmp);
+			return *_element;
 		}
 
 		T* operator->() const {
-			return (&**this);
+			return &(this->operator*()); //(&**this);
 		}
 
 		T& operator[](ptrdiff_t n) const {
