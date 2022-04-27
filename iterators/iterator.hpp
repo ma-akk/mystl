@@ -10,15 +10,15 @@ using std::endl;
 
 namespace ft {
 
-	struct input_iterator_tag { };
+	class input_iterator_tag { };
 
-	struct output_iterator_tag { };
+	class output_iterator_tag { };
 
-	struct forward_iterator_tag : public input_iterator_tag { };
+	class forward_iterator_tag : public input_iterator_tag { };
 
-	struct bidirectional_iterator_tag : public forward_iterator_tag { };
+	class bidirectional_iterator_tag : public forward_iterator_tag { };
 
-	struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+	class random_access_iterator_tag : public bidirectional_iterator_tag { };
 
 	template <	class Category,
 				class T,
@@ -121,12 +121,13 @@ namespace ft {
 			iter += n;
 		}
 
+// iterator_traits<InIt>::iterator_category
+
 		template < class InIt, class Cat >
 		typename iterator_traits<InIt>::difference_type
 		distance_impl(InIt& first, InIt& last, Cat iter_cat) {
 			cout << "impl common" << endl;
-			typedef typename iterator_traits<InIt>::difference_type Dist;
-			Dist n;
+			typename iterator_traits<InIt>::difference_type n;
 			InIt tmp = first;
 			for(n = 0; tmp != last; n++) {
 				++tmp;
@@ -138,10 +139,7 @@ namespace ft {
 		typename iterator_traits<InIt>::difference_type
 		distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
 			// cout << "impl ran_it" << endl;
-			typedef typename iterator_traits<InIt>::difference_type Dist;
-			Dist n;
-			n = (Dist)(last - first);
-			return n;
+			return last - first;
 		}
 	};
 	

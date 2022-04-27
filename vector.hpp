@@ -97,8 +97,7 @@ namespace ft {
 				for(int i = count; i < _size; i++) {
 					_alloc.destroy(_array + i);
 				}
-			} else {
-				if (count > _cap)
+			} else if (count > _cap) {
 					this->reserve(count);
 			}
 			for(int i = 0; i < count; i++) {
@@ -110,10 +109,26 @@ namespace ft {
 			_last = _array + _size;
 		}
 
-		// template< class InputIt >
-		// void assign( InputIt first, InputIt last ) {
-
-		// }
+		template< class InputIt >
+		void assign( InputIt first, InputIt last ) {
+			ptrdiff_t count = ft::distance(first, last); //!!!!!!!! исправить на ft
+			cout << "count = " << count << endl;
+			if(count < _size) {
+				for(int i = count; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+			} else if (count > _cap) {
+					this->reserve(count);
+			}
+			int i = -1;
+			for(InputIt p = first; p != last; ++p) {
+				_alloc.destroy(_array + (++i));
+				_alloc.construct(_array + i, (*p));
+			}
+			_size = count;
+			_first = _array;
+			_last = _array + _size;
+		}
 
 		/*capacity*/
 		size_t size() const {
