@@ -121,19 +121,26 @@ namespace ft {
 			iter += n;
 		}
 
-		template < class InIt, class Dist, class Cat >
-		Dist distance_impl(InIt& first, InIt& last, Cat iter_cat) {
+		template < class InIt, class Cat >
+		typename iterator_traits<InIt>::difference_type
+		distance_impl(InIt& first, InIt& last, Cat iter_cat) {
+			cout << "impl common" << endl;
+			typedef typename iterator_traits<InIt>::difference_type Dist;
 			Dist n;
-			for(n = 0; first != last; n++) {
-				++first;
+			InIt tmp = first;
+			for(n = 0; tmp != last; n++) {
+				++tmp;
 			}
 			return n;
 		}
 
-		template < class InIt, class Dist = ptrdiff_t >
-		Dist distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
+		template < class InIt, class Cat = random_access_iterator_tag>
+		typename iterator_traits<InIt>::difference_type
+		distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
+			// cout << "impl ran_it" << endl;
+			typedef typename iterator_traits<InIt>::difference_type Dist;
 			Dist n;
-			n = Dist(last - first);
+			n = (Dist)(last - first);
 			return n;
 		}
 	};
@@ -146,7 +153,7 @@ namespace ft {
 	template < class InIt >
 	typename iterator_traits<InIt>::difference_type
 	distance(InIt& first, InIt& last) {
-		distance_impl(first, last, typename iterator_traits <InIt>::iterator_category()); 
+		return distance_impl(first, last, typename iterator_traits <InIt>::iterator_category()); 
 	}
 };
 
