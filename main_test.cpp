@@ -27,6 +27,19 @@ int main() {
 	// }
 	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
 	// cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	std::vector<int>::iterator it = v.begin();
+	ft::vector<int>::iterator it1 = v1.begin();
+	v.insert(it, 10);
+	v1.insert(it1, 10);
+	cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	cout << v1[0]  << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	// it = v.begin();
+	// v.insert(it, 100);
+	// cout << v[0] << " " << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	// it = v.begin();
+	// v.insert(it, 1);
+	// cout << v[0] << " " << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	
 	v.push_back(1);
 	v.push_back(2);
 	v.push_back(3);
@@ -38,9 +51,15 @@ int main() {
 	v1.push_back(3);
 	v1.push_back(5);
 	v1.push_back(12);
-	// for(int i = 0; i < 5; i++) {
-	// 	cout << v[i] << " " << v1[i] << endl;
-	// }
+	it = v.end();
+	v.insert(it, 10);
+	cout << v[0] << " " << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	it = v.end();
+	v.insert(it, 100);
+	cout << v[0] << " " << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	for(int i = 0; i < 10; i++) {
+		cout << v[i] << " " << v1[i] << endl;
+	}
 	// // for(int i = 0; i < 10; i++) {
 	// // 	cout << v.at(i) << " " << v1.at(i) << endl;
 	// // }
@@ -163,30 +182,31 @@ int main() {
 		v3.push_back(100 + i);
 	}
 
-	std::vector<int>::iterator it = v3.begin();
+	// std::vector<int>::iterator it = v3.begin();
 
-	for(int i = 0; i < 15; i++) {
-		cout << v[i] << "         " << v1[i] << endl;
-	}
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	cout << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	v.assign(it + 2, it + 3);
-	v1.assign(it + 2, it + 3);
-	cout << endl;
-	for(int i = 0; i < 15; i++) {
-		cout << v[i] << "         " << v1[i] << endl;
-	}
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	v.assign(it, it + 10);
-	v1.assign(it, it + 10);
-	cout << endl;
-	for(int i = 0; i < 15; i++) {
-		cout << v[i] << "         " << v1[i] << endl;
-	}
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	// for(int i = 0; i < 15; i++) {
+	// 	cout << v[i] << "         " << v1[i] << endl;
+	// }
+	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	// cout << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	// v.assign(it + 2, it + 3);
+	// v1.assign(it + 2, it + 3);
+	// cout << endl;
+	// for(int i = 0; i < 15; i++) {
+	// 	cout << v[i] << "         " << v1[i] << endl;
+	// }
+	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	// cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	// v.assign(it, it + 10);
+	// v1.assign(it, it + 10);
+	// cout << endl;
+	// for(int i = 0; i < 15; i++) {
+	// 	cout << v[i] << "         " << v1[i] << endl;
+	// }
+	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	// cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 	
+
 
 
 

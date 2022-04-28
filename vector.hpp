@@ -111,7 +111,7 @@ namespace ft {
 
 		template< class InputIt >
 		void assign( InputIt first, InputIt last ) {
-			ptrdiff_t count = ft::distance(first, last); //!!!!!!!! исправить на ft
+			ptrdiff_t count = ft::distance(first, last);
 			cout << "count = " << count << endl;
 			if(count < _size) {
 				for(int i = count; i < _size; i++) {
@@ -225,8 +225,49 @@ namespace ft {
 			_last = _first;
 		}
 
-		// iterator insert( iterator pos, const T& value);
-		// void insert( iterator pos, size_type count, const T& value );
+		//NO TESTED
+		iterator insert( iterator pos, const T& value) {
+			//необходимо вначале как-то сохранить pos,
+			// после выделения памяти, он не будет указывать на нужную позицию
+			ptrdiff_t ipos = distance(_first, pos);
+			if (_size == _cap) {
+				reserve(_cap * 2);
+			}
+			size_t i = _size;
+			pos = _array + ipos;
+			for (iterator it = _array + _size; it != pos; --it) {
+				_alloc.construct(_array + i, _array[(--i)]);
+				_alloc.destroy(_array + i);
+			}
+			_alloc.constructor(_array + i, value]);
+			++_size;
+			_cap *= 2;
+			_first = _array;
+			_last = _array + _size;
+			return pos;
+		}
+
+		//NOT TESTED
+		void insert( iterator pos, size_type count, const T& value ) {
+			ptrdiff_t ipos = distance(_first, pos);
+			if ((_size + count) < _cap) {
+				reserve(_cap * 2);
+			}
+			size_t i = _size + count - 1;
+			pos = _array + ipos;
+			for (iterator it = _array + _size; it != pos; --it) {
+				_alloc.construct(_array + i, _array[i - count]);
+				_alloc.destroy(_array + i - count);
+				--i;
+			}
+			for (; count != 0; --count) {
+				_alloc.constructor(_array + (ipos--), value]);
+			}
+			++_size;
+			_cap *= 2;
+			_first = _array;
+			_last = _array + _size;
+		}
 		// template<class InputIt>
 		// void insert( iterator pos, InputIt first, InputIt last );
 
