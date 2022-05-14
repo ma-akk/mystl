@@ -7,6 +7,7 @@
 #include <exception>
 #include <cmath>
 #include <limits>
+#include "iterators/iterator.hpp"
 #include "iterators/ran_it.hpp"
 // #include "iterators/reverse_iterator.hpp"
 
@@ -17,7 +18,7 @@ using std::endl;
 #define MAXSIZE std::numeric_limits<size_t>::max()
 
 namespace ft {
-	template <class T, class Alloc = std::allocator<T>>
+	template <class T, class Alloc = std::allocator<T> >
 	class vector {
 	 public:
 		typedef T									value_type;
@@ -37,6 +38,8 @@ namespace ft {
 			_array = NULL;
 			_first = NULL;
 			_last = _first;
+
+			cout << "default construct "  << endl;
 			
 		}
 
@@ -72,14 +75,44 @@ namespace ft {
 
   		// template< class InputIt >
   		// vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
-		// vector(const vector& other);
-		// vector& operator=(const vector& value) {
-		// 	if (*this != value) {
-		// 	}
-		// }
+		
+		/*copy constructor*/
+		vector(const vector& value) {
+			cout << "copy constructor " << endl;
+			_size = value.size();
+			_cap = value.capacity();
+			_array = _alloc.allocate(_cap);
+			for(size_t i = 0; i < _size; ++i) {
+				_alloc.construct(_array + i, value[i]);
+				cout << _array + i << endl;
+			}
+			_first = _array;
+			_last = _array + _size;
+		}
+
+		vector& operator=(const vector& value) {
+			cout << "operator = " << endl;
+			if (this != &value) {
+				if(_array != NULL) {
+					clear();
+					_alloc.deallocate(_array, _cap);
+				}
+				_size = value.size();
+				_cap = value.capacity();
+				_array = _alloc.allocate(_cap);
+				for(size_t i = 0; i < _size; ++i) {
+					_alloc.construct(_array + i, value[i]);
+					cout << _array + i << endl;
+				}
+				_first = _array;
+				_last = _array + _size;
+			}
+			return *this;
+		}
 
 		/*destructor*/
 		~vector() {
+			cout << "destructor. size = " << this->size() << endl;
 			if(_array != NULL) {
 				for(int i = 0; i < _size; i++) {
 					_alloc.destroy(_array + i);
@@ -217,62 +250,106 @@ namespace ft {
 
 		/*modify*/
 		void clear() {
-			for(int i = 0; i < _size; i++) {
+			cout << "size in method clear = " << this->_size << endl;
+			for(size_t i = 0; i < _size; ++i) {
 				_alloc.destroy(_array + i);
 			}
 			_size = 0;
 			_first = _array;
 			_last = _first;
+			cout << "clear is end!" << endl;
 		}
 
-		//NO TESTED
 		iterator insert( iterator pos, const T& value) {
-			//необходимо вначале как-то сохранить pos,
-			// после выделения памяти, он не будет указывать на нужную позицию
-			ptrdiff_t ipos = distance(_first, pos);
+			ptrdiff_t ipos = &(*pos) - _first;
 			if (_size == _cap) {
-				reserve(_cap * 2);
+				reserve(_cap == 0 ? 1 : _cap * 2);
 			}
-			size_t i = _size;
-			pos = _array + ipos;
-			for (iterator it = _array + _size; it != pos; --it) {
-				_alloc.construct(_array + i, _array[(--i)]);
-				_alloc.destroy(_array + i);
+			T* ptr = _array + _size;
+			for ( ; ptr != _array + ipos; --ptr) {
+				_alloc.construct(ptr, *(ptr - 1));
+				_alloc.destroy(ptr - 1);
 			}
-			_alloc.constructor(_array + i, value]);
+			_alloc.construct(ptr, value);
 			++_size;
-			_cap *= 2;
 			_first = _array;
+			_last = _array + _size;
+			return iterator(_array + ipos);
+		}
+
+		void insert( iterator pos, size_type count, const T& value ) {
+			ptrdiff_t ipos = &(*pos) - _first;
+			if ((_size + count) >= _cap) {
+				reserve(_cap == 0 ? count : _cap * 2);
+			}
+			T* last_free_ptr = _array + _size + count;
+			T* ptr = _array + _size;
+			while (ptr != _array + ipos) {
+				--last_free_ptr;
+				--ptr;
+				_alloc.construct(last_free_ptr, *(ptr));
+				_alloc.destroy(ptr);
+			}
+			for (; ptr != last_free_ptr; ++ptr) {
+				_alloc.construct(ptr, value);
+
+			}
+			_size += count;
+			_first = _array;
+			_last = _array + _size;
+		}
+
+		template<class InputIt>
+		void insert( iterator pos, InputIt first, InputIt last ) {
+			ptrdiff_t ipos = &(*pos) - _first;
+			ptrdiff_t count = ft::distance(first, last);
+			if ((_size + count) >= _cap) {
+				reserve(_cap == 0 ? count : _cap * 2);
+			}
+			T* last_free_ptr = _array + _size + count;
+			T* ptr = _array + _size;
+			while (ptr != _array + ipos) {
+				--last_free_ptr;
+				--ptr;
+				_alloc.construct(last_free_ptr, *(ptr));
+				_alloc.destroy(ptr);
+			}
+			for (InputIt tmp = first; tmp != last; ++tmp, ++ptr) {
+				_alloc.construct(ptr, *tmp);
+			}
+			_size += count;
+			_first = _array;
+			_last = _array + _size;
+		}
+
+		iterator erase(iterator pos) {
+			_alloc.destroy(&(*pos));
+			for (T* it = &(*pos); it != _array + _size; ++it) {
+				_alloc.construct(it, *(it + 1));
+				_alloc.destroy(it + 1);
+			}
+			--_size;
 			_last = _array + _size;
 			return pos;
 		}
 
-		//NOT TESTED
-		void insert( iterator pos, size_type count, const T& value ) {
-			ptrdiff_t ipos = distance(_first, pos);
-			if ((_size + count) < _cap) {
-				reserve(_cap * 2);
+		iterator erase(iterator first, iterator last) {
+			iterator p;
+			size_t count = 0;
+			for (p = first; p != last; ++p) {
+				_alloc.destroy(&(*p));
+				++count;
 			}
-			size_t i = _size + count - 1;
-			pos = _array + ipos;
-			for (iterator it = _array + _size; it != pos; --it) {
-				_alloc.construct(_array + i, _array[i - count]);
-				_alloc.destroy(_array + i - count);
-				--i;
+			last = first;
+			for (T* ptr = &(*p); ptr != _array + _size; ++ptr) {
+				_alloc.construct((&(*last)), *(ptr));
+				_alloc.destroy(ptr);
+				last++;
 			}
-			for (; count != 0; --count) {
-				_alloc.constructor(_array + (ipos--), value]);
-			}
-			++_size;
-			_cap *= 2;
-			_first = _array;
+			_size -= count;
 			_last = _array + _size;
+			return first;
 		}
-		// template<class InputIt>
-		// void insert( iterator pos, InputIt first, InputIt last );
-
-		// iterator erase(iterator pos);
-		// iterator erase(iterator first, iterator last);
 
 		void resize(size_t n, const T& val = T()) { //заполняет только "пустые" элементы
 			if(n < _size) {
@@ -292,11 +369,33 @@ namespace ft {
 			_last = _array + _size;
 		}
 
-		// void swap(vector& other) {
-		// 	if (this != &other) {
-				
-		// 	}
-		// }
+		//NOT TESTED
+		void swap(vector& other) {
+			if (this != &other) {
+				vector<T> tmp(other);
+				// tmp._array = other._array;
+				// tmp._first = other._first;
+				// tmp._last = other._last;
+				// tmp._size = other._size;
+				// tmp._cap = other._cap;
+
+				// other._array = this->_array;
+				// other._first = this->_first;
+				// other._last = this->_last;
+				// other._size = this->_size;
+				// other._cap = this->_cap;
+
+				// this->_array = tmp._array; 
+				// this->_first = tmp._first;
+				// this->_last = tmp._last;
+				// this->_size = tmp._size;
+				// this->_cap = tmp._cap;
+
+				for(int i = 0; i < 15; i++) {
+					cout << tmp[i] << " " << other[i] << " " << _array[i] << endl;
+				}
+			}
+		}
 
 		void push_back(const T& value) {
 			

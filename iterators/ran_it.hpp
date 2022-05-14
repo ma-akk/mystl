@@ -10,11 +10,11 @@ class iterator_traits;
 namespace ft {
 
 	template < class T >
-	class ran_it : public iterator<random_access_iterator_tag, T> {
+	class ran_it : public std::iterator<random_access_iterator_tag, T> {
 	 public:
-	 	typedef typename iterator<random_access_iterator_tag, T>::iterator_category	iterator_category ;
-		typedef typename iterator<random_access_iterator_tag, T>::value_type		value_type;
-		typedef typename iterator<random_access_iterator_tag, T>::difference_type	difference_type;
+	 	typedef typename std::iterator<random_access_iterator_tag, T>::iterator_category	iterator_category ;
+		typedef typename std::iterator<random_access_iterator_tag, T>::value_type		value_type;
+		typedef typename std::iterator<random_access_iterator_tag, T>::difference_type	difference_type;
 		typedef T*		pointer;
 		typedef T&		reference;
 
@@ -33,6 +33,10 @@ namespace ft {
 				_element = value._element;
 			}
 			return *this;
+		}
+
+		T* get_pointer() const {
+			return this->_element;
 		}
 
 		T& operator*() const {
@@ -89,6 +93,32 @@ namespace ft {
 		T* _element;
 
 	};
+
+	template <typename T>
+    bool operator==(const ft::ran_it<T> lhs,
+              const ran_it<T> rhs) {
+        return (lhs.get_pointer() == rhs.get_pointer());
+    }
+
+	template <typename T>
+    bool operator!=(const ran_it<T> lhs,
+              const ran_it<T> rhs) {
+        return (lhs.get_pointer() != rhs.get_pointer());
+    }
+
+	template <typename T>
+    typename ran_it<T>::difference_type
+    operator-(const ran_it<T> lhs,
+              const ran_it<T> rhs) {
+        return (lhs.get_pointer() - rhs.get_pointer());
+    }
+
+	template <typename T>
+    typename ran_it<T>::difference_type
+    operator+(const ran_it<T> lhs,
+              const ran_it<T> rhs) {
+        return (lhs.get_pointer() + rhs.get_pointer());
+    }
 
 };
 

@@ -107,19 +107,19 @@ namespace ft {
 
 	//inline namespace for encapsulation func *_imlp
 	namespace {
-		template < class InIt, class Dist = ptrdiff_t >
-		void advance_impl(InIt& iter, Dist n, std::input_iterator_tag) { //РАБОТАЕТ ТОЛЬКО С STD!!!!!!!!!!
+		template < class InIt >
+		void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, input_iterator_tag) { //РАБОТАЕТ ТОЛЬКО С STD!!!!!!!!!!
 			cout << "it is InIt" << endl;
 			for(int i = 0; i < n; i++) {
 				++iter;
 			}
 		}
 
-		template < class InIt, class Dist = ptrdiff_t >
-		void advance_impl(InIt& iter, Dist n, ft::random_access_iterator_tag) {
-			cout << "it is RanIt" << endl;
-			iter += n;
-		}
+		// template < class InIt >
+		// void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, ft::random_access_iterator_tag) {
+		// 	cout << "it is RanIt" << endl;
+		// 	iter += n;
+		// }
 
 
 		template < class InIt >
@@ -134,16 +134,16 @@ namespace ft {
 			return n; 
 		};
 
-		template < class InIt >
-		typename iterator_traits<InIt>::difference_type
-		distance_impl(InIt& first, InIt& last, ft::random_access_iterator_tag) {
-			cout << "impl ran_it" << endl;
-			return last - first;
-		}
+		// template < class InIt >
+		// typename iterator_traits<InIt>::difference_type
+		// distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
+		// 	cout << "impl ran_it" << endl;
+		// 	return last - first;
+		// }
 	};
 	
-	template < class InIt, class Dist = ptrdiff_t >
-	void advance(InIt& iter, Dist n) {
+	template < class InIt >
+	void advance(InIt& iter, typename iterator_traits<InIt>::difference_type n) {
 		advance_impl(iter, n, typename std::iterator_traits <InIt>::iterator_category());
 	}
 

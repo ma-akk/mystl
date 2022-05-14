@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 #include <stack>
-// #include "vector.hpp"
+#include "../vector.hpp"
 #include "iterator.hpp"
 #include "ran_it.hpp"
 // #include "stack.hpp"
@@ -13,7 +13,7 @@ using std::endl;
 
 int main() {
 	std::vector<int> v;
-	// ft::vector<int> v1;
+	ft::vector<int> v1;
 
 	v.push_back(1);
 	v.push_back(2);
@@ -21,11 +21,11 @@ int main() {
 	v.push_back(5);
 	v.push_back(12);
 
-	// v1.push_back(1);
-	// v1.push_back(2);
-	// v1.push_back(3);
-	// v1.push_back(5);
-	// v1.push_back(12);
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(5);
+	v1.push_back(12);
 	// ft::iterator_traits<std::vector<int>::iterator> it1;
 	// ft::iterator_traits<std::map<int, int>::iterator> it2;
 	// std::advance(it1, 0);
@@ -44,8 +44,17 @@ int main() {
 	// cout << (*--ptr) << endl;
 	// cout << (*ptr) << endl;
 	
-	ft::ran_it<int> ran_it;
 	std::vector<int>::iterator it = v.begin();
+	ft::ran_it<int> ran_it1 = v1.begin();
+	ft::ran_it<int> ran_it2 = (v1.begin() + 2);
+	cout << *ran_it1 << " " << *ran_it2 << endl;
+	bool res = ran_it1 != ran_it2;
+	cout << res << endl;
+	res = ran_it1 == ran_it2;
+	cout << res << endl;
+
+
+
 	
 	
 	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
