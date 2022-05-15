@@ -16,9 +16,9 @@ namespace ft {
 							typename iterator_traits<ran_it>::reference > {
 	 public:
 		typedef reverse_iterator<ran_it> rev_it;
-		typedef iterator_traits<ran_it>::difference_type D;
-		typedef iterator_traits<ran_it>::pointer Ptr;
-		typedef iterator_traits<ran_it>::reference Ref;
+		typedef typename iterator_traits<ran_it>::difference_type D;
+		typedef typename iterator_traits<ran_it>::pointer Ptr;
+		typedef typename iterator_traits<ran_it>::reference Ref;
 		typedef ran_it iterator_type;
 
 		reverse_iterator() { }
@@ -27,9 +27,8 @@ namespace ft {
 				: current(x) { }
 
 		template< class U >
-		reverse_iterator( const reverse_iterator<U>& value ) {
-				: current(value.base());
-		}
+		reverse_iterator( const reverse_iterator<U>& value )
+				: current(value.base()) { }
 
 		template< class U >
 		reverse_iterator& operator=( const reverse_iterator<U>& value ) {
@@ -144,10 +143,10 @@ namespace ft {
 		return it + n;
 	};
 
-	template< class Iterator >
-	typename reverse_iterator<Iterator>::difference_type
-    operator-( const reverse_iterator<Iterator>& lhs,
-               const reverse_iterator<Iterator>& rhs ) {
+	template< class Iter >
+	reverse_iterator<Iter>
+    operator-( typename reverse_iterator<Iter>::difference_type n,
+               const reverse_iterator<Iter>& it ) {
 		return it - n;
 	};
 };

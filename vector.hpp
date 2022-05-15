@@ -9,7 +9,7 @@
 #include <limits>
 #include "iterators/iterator.hpp"
 #include "iterators/ran_it.hpp"
-// #include "iterators/reverse_iterator.hpp"
+#include "iterators/reverse_iterator.hpp"
 
 using std::allocator;
 using std::cout;
@@ -30,7 +30,7 @@ namespace ft {
 		typedef const T&							const_reference;
 	 	typedef ran_it< T >							iterator;
 		typedef ran_it< const T >					const_iterator;
-		// typedef reverse_iterator< iterator >		reverse_iterator;
+		typedef reverse_iterator< iterator >		reverse_iterator;
 		// typedef reverse_iterator< const iterator >	const_reverse_iterator;
 		
 		/*constructors*/
@@ -40,7 +40,6 @@ namespace ft {
 			_last = _first;
 
 			cout << "default construct "  << endl;
-			
 		}
 
   		explicit vector(const Alloc& alloc) : _alloc(alloc) {
@@ -51,27 +50,26 @@ namespace ft {
 			_last = _first;
 		}
 
-  		// explicit vector( size_t count,
-        //         		const T& value = T(),
-        //         		const Alloc& alloc = Alloc())
-        //         		: _size(count), _cap(count), _alloc(alloc) {
-		// 	_array = _alloc.allocate(count);
-		// 	for(int i = 0; i < count; i++) {
-		// 		_alloc.construct(_array + i, value);
-		// 	}
-		// 	_first = _array;
-		// 	_last = _array + count;
-  		// }
-
-  		explicit vector(size_t count) : _size(count), _cap(count) {
+  		explicit vector( size_t count,
+                		const T& value = T(),
+                		const Alloc& alloc = Alloc())
+                		: _size(count), _cap(count), _alloc(alloc) {
 			_array = _alloc.allocate(count);
 			for(int i = 0; i < count; i++) {
-				_alloc.construct(_array + i, T());
+				_alloc.construct(_array + i, value);
 			}
 			_first = _array;
 			_last = _array + count;
+  		}
 
-		}
+  		// explicit vector(size_t count) : _size(count), _cap(count) {
+		// 	_array = _alloc.allocate(count);
+		// 	for(int i = 0; i < count; i++) {
+		// 		_alloc.construct(_array + i, T());
+		// 	}
+		// 	_first = _array;
+		// 	_last = _array + count;
+		// }
 
   		// template< class InputIt >
   		// vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
@@ -365,7 +363,6 @@ namespace ft {
 			_last = _array + _size;
 		}
 
-		//NOT TESTED
 		void swap(vector& other) {
 			if (this != &other && !(this->empty() || other.empty())) {
 				T* tmp_ptr = _array;
@@ -428,17 +425,17 @@ namespace ft {
 			return _last;
 		}
 
-		// reverse_iterator rbegin() {
-		// 	return --_last;
-		// }
+		reverse_iterator rbegin() {
+			return reverse_iterator(_last - 1); //?????? what iterator i can give??
+		}
 
 		// const_reverse_iterator rbegin() const {
 		// 	return --_last;
 		// }
 
-		// reverse_iterator rend() {
-		// 	return _first;
-		// }
+		reverse_iterator rend() {
+			return reverse_iterator(_first - 1);
+		}
 		
 		// const_reverse_iterator rend() const {
 		// 	return _first;

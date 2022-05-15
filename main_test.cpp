@@ -17,6 +17,8 @@ int main() {
 		v01.push_back(100 + i);
 	}
 
+	ft::vector<int> v02(10);
+
 	ft::vector<int> v1_copy(v1);	
 	// ft::iterator_traits<char * > it;
 	
@@ -344,4 +346,16 @@ int main() {
 	// cout << endl;
 
 
+	cout  << "v(count): " << "ft: size/cap = " << v02.size() << " / " << v02.capacity() << endl;
+	ft::vector<int>::iterator it02 = v02.begin();
+	v02.push_back(11);
+	cout  << "v(count): " << "ft: size/cap = " << v02.size() << " / " << v02.capacity() << endl;
+	for(int i = 0; i < v02.size(); i++) {
+		cout << v02[i] << " " ;
+	}
+	ft::vector<int>::reverse_iterator it03 = v02.rbegin();
+	cout  << endl << "v02.rbegin: " << *it03 << ", end + 1 = " << *(v02.end() + 1) << endl;
+	it03 = v02.rend();
+	cout << "it is OK " << endl;
+	cout  << "v02.rend + 1: " << *(it03 + 1) <<  ", begin = " << *(v02.begin()) << endl;
 }
