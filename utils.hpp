@@ -17,6 +17,27 @@ namespace ft {
     //                           InputIt2 first2, InputIt2 last2,
     //                           Compare comp );
 
+	// template< class InputIt1, class InputIt2 >
+	// bool equal( InputIt1 first1, InputIt1 last1,
+	// 		InputIt2 first2 );	
+	// template< class InputIt1, class InputIt2,
+	// 		class BinaryPredicate >
+	// bool equal( InputIt1 first1,
+	// 			InputIt1 last1,
+	// 			InputIt2 first2,
+	// 			BinaryPredicate p );
+
+	template <bool condition, typename T>
+	struct enable_if;
+	
+	template <typename T>
+	struct enable_if<true, T> {
+		typedef T	type;
+	};
+
+	// template< class T >
+	// struct is_integral;
+	
 	//testing file is in Standart p.65
 	template <class T1, class T2 >
 	struct pair {

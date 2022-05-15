@@ -84,10 +84,20 @@ namespace ft {
 			_array = _alloc.allocate(_cap);
 			for(size_t i = 0; i < _size; ++i) {
 				_alloc.construct(_array + i, value[i]);
-				cout << _array + i << endl;
 			}
 			_first = _array;
 			_last = _array + _size;
+		}
+
+		/*destructor*/
+		~vector() {
+			cout << "destructor. size = " << this->size() << endl;
+			if(_array != NULL) {
+				for(int i = 0; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+				_alloc.deallocate(_array, _cap);
+			}
 		}
 
 		vector& operator=(const vector& value) {
@@ -102,23 +112,11 @@ namespace ft {
 				_array = _alloc.allocate(_cap);
 				for(size_t i = 0; i < _size; ++i) {
 					_alloc.construct(_array + i, value[i]);
-					cout << _array + i << endl;
 				}
 				_first = _array;
 				_last = _array + _size;
 			}
 			return *this;
-		}
-
-		/*destructor*/
-		~vector() {
-			cout << "destructor. size = " << this->size() << endl;
-			if(_array != NULL) {
-				for(int i = 0; i < _size; i++) {
-					_alloc.destroy(_array + i);
-				}
-				_alloc.deallocate(_array, _cap);
-			}
 		}
 		
 		Alloc get_allocator() const {
@@ -250,14 +248,12 @@ namespace ft {
 
 		/*modify*/
 		void clear() {
-			cout << "size in method clear = " << this->_size << endl;
 			for(size_t i = 0; i < _size; ++i) {
 				_alloc.destroy(_array + i);
 			}
 			_size = 0;
 			_first = _array;
 			_last = _first;
-			cout << "clear is end!" << endl;
 		}
 
 		iterator insert( iterator pos, const T& value) {
@@ -371,29 +367,31 @@ namespace ft {
 
 		//NOT TESTED
 		void swap(vector& other) {
-			if (this != &other) {
-				vector<T> tmp(other);
-				// tmp._array = other._array;
-				// tmp._first = other._first;
-				// tmp._last = other._last;
-				// tmp._size = other._size;
-				// tmp._cap = other._cap;
+			if (this != &other && !(this->empty() || other.empty())) {
+				T* tmp_ptr = _array;
+				_array = other._array;
+				other._array = tmp_ptr;
 
-				// other._array = this->_array;
-				// other._first = this->_first;
-				// other._last = this->_last;
-				// other._size = this->_size;
-				// other._cap = this->_cap;
+				tmp_ptr = _last;
+				_last = other._last;
+				other._last = tmp_ptr;
 
-				// this->_array = tmp._array; 
-				// this->_first = tmp._first;
-				// this->_last = tmp._last;
-				// this->_size = tmp._size;
-				// this->_cap = tmp._cap;
+				_first = _array;
+				other._first = other._array;
 
-				for(int i = 0; i < 15; i++) {
-					cout << tmp[i] << " " << other[i] << " " << _array[i] << endl;
-				}
+				size_t tmp = _size;
+				_size = other._size;
+				other._size = tmp;
+
+				tmp = _cap;
+				_cap = other._cap;
+				other._cap = tmp;
+			} else if(this->empty()) {
+				*this = other;
+				other.clear();
+			} else if(other.empty()) {
+				other = *this;
+				this->clear();
 			}
 		}
 

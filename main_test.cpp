@@ -318,18 +318,30 @@ int main() {
 	// cout << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
 	// cout << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
-	cout << endl << " =============   SWAP  ================  " << endl;
-	ft::vector<int> v0;
-	for(int i = 0; i < 15; i++) {
-		v0.push_back(100 + i);
-	}
-	v.swap(v01);
-	v1.swap(v0);
-	for(int i = 0; i < 5; i++) {
-		cout << v[i] << " " << v1[i] << endl;
-	}
-	cout << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	cout << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	// cout << endl << " =============   SWAP  ================  " << endl;
+	// ft::vector<int> v0;
+	// for(int i = 0; i < 15; i++) {
+	// 	v0.push_back(100 + i);
+	// }
+	// cout << "1: size/cap = " << v1.size() << " / " << v1.capacity() << ", arr = " ;
+	// for(int i = 0; i < v1.size(); i++) {
+	// 	cout << v1[i] << " ";
+	// }
+	// cout << endl << "2: size/cap = " << v0.size() << " / " << v0.capacity() << ", arr = " ;
+	// for(int i = 0; i < v0.size(); i++) {
+	// 	cout << v0[i] << " ";
+	// }
+	// v1.swap(v0);
+	// cout << endl << "after swap: " << endl;
+	// cout << "1: size/cap = " << v1.size() << " / " << v1.capacity() << ", arr = ";
+	// for(int i = 0; i < v1.size(); i++) {
+	// 	cout << v1[i] << " ";
+	// }
+	// cout << endl << "2: size/cap = " << v0.size() << " / " << v0.capacity() << ", arr = " ;
+	// for(int i = 0; i < v0.size(); i++) {
+	// 	cout << v0[i] << " ";
+	// }
+	// cout << endl;
 
 
 }
