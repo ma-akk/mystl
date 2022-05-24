@@ -124,7 +124,7 @@ namespace ft {
 
 		template < class InIt >
 		typename iterator_traits<InIt>::difference_type
-		distance_impl(InIt& first, InIt& last, std::input_iterator_tag) {
+		distance_impl(InIt& first, InIt& last, input_iterator_tag) {
 			cout << "impl common" << endl;
 			typename iterator_traits<InIt>::difference_type n;
 			InIt tmp = first;

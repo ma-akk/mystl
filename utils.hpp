@@ -35,8 +35,8 @@ namespace ft {
 		typedef T	type;
 	};
 
-	// template< class T >
-	// struct is_integral;
+	template <typename T>
+	struct is_integral;
 	
 	//testing file is in Standart p.65
 	template <class T1, class T2 >

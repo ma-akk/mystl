@@ -9,7 +9,7 @@
 #include <limits>
 #include "iterators/iterator.hpp"
 #include "iterators/ran_it.hpp"
-#include "iterators/reverse_iterator.hpp"
+#include "iterators/reverse_it.hpp"
 
 using std::allocator;
 using std::cout;
@@ -30,8 +30,8 @@ namespace ft {
 		typedef const T&							const_reference;
 	 	typedef ran_it< T >							iterator;
 		typedef ran_it< const T >					const_iterator;
-		typedef reverse_iterator< iterator >		reverse_iterator;
-		// typedef reverse_iterator< const iterator >	const_reverse_iterator;
+		typedef reverse_it< iterator >		reverse_iterator;
+		typedef reverse_it< const iterator >	const_reverse_iterator;
 		
 		/*constructors*/
 		vector() : _size(0), _cap(0) {
@@ -62,6 +62,7 @@ namespace ft {
 			_last = _array + count;
   		}
 
+		//~DELETE
   		// explicit vector(size_t count) : _size(count), _cap(count) {
 		// 	_array = _alloc.allocate(count);
 		// 	for(int i = 0; i < count; i++) {
@@ -71,8 +72,12 @@ namespace ft {
 		// 	_last = _array + count;
 		// }
 
-  		// template< class InputIt >
-  		// vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
+		//NOT TESTED
+  		template< class InputIt >
+  		vector(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+		  		:_alloc(alloc) {
+			this->assign(first, last);
+		}
 		
 		/*copy constructor*/
 		vector(const vector& value) {
@@ -127,8 +132,9 @@ namespace ft {
 					_alloc.destroy(_array + i);
 				}
 			} else if (count > _cap) {
-					this->reserve(count);
+				this->reserve(count);
 			}
+
 			for(int i = 0; i < count; i++) {
 				_alloc.destroy(_array + i);
 				_alloc.construct(_array + i, value);
@@ -429,17 +435,17 @@ namespace ft {
 			return reverse_iterator(_last - 1); //?????? what iterator i can give??
 		}
 
-		// const_reverse_iterator rbegin() const {
-		// 	return --_last;
-		// }
+		const_reverse_iterator rbegin() const {
+			return --_last;
+		}
 
 		reverse_iterator rend() {
 			return reverse_iterator(_first - 1);
 		}
 		
-		// const_reverse_iterator rend() const {
-		// 	return _first;
-		// }
+		const_reverse_iterator rend() const {
+			return _first;
+		}
 
 	 private:
 		T*			_array;
