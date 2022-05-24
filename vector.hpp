@@ -18,7 +18,7 @@ using std::endl;
 #define MAXSIZE std::numeric_limits<size_t>::max()
 
 namespace ft {
-	template <class T, class Alloc = std::allocator<T> >
+	template <class T, class Allocator = std::allocator<T> >
 	class vector {
 	 public:
 		typedef T									value_type;
@@ -42,7 +42,7 @@ namespace ft {
 			cout << "default construct "  << endl;
 		}
 
-  		explicit vector(const Alloc& alloc) : _alloc(alloc) {
+  		explicit vector(const Allocator& alloc) : _alloc(alloc) {
 			_size = 0;
 			_cap = 0;
 			_array = NULL;
@@ -52,7 +52,7 @@ namespace ft {
 
   		explicit vector( size_t count,
                 		const T& value = T(),
-                		const Alloc& alloc = Alloc())
+                		const Allocator& alloc = Allocator())
                 		: _size(count), _cap(count), _alloc(alloc) {
 			_array = _alloc.allocate(count);
 			for(int i = 0; i < count; i++) {
@@ -74,7 +74,7 @@ namespace ft {
 
 		//NOT TESTED
   		template< class InputIt >
-  		vector(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+  		vector(InputIt first, InputIt last, const Allocator& alloc = Allocator())
 		  		:_alloc(alloc) {
 			this->assign(first, last);
 		}
@@ -122,7 +122,7 @@ namespace ft {
 			return *this;
 		}
 		
-		Alloc get_allocator() const {
+		Allocator get_allocator() const {
 			return _alloc;
 		}
 
@@ -451,7 +451,7 @@ namespace ft {
 		T*			_array;
 		size_t		_size;
 		size_t		_cap;
-		Alloc		_alloc;
+		Allocator		_alloc;
 
 		/*_first указывает на первый элемент вектора*/
 		T*			_first;
@@ -462,9 +462,9 @@ namespace ft {
 	};
 
 	//non-member function
-	template< class T, class Alloc >
-	bool operator==( const vector<T,Alloc>& lhs,
-					const vector<T,Alloc>& rhs ) {
+	template< class T, class Allocator >
+	bool operator==( const vector<T,Allocator>& lhs,
+					const vector<T,Allocator>& rhs ) {
 		if (lhs.size() == rhs.size()) {
 			for(int i = 0; i < rhs.size(); i++) {
 				if(lhs[i] != rhs[i])
@@ -475,33 +475,33 @@ namespace ft {
 		return false;
 	}
 
-	template< class T, class Alloc >
-	bool operator!=(const vector<T,Alloc>& lhs,
-					const vector<T,Alloc>& rhs) {
+	template< class T, class Allocator >
+	bool operator!=(const vector<T,Allocator>& lhs,
+					const vector<T,Allocator>& rhs) {
 		return !(lhs == rhs);
 	}
 
-	// template< class T, class Alloc >
-	// bool operator<( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs ) {
+	// template< class T, class Allocator >
+	// bool operator<( const vector<T,Allocator>& lhs,
+	// 				const vector<T,Allocator>& rhs ) {
 		
 	// }
 
-	// template< class T, class Alloc >
-	// bool operator<=( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
+	// template< class T, class Allocator >
+	// bool operator<=( const vector<T,Allocator>& lhs,
+	// 				const vector<T,Allocator>& rhs );
 
-	// template< class T, class Alloc >
-	// bool operator>( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
+	// template< class T, class Allocator >
+	// bool operator>( const vector<T,Allocator>& lhs,
+	// 				const vector<T,Allocator>& rhs );
 
-	// template< class T, class Alloc >
-	// bool operator>=( const vector<T,Alloc>& lhs,
-	// 				const vector<T,Alloc>& rhs );
+	// template< class T, class Allocator >
+	// bool operator>=( const vector<T,Allocator>& lhs,
+	// 				const vector<T,Allocator>& rhs );
 
-	// template< class T, class Alloc >
-	// void swap( std::vector<T,Alloc>& lhs,
-    //        std::vector<T,Alloc>& rhs );
+	// template< class T, class Allocator >
+	// void swap( std::vector<T,Allocator>& lhs,
+    //        std::vector<T,Allocator>& rhs );
 }
 
 #endif	//VECTOR_HPP
