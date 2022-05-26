@@ -3,6 +3,7 @@
 
 #include "iterators/iterator.hpp"
 #include "utils.hpp"
+#include "Node.hpp"
 
 namespace ft {
 	
@@ -136,6 +137,19 @@ namespace ft {
 		// 		this->clear();
 		// 	}
 		// }
+
+		// size_type count( const Key& key ) const;
+		// iterator find( const Key& key );
+		// const_iterator find( const Key& key ) const;
+		// pair<iterator,iterator> equal_range( const Key& key );
+		// pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
+		// iterator lower_bound( const Key& key );
+		// const_iterator lower_bound( const Key& key ) const;
+		// iterator upper_bound( const Key& key );
+		// const_iterator upper_bound( const Key& key ) const;
+		// key_compare key_comp() const;
+		// map::value_compare value_comp() const;
+
 
 
 
