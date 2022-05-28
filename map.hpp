@@ -155,6 +155,8 @@ namespace ft {
 
 
 	 private:
+	 	Node *_root;
+		Node *_nil_node;
 		Key _key;
 		T	_val;
 		size_t _size;
