@@ -18,17 +18,22 @@ namespace ft {
 		typedef size_t							size_type;
 		typedef std::ptrdiff_t					difference_type;
 		typedef Compare							key_compare;
-		typedef T*								pointer;
-		typedef T&								reference;
-	 	typedef const T*						const_pointer;
-		typedef const T&						const_reference;
+		typedef Allocator::pointer				pointer;
+		typedef value_type&						reference;
+	 	typedef const Allocator::pointer		const_pointer;
+		typedef const value_type&				const_reference;
 	 	typedef ran_it< T >						iterator;
 		typedef ran_it< const T >				const_iterator;
 		typedef reverse_it< iterator >			reverse_iterator;
 		typedef reverse_it< const iterator >	const_reverse_iterator;
 		
 		/*constructors*/
-		// map();
+		map() {
+			//здесь можно создавать nil-ноду и приравнивать ее к root
+			_size = 0;
+			_root = NULL;
+			_nil = NULL;
+		}
 
 		// explicit map( const Compare& comp,
 		// 			const Allocator& alloc = Allocator() );
@@ -77,10 +82,10 @@ namespace ft {
 		// 	return _size;
 		// }
 
-		// size_t max_size() const {
-		// 	size_t res = MAXSIZE / (size_t)sizeof(T);
-		// 	return res;
-		// }
+		size_t max_size() const {
+			size_t res = MAXSIZE / (size_t)sizeof(Node);
+			return res;
+		}
 
 		/*modify*/
 		// void clear() {
@@ -151,12 +156,73 @@ namespace ft {
 		// map::value_compare value_comp() const;
 
 
+		//!!!!обращение к ключу в таком виде возможно, заменить на итераторы!!!
+		// С++ - псевдокод
+		void rb_insert_node(Node *node) {
+			Node <const Key, T> *tmp1 = _root;
+			Node <const Key, T> *tmp2 = _nil
+			while (tmp1 != _nil) {
+				tmp2 = tmp1;
+				if (node->key < tmp1->key)
+					tmp1 = tmp1->_left;
+				else
+					tmp1 = tmp1->_rigth;
+			}
+			node->_parent = tmp2;
+			if (tmp2 == _nil)
+				_root = node;
+			else if (node->key < tmp2->key)
+				tmp2->_left = node;
+			else
+				tmp2->_rigth = node;
+			node->_left = _nil;
+			node->_rigth = _nil;
+			node->_color = RED;
+		}
 
+		//проверить, как работает else {}
+		//возможно стоит перенести все в класс Node
+		void rb_insert_balance(Node *node) {
+			Node <const Key, T> *tmp = _root;
+			while (node->_parent->_color == RED) {
+				if (node->_parent == node->_parent->_parent->left) {
+					tmp = node->_parent->_parent->rigth;
+					if (tmp->_color == RED) {
+						node->_parent->_color = BLACK;
+						tmp->_color = BLACK;
+						node->_parent->_parent->_color = RED;
+						node = node->_parent->_parent;
+					} else if (node == node->_parent->_rigth) {
+						node = node->_parent;
+						node->left_rotate(_root, _nil);
+					}
+					node->_parent->_color = BLACK;
+					node->_parent->_parent->_color = RED;
+					node->_parent->_parent->rigth_rotate(_root, _nil);
+				}
+				else {
+					tmp = node->_parent->_parent->left;
+					if (tmp->_color == RED) {
+						node->_parent->_color = BLACK;
+						tmp->_color = BLACK;
+						node->_parent->_parent->_color = RED;
+						node = node->_parent->_parent;
+					} else if (node == node->_parent->_left) {
+						node = node->_parent;
+						node->rigth_rotate(_root, _nil);
+					}
+					node->_parent->_color = BLACK;
+					node->_parent->_parent->_color = RED;
+					node->_parent->_parent->left_rotate(_root, _nil);
+				}
+				_root->_color = BLACK;
+			}
+		}
 
 
 	 private:
-	 	Node *_root;
-		Node *_nil_node;
+	 	Node <const Key, T> *_root;
+		Node <const Key, T> *_nil;
 		Key _key;
 		T	_val;
 		size_t _size;

@@ -20,6 +20,11 @@ namespace ft {
 	template < class Key, class T >
 	class Node {
 	 public:
+		bool _color;
+		Node *_parent;
+		Node *_left;
+		Node *_rigth;
+		pair<const Key, T > _pair;
 
 		/* using for only null-node */
 	 	Node() {
@@ -79,7 +84,6 @@ namespace ft {
 			return 0;
 		}
 
-		//rotate without color
 		void left_rotate(Node *root, Node *nil) {
 			Node *child = this->_rigth;
 			this->_rigth = child->_left;
@@ -95,7 +99,6 @@ namespace ft {
 			this->_parent = child;
 		}
 
-		//rotate without color
 		void right_rotate(Node *root, Node *nil) {
 			Node *child = this->_left;
 			this->_left = child->_rigth;
@@ -123,15 +126,8 @@ namespace ft {
 			if (_left->_color == RED && _left->_left->_color == RED)
 				right_rotate();
 			if (_left->_color == RED && _rigth->_color == RED)
-				swap();
+				this->swap();
 		}
-
-	 private:
-		bool _color;
-		Node *_parent;
-		Node *_left;
-		Node *_rigth;
-		pair<const Key, T > _pair;
 	};
 }
 
