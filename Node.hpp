@@ -20,51 +20,51 @@ namespace ft {
 	template < class Key, class T >
 	class Node {
 	 public:
-		bool _color;
-		Node *_parent;
-		Node *_left;
-		Node *_rigth;
-		pair<const Key, T > _pair;
+		bool color;
+		Node *parent;
+		Node *left;
+		Node *rigth;
+		pair<const Key, T > pair;
 
 		/* using for only null-node */
 	 	Node() {
-			 _parent = NULL;
-			 _left = NULL;
-			 _rigth =NULL;
-			 _color = BLACK;
+			 parent = NULL;
+			 left = NULL;
+			 rigth =NULL;
+			 color = BLACK;
 		}
 
 		Node(Key key, T value, Node *parent, Node *leaf) 
-			: _parent(parent), _left(leaf), _rigth(leaf) {
-			_pair = make_pair<const Key, T>(const_cast<Key>(key), value);
-			_color = RED;
+			: parent(parent), left(leaf), rigth(leaf) {
+			pair = make_pair<const Key, T>(const_cast<Key>(key), value);
+			color = RED;
 		}
 
 		Node(Key key, T value, Node *parent, Node *left, Node *right) 
-			: _parent(parent), _left(left), _rigth(right) {
-			_pair = make_pair<const Key, T>(const_cast<Key>(key), value);
-			_color = RED;
+			: parent(parent), left(left), rigth(right) {
+			pair = make_pair<const Key, T>(const_cast<Key>(key), value);
+			color = RED;
 		}
 
 		Node(const Node &node) {
 			cout << "copy constructor " << endl;
 			if (this != &node) {
-				_color = node._color;
-				_parent = node._parent;
-				_left = node._left;
-				_rigth = node._rigth;
-				_pair = pair(node._pair);
+				color = node.color;
+				parent = node.parent;
+				left = node.left;
+				rigth = node.rigth;
+				pair = pair(node.pair);
 			}
 		}
 
 		Node &operator=(const Node &node) {
 			cout << "operator = " << endl;
 			if (this != &node) {
-				_color = node._color;
-				_parent = node._parent;
-				_left = node._left;
-				_rigth = node._rigth;
-				_pair = pair(node._pair);
+				color = node.color;
+				parent = node.parent;
+				left = node.left;
+				rigth = node.rigth;
+				pair = pair(node.pair);
 			}
 			return *this;
 		}
@@ -73,61 +73,61 @@ namespace ft {
 
 
 		bool is_root() const {
-			if (this->_parent->parent == NULL)
+			if (this->parent->parent == NULL)
 				return 1;
 			return 0;
 		}
 
 		bool is_leaf() const {
-			if (this->_parent == NULL)
+			if (this->parent == NULL)
 				return 1;
 			return 0;
 		}
 
 		void left_rotate(Node *root, Node *nil) {
-			Node *child = this->_rigth;
-			this->_rigth = child->_left;
-			if(child->_left != nil)
-				child->_left->_parent = this;
-			if(this->_parent == nil)
+			Node *child = this->rigth;
+			this->rigth = child->left;
+			if(child->left != nil)
+				child->left->parent = this;
+			if(this->parent == nil)
 				root = child;
-			else if (this == this->_parent->_left)
-				this->_parent->_left = child;
+			else if (this == this->parent->left)
+				this->parent->left = child;
 			else
-				this->_parent->_rigth = child;
-			child->_left = this;
-			this->_parent = child;
+				this->parent->rigth = child;
+			child->left = this;
+			this->parent = child;
 		}
 
 		void right_rotate(Node *root, Node *nil) {
-			Node *child = this->_left;
-			this->_left = child->_rigth;
-			if(child->_rigth != nil)
-				child->_rigth->_parent = this;
-			if(this->_parent == nil)
+			Node *child = this->left;
+			this->left = child->rigth;
+			if(child->rigth != nil)
+				child->rigth->parent = this;
+			if(this->parent == nil)
 				root = child;
-			else if (this == this->_parent->_left)
-				this->_parent->_left = child;
+			else if (this == this->parent->left)
+				this->parent->left = child;
 			else
-				this->_parent->_rigth = child;
-			child->_rigth = this;
-			this->_parent = child;
+				this->parent->rigth = child;
+			child->rigth = this;
+			this->parent = child;
 		}
 
-		void swap() {
-			this->_left->_color = BLACK;
-			this->_rigth->_color = BLACK;
-			this->_color = this->is_root ? BLACK : RED;
-		}
+		// void swap() {
+		// 	this->left->color = BLACK;
+		// 	this->rigth->color = BLACK;
+		// 	this->color = this->is_root ? BLACK : RED;
+		// }
 
-		void balance(Node &node) {
-			if (_rigth->_color == RED && _left->_color == BLACK)
-				left_rotate();
-			if (_left->_color == RED && _left->_left->_color == RED)
-				right_rotate();
-			if (_left->_color == RED && _rigth->_color == RED)
-				this->swap();
-		}
+		// void balance(Node &node) {
+		// 	if (rigth->color == RED && left->color == BLACK)
+		// 		left_rotate();
+		// 	if (left->color == RED && left->left->color == RED)
+		// 		right_rotate();
+		// 	if (left->color == RED && rigth->color == RED)
+		// 		this->swap();
+		// }
 	};
 }
 
