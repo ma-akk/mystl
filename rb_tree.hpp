@@ -1,5 +1,5 @@
-#ifndef NODE_HPP
-#define NODE_HPP
+#ifndef RB_TREE_HPP
+#define RB_TREE_HPP
 
 #include <iostream>
 #include <string>
@@ -7,6 +7,7 @@
 #include <cmath>
 #include <limits>
 #include "utils.hpp"
+#include "Node.hpp"
 
 #define RED 1
 #define BLACK 0
@@ -16,40 +17,38 @@ using std::endl;
 
 namespace ft {
 	template < typename value_type >
-	struct Node {
+	class rb_tree {
 		bool color;
-		Node *parent;
-		Node *left;
-		Node *rigth;
-		value_type value;
+		Node <value_type> *_root;
+		Node <value_type> *_nil;
 
-	 	Node(value_type value = value_type()) : parent(NULL), left(NULL), rigth(NULL), color = BLACK { }
+	 	rb_tree(value_type value = value_type()) : parent(NULL), left(NULL), rigth(NULL), color = BLACK { }
 
-		Node(const Node &node) {
+		rb_tree(const rb_tree &rb_tree) {
 			cout << "copy constructor " << endl;
-			if (this != &node) {
-				color = node.color;
-				parent = node.parent;
-				left = node.left;
-				rigth = node.rigth;
-				value = node.value;
+			if (this != &rb_tree) {
+				color = rb_tree.color;
+				parent = rb_tree.parent;
+				left = rb_tree.left;
+				rigth = rb_tree.rigth;
+				value = rb_tree.value;
 			}
 		}
 
-		Node &operator=(const Node &node) {
+		rb_tree &operator=(const rb_tree &rb_tree) {
 			cout << "operator = " << endl;
-			if (this != &node) {
-				color = node.color;
-				parent = node.parent;
-				left = node.left;
-				rigth = node.rigth;
-				value = node.value;
+			if (this != &rb_tree) {
+				color = rb_tree.color;
+				parent = rb_tree.parent;
+				left = rb_tree.left;
+				rigth = rb_tree.rigth;
+				value = rb_tree.value;
 			}
 			return *this;
 		}
 
 		//why is virtual destructor??
-		virtual ~Node();
+		virtual ~rb_tree();
 
 		bool is_root() const {
 			if (this->parent->parent == NULL)
@@ -63,8 +62,8 @@ namespace ft {
 			return 0;
 		}
 
-		void left_rotate(Node *root, Node *nil) {
-			Node *child = this->rigth;
+		void left_rotate(rb_tree *root, rb_tree *nil) {
+			rb_tree *child = this->rigth;
 			this->rigth = child->left;
 			if(child->left != nil)
 				child->left->parent = this;
@@ -78,8 +77,8 @@ namespace ft {
 			this->parent = child;
 		}
 
-		void right_rotate(Node *root, Node *nil) {
-			Node *child = this->left;
+		void right_rotate(rb_tree *root, rb_tree *nil) {
+			rb_tree *child = this->left;
 			this->left = child->rigth;
 			if(child->rigth != nil)
 				child->rigth->parent = this;
@@ -99,7 +98,7 @@ namespace ft {
 		// 	this->color = this->is_root ? BLACK : RED;
 		// }
 
-		// void balance(Node &Node) {
+		// void balance(rb_tree &rb_tree) {
 		// 	if (rigth->color == RED && left->color == BLACK)
 		// 		left_rotate();
 		// 	if (left->color == RED && left->left->color == RED)
@@ -111,4 +110,4 @@ namespace ft {
 }
 
 
-#endif	//NODE_HPP
+#endif	//RB_TREE_HPP
