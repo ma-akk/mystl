@@ -1,12 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include "vector.hpp"
-
-using std::allocator;
-using std::cout;
-using std::endl;
-
 namespace ft {
 	template< class InputIt1, class InputIt2 >
 	bool lexicographical_compare( InputIt1 first1, InputIt1 last1,

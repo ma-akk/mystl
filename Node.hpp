@@ -63,50 +63,6 @@ namespace ft {
 			return 0;
 		}
 
-		void left_rotate(Node *root, Node *nil) {
-			Node *child = this->rigth;
-			this->rigth = child->left;
-			if(child->left != nil)
-				child->left->parent = this;
-			if(this->parent == nil)
-				root = child;
-			else if (this == this->parent->left)
-				this->parent->left = child;
-			else
-				this->parent->rigth = child;
-			child->left = this;
-			this->parent = child;
-		}
-
-		void right_rotate(Node *root, Node *nil) {
-			Node *child = this->left;
-			this->left = child->rigth;
-			if(child->rigth != nil)
-				child->rigth->parent = this;
-			if(this->parent == nil)
-				root = child;
-			else if (this == this->parent->left)
-				this->parent->left = child;
-			else
-				this->parent->rigth = child;
-			child->rigth = this;
-			this->parent = child;
-		}
-
-		// void swap() {
-		// 	this->left->color = BLACK;
-		// 	this->rigth->color = BLACK;
-		// 	this->color = this->is_root ? BLACK : RED;
-		// }
-
-		// void balance(Node &Node) {
-		// 	if (rigth->color == RED && left->color == BLACK)
-		// 		left_rotate();
-		// 	if (left->color == RED && left->left->color == RED)
-		// 		right_rotate();
-		// 	if (left->color == RED && rigth->color == RED)
-		// 		this->swap();
-		// }
 	};
 }
 
