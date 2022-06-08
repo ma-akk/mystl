@@ -2,7 +2,6 @@
 #define ITERATOR_HPP
 
 #include <iostream>
-#include <string>
 
 using std::cout;
 using std::endl;
@@ -10,34 +9,9 @@ using std::endl;
 
 namespace ft {
 
-	class input_iterator_tag { };
+	template<class T> struct remove_const { typedef T type; };
 
-	class output_iterator_tag { };
-
-	class forward_iterator_tag : public input_iterator_tag { };
-
-	class bidirectional_iterator_tag : public forward_iterator_tag { };
-
-	class random_access_iterator_tag : public bidirectional_iterator_tag { };
-
-	template <	class Category,
-				class T,
-				class Distance = std::ptrdiff_t,
-				class Pointer = T*,
-				class Reference = T& > class iterator {
-		
-	 public:
-		typedef Category	iterator_category;
-		typedef T			value_type;
-		typedef Distance	difference_type;
-		typedef Pointer		pointer;
-		typedef Reference	reference;
-	};
-
-	//за ненадобностью удалить
-	template < class T, class Dist, class Ptr, class Ref >
-	class OutIt : public iterator< output_iterator_tag,
-								void, void, void, void > { };
+	template<class T> struct remove_const <const T> { typedef T type; };
 
 	template<class Iter>
 	class iterator_traits {
@@ -52,63 +26,27 @@ namespace ft {
 	template<class T>
 	class iterator_traits<T*> {
 	 public:
-		typedef random_access_iterator_tag	iterator_category;
-		typedef T							value_type;
-		typedef std::ptrdiff_t				difference_type;
-		typedef T*							pointer;
-		typedef T&							reference;
+		typedef std::random_access_iterator_tag	iterator_category;
+		typedef T								value_type;
+		typedef std::ptrdiff_t					difference_type;
+		typedef T*								pointer;
+		typedef T&								reference;
 	};
 
 	template<class T>
 	class iterator_traits<const T*> {
 	 public:
-		typedef random_access_iterator_tag	iterator_category;
-		typedef const T						value_type;
-		typedef std::ptrdiff_t				difference_type;
-		typedef const T*					pointer;
-		typedef const T&					reference;
-	};
-
-	//шаблонные функции, которые могут быть использованы вместо полей класса iterator_traits
-	//iterator_traits<It>::iterator_category
-	template < class Cat, class T, class Dist >  
-	Cat Iter_cat(const iterator<Cat, T, Dist>& ) {
-		Cat x;
-		return x;
-	};
-
-	template < class T >
-	random_access_iterator_tag Iter_cat(const T* ) {
-		random_access_iterator_tag x;
-		return x;
-	};
-
-	//iterator_traits<It>::value_type
-	template < class Cat, class T, class Dist, class Ptr, class Ref >
-	T* Val_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
-		return 0;
-	};
-
-	template < class T >
-	T* Val_type(const T* ) {
-		return 0;
-	};
-
-	//iterator_traits<It>::difference_type
-	template < class Cat, class T, class Dist, class Ptr, class Ref >
-	Dist* Dist_type(iterator <Cat, T, Dist, Ptr, Ref> ) {
-		return 0;
-	};
-
-	template < class T >
-	ptrdiff_t* Dist_type(const T* ) {
-		return 0;
+		typedef std::random_access_iterator_tag	iterator_category;
+		typedef const T							value_type;
+		typedef std::ptrdiff_t					difference_type;
+		typedef const T*						pointer;
+		typedef const T&						reference;
 	};
 
 	//inline namespace for encapsulation func *_imlp
 	namespace {
 		template < class InIt >
-		void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, input_iterator_tag) { //РАБОТАЕТ ТОЛЬКО С STD!!!!!!!!!!
+		void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, std::input_iterator_tag) { //РАБОТАЕТ ТОЛЬКО С STD!!!!!!!!!!
 			cout << "it is InIt" << endl;
 			for(int i = 0; i < n; i++) {
 				++iter;
@@ -116,7 +54,7 @@ namespace ft {
 		}
 
 		// template < class InIt >
-		// void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, ft::random_access_iterator_tag) {
+		// void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n, std::random_access_iterator_tag) {
 		// 	cout << "it is RanIt" << endl;
 		// 	iter += n;
 		// }
@@ -124,7 +62,7 @@ namespace ft {
 
 		template < class InIt >
 		typename iterator_traits<InIt>::difference_type
-		distance_impl(InIt& first, InIt& last, input_iterator_tag) {
+		distance_impl(InIt& first, InIt& last, std::input_iterator_tag) {
 			cout << "impl common" << endl;
 			typename iterator_traits<InIt>::difference_type n;
 			InIt tmp = first;
@@ -136,7 +74,7 @@ namespace ft {
 
 		// template < class InIt >
 		// typename iterator_traits<InIt>::difference_type
-		// distance_impl(InIt& first, InIt& last, random_access_iterator_tag) {
+		// distance_impl(InIt& first, InIt& last, std::random_access_iterator_tag) {
 		// 	cout << "impl ran_it" << endl;
 		// 	return last - first;
 		// }
@@ -144,7 +82,7 @@ namespace ft {
 	
 	template < class InIt >
 	void advance(InIt& iter, typename iterator_traits<InIt>::difference_type n) {
-		advance_impl(iter, n, typename std::iterator_traits <InIt>::iterator_category());
+		advance_impl(iter, n, typename ft::iterator_traits <InIt>::iterator_category());
 	}
 
 	template < class InIt >
@@ -153,7 +91,6 @@ namespace ft {
 		return distance_impl(first, last, typename ft::iterator_traits<InIt>::iterator_category()); 
 	}
 
-	
 };
 
 #endif	//ITERATOR_HPP
