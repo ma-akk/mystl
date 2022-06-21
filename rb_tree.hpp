@@ -21,27 +21,65 @@ namespace ft {
 	 public:
 		typedef size_t							size_type;
 		typedef std::ptrdiff_t					difference_type;
-		typedef Compare							key_compare;
-		typedef Allocator::pointer				pointer;
-		typedef value_type&						reference;
-	 	typedef const Allocator::pointer		const_pointer;
-		typedef const value_type&				const_reference;
-	 	typedef ran_it< T >						iterator;
-		typedef ran_it< const T >				const_iterator;
+		typedef Compare							value_compare;
+		typedef Allocator						allocator_type;
+		typedef typename Allocator::rebind<Node<value_type> >::other	node_allocator;
+		typedef	typename node_allocator::pointer 			node_pointer;
+		typedef typename allocator_type::pointer				pointer;
+		typedef typename allocator_type::reference			reference;
+	 	typedef typename allocator_type::const_pointer		const_pointer;
+		typedef typename allocator_type::const_reference		const_reference;
+	 	typedef tree_it< value_type >			iterator;
+		typedef tree_it< const value_type >		const_iterator;
 		typedef reverse_it< iterator >			reverse_iterator;
-		typedef reverse_it< const iterator >	const_reverse_iterator;
+		typedef reverse_it< const_iterator >	const_reverse_iterator;
 		
+		void init_tree() {
+			_nil = _node_alloc.allocate(1);
+			_node_alloc.construct(_nil, Node<value_type> ());
+			_root = _node_alloc.allocate(1);
+			_node_alloc.construct(_root, Node<value_type> ());
+			_root->parent = _nil;
+			_root->left = _nil;
+			_root->right = _nil;
+			_root->color = BLACK;
+		}
 
-	 	rb_tree(value_type value = value_type()) : parent(NULL), left(NULL), rigth(NULL), color = BLACK { }
+		void clear_tree() {
+			node_pointer
+			if(_ != NULL) {
+				for(int i = 0; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+				_alloc.deallocate(_array, _cap);
+			}
+		}
+		
+		/* consructors */
+		rb_tree() : _size(0) {
+			init_tree();
+		}
 
-		rb_tree(const rb_tree &rb_tree) {
+		explicit rb_tree( const Compare& comp, const Allocator& alloc = Allocator() ) :
+						_node_alloc(alloc), _compare(comp) {
+			init_tree();
+		}
+
+		// template< class InputIt >
+		// rb_tree( InputIt first, InputIt last, const Compare& comp = Compare(),
+		// 		const Allocator& alloc = Allocator() ) : _node_alloc(alloc), _compare(comp)	{
+			
+		// }
+
+		rb_tree(const rb_tree &value) {
 			cout << "copy constructor " << endl;
-			if (this != &rb_tree) {
-				color = rb_tree.color;
-				parent = rb_tree.parent;
-				left = rb_tree.left;
-				rigth = rb_tree.rigth;
-				value = rb_tree.value;
+			if (this != &value) {
+				_root = value._root;
+				_nil = value._nil;
+				_value_alloc = value._value_alloc;
+				_node_alloc = value._node_alloc;
+				_compare = value._compare;
+				_size = value._size;
 			}
 		}
 
@@ -59,18 +97,6 @@ namespace ft {
 
 		//why is virtual destructor??
 		virtual ~rb_tree();
-
-		bool is_root() const {
-			if (this->parent->parent == NULL)
-				return 1;
-			return 0;
-		}
-
-		bool is_leaf() const {
-			if (this->parent == NULL)
-				return 1;
-			return 0;
-		}
 
 		void left_rotate(rb_tree *root, rb_tree *nil) {
 			rb_tree *child = this->rigth;
@@ -101,21 +127,6 @@ namespace ft {
 			child->rigth = this;
 			this->parent = child;
 		}
-
-		// void swap() {
-		// 	this->left->color = BLACK;
-		// 	this->rigth->color = BLACK;
-		// 	this->color = this->is_root ? BLACK : RED;
-		// }
-
-		// void balance(rb_tree &rb_tree) {
-		// 	if (rigth->color == RED && left->color == BLACK)
-		// 		left_rotate();
-		// 	if (left->color == RED && left->left->color == RED)
-		// 		right_rotate();
-		// 	if (left->color == RED && rigth->color == RED)
-		// 		this->swap();
-		// }
 
 		//!!!!обращение к ключу в таком виде возможно, заменить на итераторы!!!
 		// С++ - псевдокод
@@ -290,8 +301,13 @@ namespace ft {
 		}
 
 	 private:
-		Node <value_type> *_root;
-		Node <value_type> *_nil;
+		node_pointer	_root;
+		node_pointer	_nil;
+		allocator_type	_value_alloc;
+		node_allocator	_node_alloc;
+		value_compare 	_compare;
+		size_type		_size;
+		node_pointer	_tree;
 	};
 }
 

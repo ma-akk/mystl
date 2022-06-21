@@ -242,7 +242,13 @@ namespace ft {
 		}
 
 		T* data() {
-			return _array;
+			return _arrcout << "destructor. size = " << this->size() << endl;
+			if(_array != NULL) {
+				for(int i = 0; i < _size; i++) {
+					_alloc.destroy(_array + i);
+				}
+				_alloc.deallocate(_array, _cap);
+			}ay;
 		}
 
 		const T* data() const {

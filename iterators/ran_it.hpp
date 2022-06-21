@@ -10,11 +10,11 @@ class iterator_traits;
 namespace ft {
 
 	template < class T >
-	class ran_it : public std::iterator<random_access_iterator_tag, T> {
+	class ran_it : public ft::iterator_traits<T*> {
 	 public:
-	 	typedef typename std::iterator<random_access_iterator_tag, T>::iterator_category	iterator_category ;
-		typedef typename std::iterator<random_access_iterator_tag, T>::value_type		value_type;
-		typedef typename std::iterator<random_access_iterator_tag, T>::difference_type	difference_type;
+	 	typedef typename iterator_traits<T*>::iterator_category	iterator_category ;
+		typedef typename iterator_traits<T*>::value_type		value_type;
+		typedef typename iterator_traits<T*>::difference_type	difference_type;
 		typedef T*		pointer;
 		typedef T&		reference;
 
@@ -35,21 +35,15 @@ namespace ft {
 			return *this;
 		}
 
-		T* get_pointer() const {
+		pointer get_pointer() const {
 			return this->_element;
 		}
 
-		T& operator*() const {
-			return *_element;
-		}
+		reference operator*() const { return *_element; }
 
-		T* operator->() const {
-			return &(this->operator*()); //(&**this);
-		}
+		pointer operator->() const { return &(this->operator*()); }
 
-		T& operator[](ptrdiff_t n) const {
-			return *(*this + n);
-		}
+		reference operator[](ptrdiff_t n) const { return *(*this + n); }
 
 		ran_it& operator++() {
 			++_element;
@@ -72,30 +66,28 @@ namespace ft {
 			--_element;
 			return tmp;
 		}
-		ran_it operator+(ptrdiff_t n) const {
-			return ran_it(_element + n);
-		}
+		
+		ran_it operator+(ptrdiff_t n) const { return ran_it(_element + n); }
 
-		ran_it operator-(ptrdiff_t n) const {
-			return ran_it(_element - n);
-		}
+		ran_it operator-(ptrdiff_t n) const { return ran_it(_element - n); }
 
 		ran_it& operator+=(ptrdiff_t n) {
 			_element += n;
 			return *this;
 		}
+
 		ran_it& operator-=(ptrdiff_t n) {
 			_element -= n;
 			return *this;
 		}
 
 	 protected:
-		T* _element;
+		pointer _element;
 
 	};
 
 	template <typename T>
-    bool operator==(const ft::ran_it<T> lhs,
+    bool operator==(const ran_it<T> lhs,
               const ran_it<T> rhs) {
         return (lhs.get_pointer() == rhs.get_pointer());
     }
