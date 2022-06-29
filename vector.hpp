@@ -183,10 +183,10 @@ namespace ft {
 			if(n > _cap) {
 				cout << "reserve: n = " << n << " cap = " << _cap << endl;
 				T* newarr = _alloc.allocate(n);
-				for(int i = 0; i < _cap; i++) {
+				for(size_t i = 0; i < _cap; i++) {
 					_alloc.construct(newarr + i, _array[i]);
 				}
-				for(int i = 0; i < _cap; i++) {
+				for(size_t i = 0; i < _cap; i++) {
 					_alloc.destroy(_array + i);
 				}
 				if (_array != NULL) {
@@ -200,8 +200,7 @@ namespace ft {
 		}
 
 		size_t max_size() const {
-			size_t res = MAXSIZE / (size_t)sizeof(T);
-			return res;
+			return _alloc.max_size();
 		}
 		
 		/*access*/
@@ -415,8 +414,8 @@ namespace ft {
 		}
 
 		void pop_back() {
-			_alloc.destroy(_array + _size);
 			--_size;
+			_alloc.destroy(_array + _size);
 			_last = _array + _size;
 		}
 

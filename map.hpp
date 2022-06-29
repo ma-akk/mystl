@@ -3,7 +3,7 @@
 
 #include "iterators/iterator.hpp"
 #include "utils.hpp"
-#include "Node.hpp"
+#include "tree_it.hpp"
 
 namespace ft {
 	
@@ -18,14 +18,14 @@ namespace ft {
 		typedef size_t							size_type;
 		typedef std::ptrdiff_t					difference_type;
 		typedef Compare							key_compare;
-		typedef Allocator::pointer				pointer;
+		typedef typename Allocator::pointer		pointer;
 		typedef value_type&						reference;
-	 	typedef const Allocator::pointer		const_pointer;
+	 	typedef typename Allocator::const_pointer	const_pointer;
 		typedef const value_type&				const_reference;
-	 	typedef _it< T >						iterator;
-		typedef ran_it< const T >				const_iterator;
-		typedef reverse_it< iterator >			reverse_iterator;
-		typedef reverse_it< const iterator >	const_reverse_iterator;
+	 	typedef typename _it< T >						iterator;
+		typedef typename ran_it< const T >				const_iterator;
+		typedef typename reverse_it< iterator >			reverse_iterator;
+		typedef typename reverse_it< const iterator >	const_reverse_iterator;
 		
 		/*constructors*/
 		map() {
@@ -83,8 +83,7 @@ namespace ft {
 		// }
 
 		size_t max_size() const {
-			size_t res = MAXSIZE / (size_t)sizeof(Node);
-			return res;
+			return _alloc.max_size();
 		}
 
 		/*modify*/
@@ -165,12 +164,13 @@ namespace ft {
 
 
 	 private:
-	 	Node <const Key, T> *_root;
-		Node <const Key, T> *_nil;
+	 	// будет реализовано в дереве
+	 	// Node <const Key, T> *_root;
+		// Node <const Key, T> *_nil;
 		Key _key;
 		T	_val;
-		size_t _size;
-		Allocator _alloc;
+		// size_t _size;
+		// Allocator _alloc;
 
 
 	};

@@ -36,9 +36,9 @@ namespace ft {
 		
 		void init_tree() {
 			_nil = _node_alloc.allocate(1);
-			_node_alloc.construct(_nil, Node<value_type> ());
+			_node_alloc.construct(_nil, Node<value_type>());
 			_root = _node_alloc.allocate(1);
-			_node_alloc.construct(_root, Node<value_type> ());
+			_node_alloc.construct(_root, Node<value_type>());
 			_root->parent = _nil;
 			_root->left = _nil;
 			_root->right = _nil;
