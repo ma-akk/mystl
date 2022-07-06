@@ -9,7 +9,7 @@ namespace ft
 {
 
 	template <class ran_it>
-	class reverse_it : public iterator<
+    class reverse_it : public std::iterator<
 						   typename iterator_traits<ran_it>::iterator_category,
 						   typename iterator_traits<ran_it>::value_type,
 						   typename iterator_traits<ran_it>::difference_type,

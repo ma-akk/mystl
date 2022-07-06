@@ -2,8 +2,8 @@
 #include <vector>
 #include <map>
 #include <stack>
-#include "Node.hpp"
-#include "../rb_tree.hpp"
+#include "iterators/Node.hpp"
+#include "rb_tree.hpp"
 
 using std::cout;
 using std::endl;

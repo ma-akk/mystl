@@ -66,7 +66,7 @@ namespace ft {
 			else {
 				node_pointer tmp = _node->parent;
 				while (!tmp->is_leaf() && _node == tmp->left) {
-					_node = y;
+					_node = tmp;
 					tmp = tmp->parent;
 				}
 				_node = tmp;
@@ -98,7 +98,7 @@ namespace ft {
 			else {
 				node_pointer tmp = _node->parent;
 				while (!tmp->is_leaf() && _node == tmp->left) {
-					_node = y;
+					_node = tmp;
 					tmp = tmp->parent;
 				}
 				_node = tmp;

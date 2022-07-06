@@ -6,7 +6,7 @@
 #include <exception>
 #include <cmath>
 #include <limits>
-#include "utils.hpp"
+#include "../utils.hpp"
 
 #define RED 1
 #define BLACK 0
@@ -20,10 +20,10 @@ namespace ft {
 		bool color;
 		Node *parent;
 		Node *left;
-		Node *rigth;
+		Node *right;
 		value_type value;
 
-	 	Node(value_type value = value_type()) : parent(NULL), left(NULL), rigth(NULL), color = BLACK { }
+	 	Node(value_type value = value_type()) : parent(NULL), left(NULL), right(NULL), color(BLACK) { }
 
 		Node(const Node &node) {
 			cout << "copy constructor " << endl;
@@ -31,7 +31,7 @@ namespace ft {
 				color = node.color;
 				parent = node.parent;
 				left = node.left;
-				rigth = node.rigth;
+				right = node.right;
 				value = node.value;
 			}
 		}
@@ -42,14 +42,13 @@ namespace ft {
 				color = node.color;
 				parent = node.parent;
 				left = node.left;
-				rigth = node.rigth;
+				right = node.right;
 				value = node.value;
 			}
 			return *this;
 		}
 
-		//why is virtual destructor??
-		virtual ~Node();
+		virtual ~Node() { }
 
 		bool is_root() const {
 			if (this->parent->parent == NULL)
@@ -62,9 +61,7 @@ namespace ft {
 				return 1;
 			return 0;
 		}
-
 	};
 }
-
 
 #endif	//NODE_HPP

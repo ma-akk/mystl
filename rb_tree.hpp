@@ -7,7 +7,8 @@
 #include <cmath>
 #include <memory>
 #include "utils.hpp"
-#include "Node.hpp"
+#include "iterators/tree_it.hpp"
+#include "iterators/reverse_it.hpp"
 
 #define RED 1
 #define BLACK 0
@@ -23,16 +24,16 @@ namespace ft {
 		typedef std::ptrdiff_t					difference_type;
 		typedef Compare							value_compare;
 		typedef Allocator						allocator_type;
-		typedef typename Allocator::rebind<Node<value_type> >::other	node_allocator;
+		typedef typename Allocator::template rebind<Node<value_type>>::other	node_allocator;
 		typedef	typename node_allocator::pointer 			node_pointer;
 		typedef typename allocator_type::pointer				pointer;
 		typedef typename allocator_type::reference			reference;
 	 	typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::const_reference		const_reference;
-	 	typedef tree_it< value_type >			iterator;
-		typedef tree_it< const value_type >		const_iterator;
-		typedef reverse_it< iterator >			reverse_iterator;
-		typedef reverse_it< const_iterator >	const_reverse_iterator;
+	 	typedef tree_it<value_type>			iterator;
+		typedef tree_it<const value_type>		const_iterator;
+		typedef reverse_it<iterator>			reverse_iterator;
+		typedef reverse_it<const_iterator>	const_reverse_iterator;
 		
 		void init_tree() {
 			_nil = _node_alloc.allocate(1);
@@ -45,15 +46,15 @@ namespace ft {
 			_root->color = BLACK;
 		}
 
-		void clear_tree() {
-			node_pointer
-			if(_ != NULL) {
-				for(int i = 0; i < _size; i++) {
-					_alloc.destroy(_array + i);
-				}
-				_alloc.deallocate(_array, _cap);
-			}
-		}
+//		void clear_tree() {
+//			node_pointer
+//			if(_ != NULL) {
+//				for(int i = 0; i < _size; i++) {
+//					_alloc.destroy(_array + i);
+//				}
+//				_alloc.deallocate(_array, _cap);
+//			}
+//		}
 		
 		/* consructors */
 		rb_tree() : _size(0) {
@@ -83,14 +84,15 @@ namespace ft {
 			}
 		}
 
-		rb_tree &operator=(const rb_tree &rb_tree) {
+		rb_tree &operator=(const rb_tree &value) {
 			cout << "operator = " << endl;
-			if (this != &rb_tree) {
-				color = rb_tree.color;
-				parent = rb_tree.parent;
-				left = rb_tree.left;
-				rigth = rb_tree.rigth;
-				value = rb_tree.value;
+			if (this != &value) {
+                _root = value._root;
+                _nil = value._nil;
+                _value_alloc = value._value_alloc;
+                _node_alloc = value._node_alloc;
+                _compare = value._compare;
+                _size = value._size;
 			}
 			return *this;
 		}
@@ -98,41 +100,40 @@ namespace ft {
 		//why is virtual destructor??
 		virtual ~rb_tree();
 
-		void left_rotate(rb_tree *root, rb_tree *nil) {
-			rb_tree *child = this->rigth;
-			this->rigth = child->left;
-			if(child->left != nil)
-				child->left->parent = this;
-			if(this->parent == nil)
-				root = child;
-			else if (this == this->parent->left)
-				this->parent->left = child;
+		void left_rotate(node_pointer node) {
+			rb_tree *child = node->rigth;
+            node->rigth = child->left;
+			if(child->left != _nil)
+				child->left->parent = node;
+			if(node->parent == _nil)
+				_root = child;
+			else if (node == node->parent->left)
+                node->parent->left = child;
 			else
-				this->parent->rigth = child;
-			child->left = this;
-			this->parent = child;
+                node->parent->rigth = child;
+			child->left = node;
+            node->parent = child;
 		}
 
-		void right_rotate(rb_tree *root, rb_tree *nil) {
-			rb_tree *child = this->left;
-			this->left = child->rigth;
-			if(child->rigth != nil)
-				child->rigth->parent = this;
-			if(this->parent == nil)
-				root = child;
-			else if (this == this->parent->left)
-				this->parent->left = child;
+		void right_rotate(node_pointer node) {
+			rb_tree *child = node->left;
+            node->left = child->rigth;
+			if(child->rigth != _nil)
+				child->rigth->parent = node;
+			if(node->parent == _nil)
+				_root = child;
+			else if (node == node->parent->left)
+                node->parent->left = child;
 			else
-				this->parent->rigth = child;
-			child->rigth = this;
-			this->parent = child;
+                node->parent->rigth = child;
+			child->rigth = node;
+            node->parent = child;
 		}
 
-		//!!!!обращение к ключу в таком виде возможно, заменить на итераторы!!!
-		// С++ - псевдокод
-		void rb_insert_node(Node *node) {
-			Node <const Key, T> *tmp1 = _root;
-			Node <const Key, T> *tmp2 = _nil
+		//!!!!обращение к ключу в таком виде невозможно, заменить на итераторы!!!
+		void rb_insert_node(node_pointer node) {
+            node_pointer tmp1 = _root;
+            node_pointer tmp2 = _nil;
 			while (tmp1 != _nil) {
 				tmp2 = tmp1;
 				if (node->key < tmp1->key)
@@ -154,9 +155,8 @@ namespace ft {
 		}
 
 		//проверить, как работает else {}
-		//возможно стоит перенести все в класс Node
-		void rb_insert_balance(Node *node) {
-			Node <const Key, T> *tmp = _root;
+		void rb_insert_balance(node_pointer node) {
+            node_pointer tmp = _root;
 			while (node->parent->color == RED) {
 				if (node->parent == node->parent->parent->left) {
 					tmp = node->parent->parent->rigth;
@@ -168,11 +168,11 @@ namespace ft {
 					} else {
 						if (node == node->parent->rigth) {
 							node = node->parent;
-							node->left_rotate(_root, _nil);
+							left_rotate(node);
 						}
 						node->parent->color = BLACK;
 						node->parent->parent->color = RED;
-						node->parent->parent->rigth_rotate(_root, _nil);
+						right_rotate(node->parent->parent);
 					}
 				}
 				else {
@@ -185,25 +185,25 @@ namespace ft {
 					} else {
 						if (node == node->parent->left) {
 							node = node->parent;
-							node->rigth_rotate(_root, _nil);
+							right_rotate(node);
 						}
 						node->parent->color = BLACK;
 						node->parent->parent->color = RED;
-						node->parent->parent->left_rotate(_root, _nil);
+						left_rotate(node->parent->parent);
 					}
 				}
 			}
 			_root->color = BLACK;
 		}
 
-		Node *rb_min(Node *node) {
-			Node *tmp = node;
+        node_pointer rb_min(node_pointer node) {
+            node_pointer tmp = node;
 			while (tmp->left != _nil)
 				tmp = tmp->left;
 			return tmp;
 		}
 
-		void rb_transplant(Node *u, Node *v) {
+		void rb_transplant(node_pointer u, node_pointer v) {
 			if (u->parent == _nil)
 				_root = v;
 			else if(u == u->parent->left)
@@ -213,9 +213,9 @@ namespace ft {
 			v->parent = u->parent;
 		}
 
-		void rb_delete(Node *node) {
-			Node *x; 
-			Node *tmp = node;
+		void rb_delete(node_pointer node) {
+            node_pointer x;
+            node_pointer tmp = node;
 			bool tmp_orig_color = tmp->color;
 
 			if (node->left == _nil) {
@@ -244,15 +244,15 @@ namespace ft {
 				rb_delete_balance(x);
 		}
 
-		void rb_delete_balance(Node *node) {
-			Node *tmp;
+		void rb_delete_balance(node_pointer node) {
+            node_pointer tmp;
 			while (node != _root && node->color == BLACK) {
 				if (node == node->parent->left) {
 					tmp = node->parent->rigth;
 					if (tmp->color == RED) {
 						tmp->color = BLACK;
 						node->parent->color = RED;
-						node->parent->left_rotate(_root, _nil);
+						left_rotate(node->parent);
 						tmp = node->parent->rigth;
 					}
 					if (tmp->left->color == BLACK && tmp->rigth->color == BLACK) {
@@ -262,13 +262,13 @@ namespace ft {
 						if (tmp->rigth->color == BLACK) {
 							tmp->left->color = BLACK;
 							tmp->color = RED;
-							tmp->rigth_rotate(_root, _nil);
+							right_rotate(tmp);
 							tmp = node->parent->rigth;
 						}
 						tmp->color = node->parent->color;
 						node->parent->color = BLACK;
 						tmp->rigth->color = BLACK;
-						node->parent->left_rotate(_root, _nil);
+						left_rotate(node->parent);
 						node = _root;
 					}
 				} else {
@@ -276,7 +276,7 @@ namespace ft {
 					if (tmp->color == RED) {
 						tmp->color = BLACK;
 						node->parent->color = RED;
-						node->parent->rigth_rotate(_root, _nil);
+						right_rotate(node->parent);
 						tmp = node->parent->left;
 					}
 					if (tmp->rigth->color == BLACK && tmp->left->color == BLACK) {
@@ -286,13 +286,13 @@ namespace ft {
 						if (tmp->left->color == BLACK) {
 							tmp->rigth->color = BLACK;
 							tmp->color = RED;
-							tmp->left_rotate(_root, _nil);
+							left_rotate(tmp);
 							tmp = node->parent->left;
 						}
 						tmp->color = node->parent->color;
 						node->parent->color = BLACK;
 						tmp->left->color = BLACK;
-						node->parent->rigth_rotate(_root, _nil);
+						right_rotate(node->parent);
 						node = _root;
 					}
 				}
