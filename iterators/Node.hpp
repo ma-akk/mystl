@@ -62,6 +62,12 @@ namespace ft {
 			return 0;
 		}
 	};
+
+    //???????
+    template < typename value_type>
+    bool operator<( const Node<value_type>& lhs, const Node<value_type>& rhs ) {
+        return lhs.value < rhs.value;
+    };
 }
 
 #endif	//NODE_HPP

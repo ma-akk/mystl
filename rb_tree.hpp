@@ -46,14 +46,33 @@ namespace ft {
 			_root->color = BLACK;
 		}
 
+        //функция печати дерева от @lelle from slack
+//        void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
+//        {
+//            std::cout << prefix;
+//            std::cout << (isLeft ? “├──” : “└──” );
+//            if (nodeV == _nil){
+//                std::cout <<“\033[0;36m”<< “nil” << “\033[0m”<<std::endl;
+//                return ;
+//            }
+//            // print the value of the node
+//            if (nodeV->color == 0)
+//                std::cout <<“\033[0;36m”<< nodeV->key.first<<“\033[0m”<<std::endl;
+//            else
+//            std::cout <<“\033[0;31m”<< nodeV->key.first << “\033[0m”<<std::endl;
+//            printBT( prefix + (isLeft ? “│   ” : ”    “), nodeV->left, true);
+//            printBT( prefix + (isLeft ? “│   ” : ”    “), nodeV->right, false);
+//        }
+//        void printTree(){
+//            printBT(“”, _root, false);
+//        }
+
 //		void clear_tree() {
-//			node_pointer
-//			if(_ != NULL) {
-//				for(int i = 0; i < _size; i++) {
-//					_alloc.destroy(_array + i);
-//				}
-//				_alloc.deallocate(_array, _cap);
-//			}
+//            node_pointer tmp = _root;
+//            while(tmp != _nil) {
+//                _alloc.destroy(_array + i);
+//            }
+//            _alloc.deallocate(_array, _cap);
 //		}
 		
 		/* consructors */
@@ -62,7 +81,7 @@ namespace ft {
 		}
 
 		explicit rb_tree( const Compare& comp, const Allocator& alloc = Allocator() ) :
-						_node_alloc(alloc), _compare(comp) {
+						_node_alloc(alloc), _compare(comp), _size(0) {
 			init_tree();
 		}
 
@@ -98,7 +117,17 @@ namespace ft {
 		}
 
 		//why is virtual destructor??
-		virtual ~rb_tree();
+		virtual ~rb_tree() { }
+
+        //method for debug; remove after finish project
+        node_pointer get_root() const {
+            return _root;
+        }
+
+        //method for debug; remove after finish project
+        node_pointer get_leaf() const {
+            return _nil;
+        }
 
 		void left_rotate(node_pointer node) {
 			rb_tree *child = node->rigth;
@@ -136,7 +165,7 @@ namespace ft {
             node_pointer tmp2 = _nil;
 			while (tmp1 != _nil) {
 				tmp2 = tmp1;
-				if (node->key < tmp1->key)
+				if (_compare(node, tmp1)) //(node->key < tmp1->key)
 					tmp1 = tmp1->left;
 				else
 					tmp1 = tmp1->rigth;
@@ -144,7 +173,7 @@ namespace ft {
 			node->parent = tmp2;
 			if (tmp2 == _nil)
 				_root = node;
-			else if (node->key < tmp2->key)
+			else if (_compare(node, tmp2)) //(node->key < tmp2->key)
 				tmp2->left = node;
 			else
 				tmp2->rigth = node;
@@ -300,9 +329,10 @@ namespace ft {
 			node->color = BLACK;
 		}
 
+        node_pointer	_root;
+        node_pointer	_nil;
 	 private:
-		node_pointer	_root;
-		node_pointer	_nil;
+
 		allocator_type	_value_alloc;
 		node_allocator	_node_alloc;
 		value_compare 	_compare;

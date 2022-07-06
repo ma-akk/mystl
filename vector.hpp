@@ -103,6 +103,8 @@ namespace ft {
 			}
 		}
 
+
+
 		vector& operator=(const vector& value) {
 			cout << "operator = " << endl;
 			if (this != &value) {
@@ -241,13 +243,7 @@ namespace ft {
 		}
 
 		T* data() {
-			return _arrcout << "destructor. size = " << this->size() << endl;
-			if(_array != NULL) {
-				for(int i = 0; i < _size; i++) {
-					_alloc.destroy(_array + i);
-				}
-				_alloc.deallocate(_array, _cap);
-			}ay;
+			return _array;
 		}
 
 		const T* data() const {
