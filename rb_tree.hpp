@@ -130,8 +130,8 @@ namespace ft {
         }
 
 		void left_rotate(node_pointer node) {
-			rb_tree *child = node->rigth;
-            node->rigth = child->left;
+            node_pointer child = node->right;
+            node->right = child->left;
 			if(child->left != _nil)
 				child->left->parent = node;
 			if(node->parent == _nil)
@@ -139,46 +139,45 @@ namespace ft {
 			else if (node == node->parent->left)
                 node->parent->left = child;
 			else
-                node->parent->rigth = child;
+                node->parent->right = child;
 			child->left = node;
             node->parent = child;
 		}
 
 		void right_rotate(node_pointer node) {
-			rb_tree *child = node->left;
-            node->left = child->rigth;
-			if(child->rigth != _nil)
-				child->rigth->parent = node;
+            node_pointer child = node->left;
+            node->left = child->right;
+			if(child->right != _nil)
+				child->right->parent = node;
 			if(node->parent == _nil)
 				_root = child;
 			else if (node == node->parent->left)
                 node->parent->left = child;
 			else
-                node->parent->rigth = child;
-			child->rigth = node;
+                node->parent->right = child;
+			child->right = node;
             node->parent = child;
 		}
 
-		//!!!!обращение к ключу в таком виде невозможно, заменить на итераторы!!!
 		void rb_insert_node(node_pointer node) {
             node_pointer tmp1 = _root;
             node_pointer tmp2 = _nil;
 			while (tmp1 != _nil) {
 				tmp2 = tmp1;
-				if (_compare(node, tmp1)) //(node->key < tmp1->key)
+				if (node->value < tmp1->value) //_compare(node->value, tmp1->value)
 					tmp1 = tmp1->left;
 				else
-					tmp1 = tmp1->rigth;
+					tmp1 = tmp1->right;
 			}
 			node->parent = tmp2;
 			if (tmp2 == _nil)
 				_root = node;
-			else if (_compare(node, tmp2)) //(node->key < tmp2->key)
+			else if (_compare(node->value, tmp2->value)) //(node->value < tmp2->value)
 				tmp2->left = node;
 			else
-				tmp2->rigth = node;
+				tmp2->right = node;
 			node->left = _nil;
-			node->rigth = _nil;
+			node->right = _nil;
 			node->color = RED;
 			rb_insert_balance(node);
 		}
@@ -188,14 +187,14 @@ namespace ft {
             node_pointer tmp = _root;
 			while (node->parent->color == RED) {
 				if (node->parent == node->parent->parent->left) {
-					tmp = node->parent->parent->rigth;
+					tmp = node->parent->parent->right;
 					if (tmp->color == RED) {
 						node->parent->color = BLACK;
 						tmp->color = BLACK;
 						node->parent->parent->color = RED;
 						node = node->parent->parent;
 					} else {
-						if (node == node->parent->rigth) {
+						if (node == node->parent->right) {
 							node = node->parent;
 							left_rotate(node);
 						}
@@ -238,7 +237,7 @@ namespace ft {
 			else if(u == u->parent->left)
 				u->parent->left = v;
 			else
-				u->parent->rigth = v;
+				u->parent->right = v;
 			v->parent = u->parent;
 		}
 
@@ -248,21 +247,21 @@ namespace ft {
 			bool tmp_orig_color = tmp->color;
 
 			if (node->left == _nil) {
-				x = node->rigth;
-				rb_transplant(node, node->rigth);
-			} else if (node->rigth == _nil) {
+				x = node->right;
+				rb_transplant(node, node->right);
+			} else if (node->right == _nil) {
 				x = node->left;
 				rb_transplant(node, node->left);
 			} else {
-				tmp = rb_min(node->rigth);
+				tmp = rb_min(node->right);
 				tmp_orig_color = tmp->color;
-				x = tmp->rigth;
+				x = tmp->right;
 				if (tmp->parent == node) {
 					x->parent = tmp;
 				} else {
-					rb_transplant(tmp, tmp->rigth);
-					tmp->rigth = node->rigth;
-					tmp->rigth->parent = tmp;
+					rb_transplant(tmp, tmp->right);
+					tmp->right = node->right;
+					tmp->right->parent = tmp;
 				}
 				rb_transplant(node, tmp);
 				tmp->left = node->left;
@@ -277,26 +276,26 @@ namespace ft {
             node_pointer tmp;
 			while (node != _root && node->color == BLACK) {
 				if (node == node->parent->left) {
-					tmp = node->parent->rigth;
+					tmp = node->parent->right;
 					if (tmp->color == RED) {
 						tmp->color = BLACK;
 						node->parent->color = RED;
 						left_rotate(node->parent);
-						tmp = node->parent->rigth;
+						tmp = node->parent->right;
 					}
-					if (tmp->left->color == BLACK && tmp->rigth->color == BLACK) {
+					if (tmp->left->color == BLACK && tmp->right->color == BLACK) {
 						tmp->color = RED;
 						node = node->parent;
 					} else {
-						if (tmp->rigth->color == BLACK) {
+						if (tmp->right->color == BLACK) {
 							tmp->left->color = BLACK;
 							tmp->color = RED;
 							right_rotate(tmp);
-							tmp = node->parent->rigth;
+							tmp = node->parent->right;
 						}
 						tmp->color = node->parent->color;
 						node->parent->color = BLACK;
-						tmp->rigth->color = BLACK;
+						tmp->right->color = BLACK;
 						left_rotate(node->parent);
 						node = _root;
 					}
@@ -308,12 +307,12 @@ namespace ft {
 						right_rotate(node->parent);
 						tmp = node->parent->left;
 					}
-					if (tmp->rigth->color == BLACK && tmp->left->color == BLACK) {
+					if (tmp->right->color == BLACK && tmp->left->color == BLACK) {
 						tmp->color = RED;
 						node = node->parent;
 					} else {
 						if (tmp->left->color == BLACK) {
-							tmp->rigth->color = BLACK;
+							tmp->right->color = BLACK;
 							tmp->color = RED;
 							left_rotate(tmp);
 							tmp = node->parent->left;

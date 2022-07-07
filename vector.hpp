@@ -103,8 +103,6 @@ namespace ft {
 			}
 		}
 
-
-
 		vector& operator=(const vector& value) {
 			cout << "operator = " << endl;
 			if (this != &value) {
