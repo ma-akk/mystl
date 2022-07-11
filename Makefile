@@ -1,14 +1,15 @@
-SRCS		= main.cpp Vector.cpp
+SRCS		= main_it_test.cpp
 
 OBJS		= ${SRCS:.cpp=.o}
 
-HEADER		= Vector.hpp 
+HEADER		= rb_tree.hpp
 
 CC			= c++
 
 NAME		= ft_containers
 
-FLAGS		= -Wall -Wextra -Werror -std=c++98
+#add flags -Wall -Wextra -Werror
+FLAGS		= -std=c++98 -g
 
 .cpp.o:
 		${CC} ${FLAGS} -c $< -o ${<:.cpp=.o}

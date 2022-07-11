@@ -24,7 +24,7 @@ namespace ft {
 		typedef std::ptrdiff_t					difference_type;
 		typedef Compare							value_compare;
 		typedef Allocator						allocator_type;
-		typedef typename Allocator::template rebind<Node<value_type>>::other	node_allocator;
+		typedef typename Allocator::template rebind<Node<value_type> >::other	node_allocator;
 		typedef	typename node_allocator::pointer 			node_pointer;
 		typedef typename allocator_type::pointer				pointer;
 		typedef typename allocator_type::reference			reference;
@@ -38,12 +38,13 @@ namespace ft {
 		void init_tree() {
 			_nil = _node_alloc.allocate(1);
 			_node_alloc.construct(_nil, Node<value_type>());
-			_root = _node_alloc.allocate(1);
-			_node_alloc.construct(_root, Node<value_type>());
-			_root->parent = _nil;
-			_root->left = _nil;
-			_root->right = _nil;
-			_root->color = BLACK;
+			_root = _nil;
+			// _root = _node_alloc.allocate(1);
+			// _node_alloc.construct(_root, Node<value_type>());
+			// _root->parent = _nil;
+			// _root->left = _nil;
+			// _root->right = _nil;
+			// _root->color = BLACK;
 		}
 
         //функция печати дерева от @lelle from slack

@@ -23,7 +23,8 @@ namespace ft {
 		Node *right;
 		value_type value;
 
-	 	Node(value_type value = value_type()) : parent(NULL), left(NULL), right(NULL), color(BLACK) { }
+	 	Node(value_type value = value_type()) 
+			: parent(NULL), left(NULL), right(NULL), color(BLACK), value(value) { }
 
 		Node(const Node &node) {
 			cout << "copy constructor " << endl;

@@ -1,6 +1,8 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <stdint.h>
+
 namespace ft {
 	template< class InputIt1, class InputIt2 >
 	bool lexicographical_compare( InputIt1 first1, InputIt1 last1,
@@ -71,9 +73,9 @@ namespace ft {
 	template <> struct is_integral<signed char>			: public integral_constant<bool, true> {};
 	template <> struct is_integral<unsigned char>		: public integral_constant<bool, true> {};
 	template <> struct is_integral<wchar_t>				: public integral_constant<bool, true> {};
-	template <> struct is_integral<char16_t>			: public integral_constant<bool, true> {};
+	template <> struct is_integral<uint16_t>			: public integral_constant<bool, true> {};
 	template <> struct is_integral<short>				: public integral_constant<bool, true> {};
-	template <> struct is_integral<unsigned short>		: public integral_constant<bool, true> {};
+//	template <> struct is_integral<unsigned short>		: public integral_constant<bool, true> {};
 	template <> struct is_integral<int>					: public integral_constant<bool, true> {};
 	template <> struct is_integral<unsigned int>		: public integral_constant<bool, true> {};
 	template <> struct is_integral<long>				: public integral_constant<bool, true> {};

@@ -28,11 +28,10 @@ int main() {
 //
     ft::rb_tree<value> *tree = new ft::rb_tree<value>();
     tree->rb_insert_node(pnode1);
-    tree->_root = pnode1;
-    tree->_root->left = pnode2;
-    pnode2->parent = pnode1;
-    pnode1->right = pnode3;
-    cout << "tree->get_root()->right = " << tree->get_root()->right << " color = " << tree->get_root()->right->color << endl;
+    tree->rb_insert_node(pnode2);
+    tree->rb_insert_node(pnode3);
+    cout << "tree->get_root() = " << tree->get_root()->value.first << " color = " << tree->get_root()->color << endl;
+    cout << "tree->get_root()->right = " << tree->get_root()->right->value.first << " color = " << tree->get_root()->right->color << endl;
 //    cout << "tree->get_leaf() = " << tree->get_leaf() << " color = " << tree->get_leaf()->color << endl;
 
 
