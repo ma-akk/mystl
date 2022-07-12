@@ -175,8 +175,7 @@ namespace ft {
 		}
 
 		bool empty() const {
-			bool res = _size == 0 ? true : false;
-			return res;
+			return _size == 0 ? 1 : 0;
 		}
 
 		void reserve(size_t n) {

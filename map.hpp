@@ -3,7 +3,8 @@
 
 #include "iterators/iterator.hpp"
 #include "utils.hpp"
-#include "tree_it.hpp"
+#include "iterators/tree_it.hpp"
+#include "rb_tree.hpp"
 
 namespace ft {
 	
@@ -22,18 +23,15 @@ namespace ft {
 		typedef value_type&						reference;
 	 	typedef typename Allocator::const_pointer	const_pointer;
 		typedef const value_type&				const_reference;
-	 	typedef typename _it< T >						iterator;
-		typedef typename ran_it< const T >				const_iterator;
-		typedef typename reverse_it< iterator >			reverse_iterator;
-		typedef typename reverse_it< const iterator >	const_reverse_iterator;
+//	 	typedef ran_it< T >						iterator;
+//		typedef ran_it< const T >				const_iterator;
+//		typedef reverse_it< iterator >			reverse_iterator;
+//		typedef reverse_it< const iterator >	const_reverse_iterator;
+
+        typedef rb_tree<value_type, key_compare, Allocator > map_tree;
 		
 		/*constructors*/
-		map() {
-			//здесь можно создавать nil-ноду и приравнивать ее к root
-			_size = 0;
-			_root = NULL;
-			
-		}
+//		map() {	}
 
 		// explicit map( const Compare& comp,
 		// 			const Allocator& alloc = Allocator() );
@@ -46,13 +44,11 @@ namespace ft {
 		// map( const map& other );
 
 		// /*destructor*/
-		// ~map() {}
+		// ~map() { }
 
 		// map& operator=( const map& other );
 
-		Allocator get_allocator() const {
-			return _alloc;
-		}
+		Allocator get_allocator() const {  }
 
 		// T& at( const Key& key ) {
 		// 	if(n > _size || n < 0)
@@ -74,27 +70,14 @@ namespace ft {
 		// const_reverse_iterator rend() const;
 
 		/* capacity */
-		// bool empty() const {
-		// 	return _size == 0 ? true : false;;
-		// }
+		 bool empty() const { }
 
-		// size_t size() const {
-		// 	return _size;
-		// }
+		 size_t size() const { }
 
-		size_t max_size() const {
-			return _alloc.max_size();
-		}
+         size_t max_size() const { }
 
 		/*modify*/
-		// void clear() {
-		// 	for(size_t i = 0; i < _size; ++i) {
-		// 		_alloc.destroy(_array + i);
-		// 	}
-		// 	_size = 0;
-		// 	_first = _array;
-		// 	_last = _first;
-		// }
+		// void clear() { }
 
 		// pair<iterator, bool> insert( const value_type& value );
 		// iterator insert( iterator hint, const value_type& value );
@@ -142,6 +125,7 @@ namespace ft {
 		// 	}
 		// }
 
+        /* lookup */
 		// size_type count( const Key& key ) const;
 		// iterator find( const Key& key );
 		// const_iterator find( const Key& key ) const;
@@ -151,26 +135,15 @@ namespace ft {
 		// const_iterator lower_bound( const Key& key ) const;
 		// iterator upper_bound( const Key& key );
 		// const_iterator upper_bound( const Key& key ) const;
+
+        /* observers */
 		// key_compare key_comp() const;
 		// map::value_compare value_comp() const;
 
 
-		void create_nil(Node *root) {
-			_nil = _alloc.allocate(1);
-			_alloc.construct(_nil, Node());
-		}
-		
-		
-
 
 	 private:
-	 	// будет реализовано в дереве
-	 	// Node <const Key, T> *_root;
-		// Node <const Key, T> *_nil;
-		Key _key;
-		T	_val;
-		// size_t _size;
-		// Allocator _alloc;
+	 	map_tree _tree;
 
 
 	};

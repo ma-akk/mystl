@@ -13,9 +13,6 @@ int main() {
     value v1 = ft::make_pair(1, -1);
     value v2 = ft::make_pair(2, -2);
     value v3 = ft::make_pair(3, -3);
-    ft::Node<value> *pnode1 = new ft::Node<value>(v1);
-    ft::Node<value> *pnode2 = new ft::Node<value>(v2);
-    ft::Node<value> *pnode3 = new ft::Node<value>(v3);
 
     ft::Node<value> node;
 
@@ -27,11 +24,18 @@ int main() {
 //
 //
     ft::rb_tree<value> *tree = new ft::rb_tree<value>();
+    ft::Node<value> *pnode1 = tree->init_node(v1);
+    ft::Node<value> *pnode2 = tree->init_node(v2);
+    ft::Node<value> *pnode3 = tree->init_node(v3);
+    ft::Node<value> *pnode4 = tree->init_node();
     tree->rb_insert_node(pnode1);
     tree->rb_insert_node(pnode2);
     tree->rb_insert_node(pnode3);
+    tree->rb_insert_node(pnode4);
+    tree->printTree();
     cout << "tree->get_root() = " << tree->get_root()->value.first << " color = " << tree->get_root()->color << endl;
     cout << "tree->get_root()->right = " << tree->get_root()->right->value.first << " color = " << tree->get_root()->right->color << endl;
+    cout << "tree->get_root()->left = " << tree->get_root()->left->value.first << " color = " << tree->get_root()->left->color << endl;
 //    cout << "tree->get_leaf() = " << tree->get_leaf() << " color = " << tree->get_leaf()->color << endl;
 
 

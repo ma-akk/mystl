@@ -34,47 +34,23 @@ namespace ft {
 		typedef tree_it<const value_type>		const_iterator;
 		typedef reverse_it<iterator>			reverse_iterator;
 		typedef reverse_it<const_iterator>	const_reverse_iterator;
-		
-		void init_tree() {
-			_nil = _node_alloc.allocate(1);
-			_node_alloc.construct(_nil, Node<value_type>());
+
+        node_pointer init_node(value_type v = value_type()) {
+            node_pointer node = _node_alloc.allocate(1);
+            _node_alloc.construct(node, Node<value_type>(v));
+            return node;
+        }
+
+        void free_node(node_pointer node){
+            _value_alloc.destroy(node->value);
+            _value_alloc.deallocate(node->value, 1);
+            _node_alloc.deallocate(node, 1);
+        }
+
+        void init_tree() {
+			_nil = init_node();
 			_root = _nil;
-			// _root = _node_alloc.allocate(1);
-			// _node_alloc.construct(_root, Node<value_type>());
-			// _root->parent = _nil;
-			// _root->left = _nil;
-			// _root->right = _nil;
-			// _root->color = BLACK;
 		}
-
-        //функция печати дерева от @lelle from slack
-//        void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
-//        {
-//            std::cout << prefix;
-//            std::cout << (isLeft ? “├──” : “└──” );
-//            if (nodeV == _nil){
-//                std::cout <<“\033[0;36m”<< “nil” << “\033[0m”<<std::endl;
-//                return ;
-//            }
-//            // print the value of the node
-//            if (nodeV->color == 0)
-//                std::cout <<“\033[0;36m”<< nodeV->key.first<<“\033[0m”<<std::endl;
-//            else
-//            std::cout <<“\033[0;31m”<< nodeV->key.first << “\033[0m”<<std::endl;
-//            printBT( prefix + (isLeft ? “│   ” : ”    “), nodeV->left, true);
-//            printBT( prefix + (isLeft ? “│   ” : ”    “), nodeV->right, false);
-//        }
-//        void printTree(){
-//            printBT(“”, _root, false);
-//        }
-
-//		void clear_tree() {
-//            node_pointer tmp = _root;
-//            while(tmp != _nil) {
-//                _alloc.destroy(_array + i);
-//            }
-//            _alloc.deallocate(_array, _cap);
-//		}
 		
 		/* consructors */
 		rb_tree() : _size(0) {
@@ -117,19 +93,13 @@ namespace ft {
 			return *this;
 		}
 
-		//why is virtual destructor??
-		virtual ~rb_tree() { }
-
-        //method for debug; remove after finish project
-        node_pointer get_root() const {
-            return _root;
+        /* destructor */
+		virtual ~rb_tree() {
+            clear_tree(_root);
+            free_node(_nil);
         }
 
-        //method for debug; remove after finish project
-        node_pointer get_leaf() const {
-            return _nil;
-        }
-
+        /* methods of rotate around node */
 		void left_rotate(node_pointer node) {
             node_pointer child = node->right;
             node->right = child->left;
@@ -160,6 +130,7 @@ namespace ft {
             node->parent = child;
 		}
 
+        /* methods of transformation of tree */
 		void rb_insert_node(node_pointer node) {
             node_pointer tmp1 = _root;
             node_pointer tmp2 = _nil;
@@ -181,6 +152,7 @@ namespace ft {
 			node->right = _nil;
 			node->color = RED;
 			rb_insert_balance(node);
+            _size++;
 		}
 
 		//проверить, как работает else {}
@@ -225,13 +197,6 @@ namespace ft {
 			_root->color = BLACK;
 		}
 
-        node_pointer rb_min(node_pointer node) {
-            node_pointer tmp = node;
-			while (tmp->left != _nil)
-				tmp = tmp->left;
-			return tmp;
-		}
-
 		void rb_transplant(node_pointer u, node_pointer v) {
 			if (u->parent == _nil)
 				_root = v;
@@ -271,6 +236,7 @@ namespace ft {
 			}
 			if (tmp_orig_color == BLACK)
 				rb_delete_balance(x);
+            (_size == 0) ? 0 : --_size;
 		}
 
 		void rb_delete_balance(node_pointer node) {
@@ -329,15 +295,78 @@ namespace ft {
 			node->color = BLACK;
 		}
 
+        allocator_type get_allocator() const {
+            return _value_alloc;
+        }
+
+        size_t max_size() const {
+            return _value_alloc.max_size();
+        }
+
+        bool empty() const {
+            return _size == 0 ? 1 : 0;
+        }
+
+        size_t size() const {
+            return _size;
+         }
+
+        //method for debug; remove after finish project
+        node_pointer get_root() const {
+            return _root;
+        }
+
+        //method for debug; remove after finish project
+        node_pointer get_leaf() const {
+            return _nil;
+        }
+
+        node_pointer rb_min(node_pointer node) {
+            node_pointer tmp = node;
+            while (tmp->left != _nil)
+                tmp = tmp->left;
+            return tmp;
+        }
+
+        /* methods of print tree from @lelle */
+        void printBT(const std::string& prefix, const node_pointer nodeV, bool isLeft) const
+        {
+            std::cout << prefix;
+            std::cout << (isLeft ? "├──" : "└──" );
+            if (nodeV == _nil){
+                std::cout <<"\033[0;36m" << "nil" << "\033[0m" << endl;
+                return ;
+            }
+            // print the value of the node
+            if (nodeV->color == 0)
+                cout << "\033[0;36m" << nodeV->value.first << "\033[0m" << endl;
+            else
+                cout << "\033[0;31m" << nodeV->value.first << "\033[0m" << endl;
+            printBT( prefix + (isLeft ? "│   " : "    "), nodeV->left, true);
+            printBT( prefix + (isLeft ? "│   " : "    "), nodeV->right, false);
+        }
+        void printTree(){
+            printBT("", _root, false);
+        }
+
+        void clear_tree(node_pointer node) {
+            if (node != _nil) {
+                clear_tree(node->left);
+                clear_tree(node->right);
+                free_node(node);
+            }
+        }
+
+
+
+	 private:
         node_pointer	_root;
         node_pointer	_nil;
-	 private:
-
 		allocator_type	_value_alloc;
 		node_allocator	_node_alloc;
 		value_compare 	_compare;
 		size_type		_size;
-		node_pointer	_tree;
+		node_pointer	_tree;   //??????????
 	};
 }
 
