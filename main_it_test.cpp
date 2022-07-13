@@ -33,10 +33,21 @@ int main() {
     tree->rb_insert_node(pnode3);
     tree->rb_insert_node(pnode4);
     tree->printTree();
+    if (tree->tree_search(tree->get_root(), v1) == pnode1)
+        cout << "SEARCH WORKS CORRECT!" << endl;
+    else cout << "FAIL SEARCH!" << endl;
+    if (tree->tree_search(tree->get_root(), ft::make_pair(5, -5)) == tree->get_leaf())
+        cout << "SEARCH WORKS CORRECT!" << endl;
+    else cout << "FAIL SEARCH!" << endl;
     cout << "tree->get_root() = " << tree->get_root()->value.first << " color = " << tree->get_root()->color << endl;
     cout << "tree->get_root()->right = " << tree->get_root()->right->value.first << " color = " << tree->get_root()->right->color << endl;
     cout << "tree->get_root()->left = " << tree->get_root()->left->value.first << " color = " << tree->get_root()->left->color << endl;
-//    cout << "tree->get_leaf() = " << tree->get_leaf() << " color = " << tree->get_leaf()->color << endl;
+
+    std::map<int, int> m1;
+    m1[1] = 10;
+    m1.find(1);
+
+    //    cout << "tree->get_leaf() = " << tree->get_leaf() << " color = " << tree->get_leaf()->color << endl;
 
 
 

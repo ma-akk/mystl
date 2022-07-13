@@ -41,11 +41,11 @@ namespace ft {
             return node;
         }
 
-        void free_node(node_pointer node){
-            _value_alloc.destroy(node->value);
-            _value_alloc.deallocate(node->value, 1);
-            _node_alloc.deallocate(node, 1);
-        }
+//        void free_node(node_pointer node){
+//            _value_alloc.destroy(node->value);
+//            _value_alloc.deallocate(node->value, 1);
+//            _node_alloc.deallocate(node, 1);
+//        }
 
         void init_tree() {
 			_nil = init_node();
@@ -95,8 +95,8 @@ namespace ft {
 
         /* destructor */
 		virtual ~rb_tree() {
-            clear_tree(_root);
-            free_node(_nil);
+//            clear_tree(_root);
+//            free_node(_nil);
         }
 
         /* methods of rotate around node */
@@ -349,14 +349,22 @@ namespace ft {
             printBT("", _root, false);
         }
 
-        void clear_tree(node_pointer node) {
-            if (node != _nil) {
-                clear_tree(node->left);
-                clear_tree(node->right);
-                free_node(node);
-            }
-        }
+//        void clear_tree(node_pointer node) {
+//            if (node != _nil) {
+//                clear_tree(node->left);
+//                clear_tree(node->right);
+//                free_node(node);
+//            }
+//        }
 
+        //как сравнивать именно ключи в паре, NEED TEST
+        node_pointer tree_search(node_pointer root, value_type key) const {
+            if (root == _nil || (_compare(key, root->value) && _compare(root->value, key)))
+                return root;
+            if (_compare(key, root->value))
+                return tree_search(root->left, key);
+            else return tree_search(root->right, key);
+        }
 
 
 	 private:
