@@ -6,7 +6,7 @@
 #include <exception>
 #include <cmath>
 #include <limits>
-#include "../utils.hpp"
+#include "utils.hpp"
 
 #define RED 1
 #define BLACK 0

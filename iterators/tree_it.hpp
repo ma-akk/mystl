@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "iterator.hpp"
-#include "Node.hpp"
+#include "../utils/Node.hpp"
 
 namespace ft {
 
@@ -106,7 +106,7 @@ namespace ft {
 			return new_it;
 		}
 
-		protected:
+		private:
 			node_pointer _node;
 
 			node_pointer tree_min(node_pointer node) {

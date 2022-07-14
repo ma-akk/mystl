@@ -7,8 +7,8 @@
 #include <cmath>
 #include <memory>
 #include "utils.hpp"
-#include "iterators/tree_it.hpp"
-#include "iterators/reverse_it.hpp"
+#include "../iterators/tree_it.hpp"
+#include "../iterators/reverse_it.hpp"
 
 #define RED 1
 #define BLACK 0
@@ -41,11 +41,11 @@ namespace ft {
             return node;
         }
 
-//        void free_node(node_pointer node){
-//            _value_alloc.destroy(node->value);
-//            _value_alloc.deallocate(node->value, 1);
-//            _node_alloc.deallocate(node, 1);
-//        }
+        void free_node(node_pointer node){
+            _value_alloc.destroy(node->value);
+            _value_alloc.deallocate(node->value, 1);
+            _node_alloc.deallocate(node, 1);
+        }
 
         void init_tree() {
 			_nil = init_node();
@@ -96,7 +96,7 @@ namespace ft {
         /* destructor */
 		virtual ~rb_tree() {
 //            clear_tree(_root);
-//            free_node(_nil);
+            free_node(_nil);
         }
 
         /* methods of rotate around node */
@@ -365,6 +365,30 @@ namespace ft {
                 return tree_search(root->left, key);
             else return tree_search(root->right, key);
         }
+
+        // pair<iterator, bool> insert( const value_type& value );
+        // iterator insert( iterator hint, const value_type& value );
+
+        // iterator erase(iterator pos);
+
+        // iterator erase(iterator first, iterator last) ;
+
+        // size_type erase( const Key& key );
+
+        // void swap(vector& other) ;
+
+        /* lookup */
+        // size_type count( const Key& key ) const;
+         iterator find( const value_type& key) {
+             node_pointer
+         }
+        // const_iterator find( const Key& key ) const;
+        // pair<iterator,iterator> equal_range( const Key& key );
+        // pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
+        // iterator lower_bound( const Key& key );
+        // const_iterator lower_bound( const Key& key ) const;
+        // iterator upper_bound( const Key& key );
+        // const_iterator upper_bound( const Key& key ) const;
 
 
 	 private:
