@@ -36,6 +36,7 @@ namespace ft {
 		typedef reverse_it<const_iterator>	const_reverse_iterator;
 
         node_pointer init_node(value_type v = value_type()) {
+            //требуется ли выделять память для value???
             node_pointer node = _node_alloc.allocate(1);
             _node_alloc.construct(node, Node<value_type>(v));
             return node;
@@ -408,9 +409,23 @@ namespace ft {
         }
 
         /*modify*/
-        // pair<iterator, bool> insert( const value_type& value );
-//        template< class InputIt >
-//        void insert( InputIt first, InputIt last );
+         pair<iterator, bool> insert( const value_type& value ) {
+             iterator res = find(value);
+            if (res.get_node() != _nil)
+                return pair<iterator, bool>(res, false);
+            else {
+                node_pointer node = init_node(value);
+                rb_insert_node(node);
+                return pair<iterator, bool>(iterator(node), true);
+            }
+         }
+
+        template< class InputIt >
+        void insert( InputIt first, InputIt last ) {
+            for (InputIt it = first; it != last; ++it) {
+                insert(*it);
+            }
+         }
 
         // iterator erase(iterator pos) ;
         // iterator erase(iterator first, iterator last);;
@@ -482,6 +497,34 @@ namespace ft {
 		size_type		_size;
 		node_pointer	_tree;   //??????????
 	};
+
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator==( const map<Key,T,Compare,Alloc>& lhs,
+//                     const map<Key,T,Compare,Alloc>& rhs );
+//
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator!=( const map<Key,T,Compare,Alloc>& lhs,
+//                     const map<Key,T,Compare,Alloc>& rhs );
+//
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator<( const map<Key,T,Compare,Alloc>& lhs,
+//                    const map<Key,T,Compare,Alloc>& rhs );
+//
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator<=( const map<Key,T,Compare,Alloc>& lhs,
+//                     const map<Key,T,Compare,Alloc>& rhs );
+//
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator>( const map<Key,T,Compare,Alloc>& lhs,
+//                    const map<Key,T,Compare,Alloc>& rhs );
+//
+//    template< class Key, class T, class Compare, class Alloc >
+//    bool operator>=( const map<Key,T,Compare,Alloc>& lhs,
+//                     const map<Key,T,Compare,Alloc>& rhs );
+
+//    template< class Key, class T, class Compare, class Alloc >
+//    void swap( map<Key,T,Compare,Alloc>& lhs,
+//               map<Key,T,Compare,Alloc>& rhs );
 }
 
 

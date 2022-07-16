@@ -55,8 +55,8 @@ namespace ft {
 
         // map& operator=( const map& other );
 
-		// /*destructor*/
-		// ~map() { }
+		 /*destructor*/
+		 ~map() { }
 
 		Allocator get_allocator() const {  }
 
@@ -151,10 +151,10 @@ namespace ft {
          }
 
 		 pair<iterator,iterator> equal_range( const Key& key ) {
-             return _tree.equal_range(_tree.lower_bound(make_pair(key, mapped_type())), _tree.upper_bound(make_pair(key, mapped_type())));
+             return _tree.equal_range(make_pair(key, mapped_type()));
          }
 		 pair<const_iterator,const_iterator> equal_range( const Key& key ) const {
-             return _tree.equal_range(key, mapped_type());
+             return _tree.equal_range(make_pair(key, mapped_type()));
          }
 
 		 iterator lower_bound( const Key& key ) {

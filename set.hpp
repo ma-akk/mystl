@@ -47,29 +47,59 @@ namespace ft {
 
         // set& operator=( const set& other );
 
-        // /*destructor*/
-        // ~set() { }
+         /*destructor*/
+         ~set() { }
 
         Allocator get_allocator() const {  }
 
-        // iterator begin();
-        // const_iterator begin() const;
-        // iterator end();
-        // const_iterator end() const;
-        // reverse_iterator rbegin();
-        // const_reverse_iterator rbegin() const;
-        // reverse_iterator rend();
-        // const_reverse_iterator rend() const;
+        iterator begin() {
+            return _tree.begin();
+        }
+        const_iterator begin() const {
+            return _tree.begin();
+        }
+
+        iterator end() {
+            return _tree.end();
+        }
+
+        const_iterator end() const {
+            return _tree.end();
+        }
+
+        reverse_iterator rbegin() {
+            return _tree.rbegin();
+        }
+
+        const_reverse_iterator rbegin() const {
+            return _tree.rbegin();
+        }
+
+        reverse_iterator rend() {
+            return _tree.rend();
+        }
+
+        const_reverse_iterator rend() const {
+            return _tree.rend();
+        }
 
         /* capacity */
-        bool empty() const { }
+        bool empty() const {
+            return _tree.empty();
+        }
 
-        size_t size() const { }
+        size_t size() const {
+            return _tree.size();
+        }
 
-        size_t max_size() const { }
+        size_t max_size() const {
+            return _tree.max_size();
+        }
 
         /*modify*/
-        // void clear() { }
+         void clear() {
+            _tree.clear_tree();
+         }
 
         // pair<iterator, bool> insert( const value_type& value );
         // template< class InputIt >
@@ -82,19 +112,48 @@ namespace ft {
         // void swap(vector& other)
 
         /* lookup */
-        // size_type count( const Key& key ) const;
-        // iterator find( const Key& key );
-        // const_iterator find( const Key& key ) const;
-        // pair<iterator,iterator> equal_range( const Key& key );
-        // pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
-        // iterator lower_bound( const Key& key );
-        // const_iterator lower_bound( const Key& key ) const;
-        // iterator upper_bound( const Key& key );
-        // const_iterator upper_bound( const Key& key ) const;
+         size_type count( const Key& key ) const {
+            return _tree.count(key);
+        }
+
+        iterator find( const Key& key ) {
+            return _tree.find(key);
+        }
+
+        const_iterator find( const Key& key ) const {
+            return _tree.find(key);
+        }
+
+        pair<iterator,iterator> equal_range( const Key& key ) {
+            return _tree.equal_range(key);
+        }
+        pair<const_iterator,const_iterator> equal_range( const Key& key ) const {
+            return _tree.equal_range(key);
+        }
+
+        iterator lower_bound( const Key& key ) {
+            return _tree.lower_bound(key);
+        }
+
+        const_iterator lower_bound( const Key& key ) const {
+            return _tree.lower_bound(key);
+        }
+
+        iterator upper_bound( const Key& key ) {
+            return _tree.upper_bound(key);
+        }
+
+        const_iterator upper_bound( const Key& key ) const {
+            return _tree.upper_bound(key);
+        }
 
         /* observers */
-        // key_compare key_comp() const;
-        // set::value_compare value_comp() const;
+         key_compare key_comp() const {
+             return _compare;
+         }
+         set::value_compare value_comp() const {
+             return _tree.value_comp();
+         }
 
 
 
