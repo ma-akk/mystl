@@ -430,19 +430,19 @@ namespace ft {
 		}
 
 		reverse_iterator rbegin() {
-			return reverse_iterator(_last - 1); //?????? what iterator i can give??
+			return reverse_iterator(end());
 		}
 
 		const_reverse_iterator rbegin() const {
-			return --_last;
+			return const_reverse_iterator(end());
 		}
 
 		reverse_iterator rend() {
-			return reverse_iterator(_first - 1);
+			return reverse_iterator(begin());
 		}
 		
 		const_reverse_iterator rend() const {
-			return _first;
+			return const_reverse_iterator(begin());
 		}
 
 	 private:

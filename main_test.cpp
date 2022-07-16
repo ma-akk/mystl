@@ -4,7 +4,7 @@
 #include "vector.hpp"
 #include "iterators/iterator.hpp"
 #include "stack.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 using std::cout;
 using std::endl;

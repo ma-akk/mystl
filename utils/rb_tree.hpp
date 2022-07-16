@@ -42,8 +42,8 @@ namespace ft {
         }
 
         void free_node(node_pointer node){
-            _value_alloc.destroy(node->value);
-            _value_alloc.deallocate(node->value, 1);
+            _value_alloc.destroy(&(node->value));
+            _value_alloc.deallocate(&(node->value), 1);
             _node_alloc.deallocate(node, 1);
         }
 
@@ -95,7 +95,7 @@ namespace ft {
 
         /* destructor */
 		virtual ~rb_tree() {
-//            clear_tree(_root);
+            clear_tree(_root);
             free_node(_nil);
         }
 
@@ -105,6 +105,7 @@ namespace ft {
             node->right = child->left;
 			if(child->left != _nil)
 				child->left->parent = node;
+			child->parent = node->parent;
 			if(node->parent == _nil)
 				_root = child;
 			else if (node == node->parent->left)
@@ -120,6 +121,7 @@ namespace ft {
             node->left = child->right;
 			if(child->right != _nil)
 				child->right->parent = node;
+			child->parent = node->parent;
 			if(node->parent == _nil)
 				_root = child;
 			else if (node == node->parent->left)
@@ -136,7 +138,7 @@ namespace ft {
             node_pointer tmp2 = _nil;
 			while (tmp1 != _nil) {
 				tmp2 = tmp1;
-				if (node->value < tmp1->value) //_compare(node->value, tmp1->value)
+				if (_compare(node->value, tmp1->value))
 					tmp1 = tmp1->left;
 				else
 					tmp1 = tmp1->right;
@@ -328,6 +330,13 @@ namespace ft {
             return tmp;
         }
 
+        node_pointer rb_max(node_pointer node) {
+            node_pointer tmp = node;
+            while (tmp->right != _nil)
+                tmp = tmp->right;
+            return tmp;
+        }
+
         /* methods of print tree from @lelle */
         void printBT(const std::string& prefix, const node_pointer nodeV, bool isLeft) const
         {
@@ -349,47 +358,120 @@ namespace ft {
             printBT("", _root, false);
         }
 
-//        void clear_tree(node_pointer node) {
-//            if (node != _nil) {
-//                clear_tree(node->left);
-//                clear_tree(node->right);
-//                free_node(node);
-//            }
-//        }
+        void clear_tree(node_pointer node) {
+            if (node != _nil) {
+                clear_tree(node->left);
+                clear_tree(node->right);
+                free_node(node);
+            }
+        }
 
-        //как сравнивать именно ключи в паре, NEED TEST
         node_pointer tree_search(node_pointer root, value_type key) const {
-            if (root == _nil || (_compare(key, root->value) && _compare(root->value, key)))
+            if (root == _nil || (!_compare(key, root->value) && !_compare(root->value, key))) {
                 return root;
+            }
             if (_compare(key, root->value))
                 return tree_search(root->left, key);
             else return tree_search(root->right, key);
         }
 
+         iterator begin() {
+            return iterator(rb_min(_root));
+        }
+
+         const_iterator begin() const {
+             return const_iterator(rb_min(_root));
+         }
+
+         iterator end() {
+             return ++iterator(rb_max(_root));
+        }
+
+         const_iterator end() const {
+             return ++const_iterator(rb_max(_root));
+         }
+
+         reverse_iterator rbegin() {
+             return reverse_iterator(end());
+        }
+
+         const_reverse_iterator rbegin() const {
+             return const_reverse_iterator(end());
+        }
+
+         reverse_iterator rend() {
+             return reverse_iterator(begin());
+        }
+
+         const_reverse_iterator rend() const {
+             return const_reverse_iterator(begin());
+        }
+
+        /*modify*/
         // pair<iterator, bool> insert( const value_type& value );
-        // iterator insert( iterator hint, const value_type& value );
+//        template< class InputIt >
+//        void insert( InputIt first, InputIt last );
 
-        // iterator erase(iterator pos);
-
-        // iterator erase(iterator first, iterator last) ;
-
+        // iterator erase(iterator pos) ;
+        // iterator erase(iterator first, iterator last);;
         // size_type erase( const Key& key );
 
-        // void swap(vector& other) ;
+        // void swap(vector& other);
 
         /* lookup */
-        // size_type count( const Key& key ) const;
-         iterator find( const value_type& key) {
-             node_pointer
+         size_type count( const value_type& key ) const {
+             return tree_search(_root, key) != _nil ? 1 : 0;
          }
-        // const_iterator find( const Key& key ) const;
-        // pair<iterator,iterator> equal_range( const Key& key );
-        // pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
-        // iterator lower_bound( const Key& key );
-        // const_iterator lower_bound( const Key& key ) const;
-        // iterator upper_bound( const Key& key );
-        // const_iterator upper_bound( const Key& key ) const;
 
+         iterator find( const value_type& key ) {
+             return iterator(tree_search(_root, key));
+         }
+
+         const_iterator find( const value_type& key ) const  {
+             return const_iterator(tree_search(_root, key));
+         }
+
+         pair<iterator,iterator> equal_range( const value_type& key ) {
+             return pair<iterator,iterator>(lower_bound(key), upper_bound(key));
+         }
+
+         pair<const_iterator,const_iterator> equal_range( const value_type& key ) const {
+             return pair<iterator,iterator>(lower_bound(key), upper_bound(key));
+         }
+
+        iterator lower_bound( const value_type& key ) {
+            iterator it = begin();
+            while (it != end() && _compare(it.get_node()->value, key)) //использовать *it, find error in tree_it!!!
+                ++it;
+            return it;
+        }
+
+        const_iterator lower_bound( const value_type& key ) const {
+            const_iterator it = begin();
+            while (it != end() && _compare(it.get_node()->value, key)) //использовать *it
+                ++it;
+            return it;
+        }
+
+         iterator upper_bound( const value_type& key ) {
+            iterator it = begin();
+            while (it != end() && _compare(it.get_node()->value, key)) //использовать *it
+                 ++it;
+			if (!(_compare(it.get_node()->value, key) || _compare(key, it.get_node()->value)))
+				++it;
+            return it;
+         }
+
+         const_iterator upper_bound( const value_type& key ) const {
+             const_iterator it = begin();
+             while (it != end() && (_compare(it.get_node()->value, key) || _compare(key, it.get_node()->value))) //использовать *it
+                 ++it;
+             return it;
+         }
+
+        value_compare value_comp() const {
+            return _compare;
+         }
 
 	 private:
         node_pointer	_root;

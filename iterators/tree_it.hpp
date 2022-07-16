@@ -28,7 +28,7 @@ namespace ft {
 
 		tree_it& operator=(const tree_it<typename remove_const<value_type>::type>&value) {
 			if (this != &value)
-				this->_node = value.node();
+				this->_node = value._node;
 			return *this;
 		}
 
