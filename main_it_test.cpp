@@ -92,7 +92,7 @@ int main() {
         cout << it->first << " " << it->second << endl;
     }
     it_fst = ++m2.begin();
-    cout << "erase: " << m2.erase(it_fst)->first << endl;
+    // cout << "erase: " << m2.erase(it_fst)->first << endl;
     for(std::map<int, int>::iterator it = m2.begin(); it != m2.end(); ++it) {
         cout << it->first << " " << it->second << endl;
     }
