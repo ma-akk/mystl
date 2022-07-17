@@ -33,25 +33,35 @@ namespace ft {
         typedef rb_tree<value_type, key_compare, Allocator> set_tree;
 
         /*constructors*/
-//		set() {	}
+		set() : _tree(set_tree()) {	}
+         explicit set( const Compare& comp, const Allocator& alloc = Allocator() )
+		 			: _tree(set_tree(comp, alloc)) { }
 
-        // explicit set( const Compare& comp,
-        // 			const Allocator& alloc = Allocator() );
+         template< class InputIt >
+         set( InputIt first, InputIt last,
+         	const Compare& comp = Compare(),
+         	const Allocator& alloc = Allocator() ) : _tree(set_tree(first, last, comp, alloc)) { }
 
-        // template< class InputIt >
-        // set( InputIt first, InputIt last,
-        // 	const Compare& comp = Compare(),
-        // 	const Allocator& alloc = Allocator() );
+         set( const set& other ) {
+			 this->_tree = set_tree(other._tree);
+		}
 
-        // set( const set& other );
-
-        // set& operator=( const set& other );
+         set& operator=( const set& other ) {
+			if (this != &other) {
+				_tree.clear_tree();
+				this->_tree = set_tree(other._tree);
+			}
+			return *this;
+		}
 
          /*destructor*/
-         ~set() { }
+         ~set() {
+			 _tree.clear_tree();
+		 }
 
         Allocator get_allocator() const {  }
 
+	  	/* iterators */
         iterator begin() {
             return _tree.begin();
         }
@@ -101,15 +111,34 @@ namespace ft {
             _tree.clear_tree();
          }
 
-        // pair<iterator, bool> insert( const value_type& value );
-        // template< class InputIt >
-        //void insert( InputIt first, InputIt last );
+         pair<iterator, bool> insert( const value_type& value ) {
+			 return _tree.insert(value);
+		 }
 
-        // iterator erase(iterator pos) ;
-        // iterator erase(iterator first, iterator last) ;
-//        size_type erase( const Key& key );
+        iterator insert( iterator hint, const value_type& value ) {
+			 return _tree.insert(hint, value);
+		}
 
-        // void swap(vector& other)
+	  	template< class InputIt >
+        void insert( InputIt first, InputIt last ) {
+			return _tree.insert(first, last);
+		}
+
+         iterator erase(iterator pos) {
+			 return _tree.erase(pos);
+		 }
+
+         iterator erase(iterator first, iterator last) {
+			 return _tree.erase(first, last);
+		 }
+
+        size_type erase( const Key& key ) {
+			return _tree.erase(key);
+		}
+
+         void swap(set& other) {
+			 _tree.swap(other);
+		 }
 
         /* lookup */
          size_type count( const Key& key ) const {
@@ -155,41 +184,52 @@ namespace ft {
              return _tree.value_comp();
          }
 
-
-
     private:
         set_tree _tree;
-        Allocator _alloc;
         Compare _compare;
     };
 
-//    template< class Key, class Compare, class Alloc >
-//    bool operator==( const set<Key,Compare,Alloc>& lhs,
-//                     const set<Key,Compare,Alloc>& rhs );
+    template< class Key, class Compare, class Alloc >
+    bool operator==( const set<Key,Compare,Alloc>& lhs,
+                     const set<Key,Compare,Alloc>& rhs ) {
+		return lhs._tree == rhs._tree;
+	}
 
-//    template< class Key, class Compare, class Alloc >
-//    bool operator!=( const set<Key,Compare,Alloc>& lhs,
-//                     const set<Key,Compare,Alloc>& rhs );
-//
-//    template< class Key, class Compare, class Alloc >
-//    bool operator<( const set<Key,Compare,Alloc>& lhs,
-//                    const set<Key,Compare,Alloc>& rhs );
-//
-//    template< class Key, class Compare, class Alloc >
-//    bool operator<=( const set<Key,Compare,Alloc>& lhs,
-//                     const set<Key,Compare,Alloc>& rhs );
-//
-//    template< class Key, class Compare, class Alloc >
-//    bool operator>( const set<Key,Compare,Alloc>& lhs,
-//                    const set<Key,Compare,Alloc>& rhs );
-//
-//    template< class Key, class Compare, class Alloc >
-//    bool operator>=( const set<Key,Compare,Alloc>& lhs,
-//                     const set<Key,Compare,Alloc>& rhs );
-//
-//    template< class Key, class Compare, class Alloc >
-//    void swap( set<Key,Compare,Alloc>& lhs,
-//               set<Key,Compare,Alloc>& rhs );
+    template< class Key, class Compare, class Alloc >
+    bool operator!=( const set<Key,Compare,Alloc>& lhs,
+                     const set<Key,Compare,Alloc>& rhs ) {
+		return !(lhs._tree == rhs._tree);
+	}
+
+    template< class Key, class Compare, class Alloc >
+    bool operator<( const set<Key,Compare,Alloc>& lhs,
+                    const set<Key,Compare,Alloc>& rhs ) {
+		return lhs._tree < rhs._tree;
+	}
+
+    template< class Key, class Compare, class Alloc >
+    bool operator<=( const set<Key,Compare,Alloc>& lhs,
+                     const set<Key,Compare,Alloc>& rhs ) {
+		return (lhs._tree < rhs._tree || lhs._tree == rhs._tree);
+	}
+
+    template< class Key, class Compare, class Alloc >
+    bool operator>( const set<Key,Compare,Alloc>& lhs,
+                    const set<Key,Compare,Alloc>& rhs ) {
+		return !(lhs._tree < rhs._tree || lhs._tree == rhs._tree);
+	}
+
+    template< class Key, class Compare, class Alloc >
+    bool operator>=( const set<Key,Compare,Alloc>& lhs,
+                     const set<Key,Compare,Alloc>& rhs ) {
+		return !(lhs._tree < rhs._tree);
+	}
+
+    template< class Key, class Compare, class Alloc >
+    void swap( set<Key,Compare,Alloc>& lhs,
+               set<Key,Compare,Alloc>& rhs ) {
+		lhs.swap(rhs);
+	}
 }
 
 #endif //SET_HPP

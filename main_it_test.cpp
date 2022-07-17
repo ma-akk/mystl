@@ -85,12 +85,22 @@ int main() {
 //    cout << "res of insert: " << res.first->first << " " << res.second << endl;
 //    for(it_fst; it_fst != it_last; )
     std::map<int, int> m2;
-    m2[3] = 2;
-    m2[-3] = 4;
+    m2[2] = 2;
+    m2[4] = 4;
     m2.insert(it_fst,it_last);
     for(std::map<int, int>::iterator it = m2.begin(); it != m2.end(); ++it) {
         cout << it->first << " " << it->second << endl;
     }
+    it_fst = ++m2.begin();
+    cout << "erase: " << m2.erase(it_fst)->first << endl;
+    for(std::map<int, int>::iterator it = m2.begin(); it != m2.end(); ++it) {
+        cout << it->first << " " << it->second << endl;
+    }
+//    cout << "erase: " << m2.erase(3) << endl;
+//    for(std::map<int, int>::iterator it = m2.begin(); it != m2.end(); ++it) {
+//        cout << it->first << " " << it->second << endl;
+//    }
+std::map<int, int> *m3 = new std::map<int, int>();
 
 
 //    m1[0] = 6;

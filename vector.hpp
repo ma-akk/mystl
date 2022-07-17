@@ -368,32 +368,38 @@ namespace ft {
 		}
 
 		void swap(vector& other) {
-			if (this != &other && !(this->empty() || other.empty())) {
-				T* tmp_ptr = _array;
-				_array = other._array;
-				other._array = tmp_ptr;
-
-				tmp_ptr = _last;
-				_last = other._last;
-				other._last = tmp_ptr;
-
-				_first = _array;
-				other._first = other._array;
-
-				size_t tmp = _size;
-				_size = other._size;
-				other._size = tmp;
-
-				tmp = _cap;
-				_cap = other._cap;
-				other._cap = tmp;
-			} else if(this->empty()) {
-				*this = other;
-				other.clear();
-			} else if(other.empty()) {
-				other = *this;
-				this->clear();
-			}
+			std::swap(this->_array, other._array);
+			std::swap(this->_size, other._size);
+			std::swap(this->_cap, other._size);
+			std::swap(this->_alloc, other._alloc);
+			std::swap(this->_first, other._first);
+			std::swap(this->_last, other._last);
+//			if (this != &other && !(this->empty() || other.empty())) {
+//				T* tmp_ptr = _array;
+//				_array = other._array;
+//				other._array = tmp_ptr;
+//
+//				tmp_ptr = _last;
+//				_last = other._last;
+//				other._last = tmp_ptr;
+//
+//				_first = _array;
+//				other._first = other._array;
+//
+//				size_t tmp = _size;
+//				_size = other._size;
+//				other._size = tmp;
+//
+//				tmp = _cap;
+//				_cap = other._cap;
+//				other._cap = tmp;
+//			} else if(this->empty()) {
+//				*this = other;
+//				other.clear();
+//			} else if(other.empty()) {
+//				other = *this;
+//				this->clear();
+//			}
 		}
 
 		void push_back(const T& value) {
@@ -449,14 +455,9 @@ namespace ft {
 		T*			_array;
 		size_t		_size;
 		size_t		_cap;
-		Allocator		_alloc;
-
-		/*_first указывает на первый элемент вектора*/
+		Allocator	_alloc;
 		T*			_first;
-
-		/*_last указывает на некоторую область после конца вектора*/
 		T*			_last;
-
 	};
 
 	//non-member function
@@ -479,27 +480,35 @@ namespace ft {
 		return !(lhs == rhs);
 	}
 
-	// template< class T, class Allocator >
-	// bool operator<( const vector<T,Allocator>& lhs,
-	// 				const vector<T,Allocator>& rhs ) {
-		
-	// }
+	 template< class T, class Allocator >
+	 bool operator<( const vector<T,Allocator>& lhs,
+	 				const vector<T,Allocator>& rhs ) {
+		 return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	 }
 
-	// template< class T, class Allocator >
-	// bool operator<=( const vector<T,Allocator>& lhs,
-	// 				const vector<T,Allocator>& rhs );
+	 template< class T, class Allocator >
+	 bool operator<=( const vector<T,Allocator>& lhs,
+	 				const vector<T,Allocator>& rhs ) {
+		 return (lhs < rhs || lhs == rhs);
+	 }
 
-	// template< class T, class Allocator >
-	// bool operator>( const vector<T,Allocator>& lhs,
-	// 				const vector<T,Allocator>& rhs );
+	 template< class T, class Allocator >
+	 bool operator>( const vector<T,Allocator>& lhs,
+	 				const vector<T,Allocator>& rhs ) {
+		 return !(lhs < rhs || lhs == rhs);
+	 }
 
-	// template< class T, class Allocator >
-	// bool operator>=( const vector<T,Allocator>& lhs,
-	// 				const vector<T,Allocator>& rhs );
+	 template< class T, class Allocator >
+	 bool operator>=( const vector<T,Allocator>& lhs,
+	 				const vector<T,Allocator>& rhs ) {
+		 return !(lhs < rhs);
+	 }
 
-	// template< class T, class Allocator >
-	// void swap( std::vector<T,Allocator>& lhs,
-    //        std::vector<T,Allocator>& rhs );
+	 template< class T, class Allocator >
+	 void swap(vector<T,Allocator>& lhs,
+            vector<T,Allocator>& rhs ) {
+		 lhs.swap(rhs);
+	 }
 }
 
 #endif	//VECTOR_HPP
