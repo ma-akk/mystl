@@ -2,7 +2,9 @@ SRCS		= main_it_test.cpp
 
 OBJS		= ${SRCS:.cpp=.o}
 
-HEADER		= rb_tree.hpp
+HEADER		= utils/rb_tree.hpp utils/utils.hpp utils/Node.hpp rmrmrmrmrmrmrmrmrmmrr\
+			iterators/iterator.hpp iterators/ran_it.hpp iterators/reverse_it.hpp iterators/tree_it.hpp \
+			vector.hpp stack.hpp set.hpp map.hpp
 
 CC			= c++
 

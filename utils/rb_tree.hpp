@@ -38,8 +38,8 @@ class rb_tree {
 		//требуется ли выделять память для value???
 		node_pointer node = _node_alloc.allocate(1);
 		_node_alloc.construct(node, Node<value_type>(v));
-//		_value_alloc.destroy(&(node->value));
-//		_value_alloc.deallocate(&(node->value), 1);
+		//		_value_alloc.destroy(&(node->value));
+		//		_value_alloc.deallocate(&(node->value), 1);
 		return node;
 	}
 
@@ -63,13 +63,13 @@ class rb_tree {
 		init_tree();
 	}
 
-	 template< class InputIt >
-	 rb_tree( InputIt first, InputIt last, const Compare& comp = Compare(),
-	 		const Allocator& alloc = Allocator() ) : _node_alloc(alloc), _compare(comp)	{
-		 init_tree();
-		 InputIt it = first;
-		 for (; it != last; ++it)
-			 insert(*it);
+	template <class InputIt>
+	rb_tree(InputIt first, InputIt last, const Compare& comp = Compare(),
+			const Allocator& alloc = Allocator())
+		: _node_alloc(alloc), _compare(comp) {
+		init_tree();
+		InputIt it = first;
+		for (; it != last; ++it) insert(*it);
 	}
 
 	rb_tree(const rb_tree& value) {
@@ -148,8 +148,7 @@ class rb_tree {
 		node->parent = tmp2;
 		if (tmp2 == _nil)
 			_root = node;
-		else if (_compare(node->value,
-						  tmp2->value))	 //(node->value < tmp2->value)
+		else if (_compare(node->value, tmp2->value))
 			tmp2->left = node;
 		else
 			tmp2->right = node;
@@ -340,6 +339,7 @@ class rb_tree {
 		printBT(prefix + (isLeft ? "│   " : "    "), nodeV->left, true);
 		printBT(prefix + (isLeft ? "│   " : "    "), nodeV->right, false);
 	}
+
 	void printTree() { printBT("", _root, false); }
 
 	void clear_tree(node_pointer node) {
@@ -403,7 +403,7 @@ class rb_tree {
 		}
 	}
 
-	iterator insert( iterator hint, const value_type& value ) {
+	iterator insert(iterator hint, const value_type& value) {
 		node_pointer node = tree_search(hint.get_node(), value);
 		if (node != _nil)
 			return iterator(node);
@@ -439,14 +439,14 @@ class rb_tree {
 		return erase_node(node);
 	}
 
-  void swap(rb_tree &other) {
-	  std::swap(this->_root, other._root);
-	  std::swap(this->_nil, other._nil);
-	  std::swap(this->_size, other._size);
-	  std::swap(this->_node_alloc, other._node_alloc);
-	  std::swap(this->_value_alloc, other._value_alloc);
-	  std::swap(this->_compare, other._compare);
-  }
+	void swap(rb_tree& other) {
+		std::swap(this->_root, other._root);
+		std::swap(this->_nil, other._nil);
+		std::swap(this->_size, other._size);
+		std::swap(this->_node_alloc, other._node_alloc);
+		std::swap(this->_value_alloc, other._value_alloc);
+		std::swap(this->_compare, other._compare);
+	}
 
 	/* lookup */
 	size_type count(const value_type& key) const {
@@ -518,24 +518,25 @@ class rb_tree {
 	size_type _size;
 };
 
+template <typename value_type, class Compare, class Alloc>
+bool operator==(const rb_tree<value_type, Compare, Alloc>& lhs,
+				const rb_tree<value_type, Compare, Alloc>& rhs) {
+	return (lhs.size() == rhs.size() &&
+			equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
 
-    template< typename value_type, class Compare, class Alloc >
-    bool operator==( const rb_tree<value_type,Compare,Alloc>& lhs,
-                     const rb_tree<value_type,Compare,Alloc>& rhs ) {
-		return (lhs.size() == rhs.size() && equal(lhs.begin(), lhs.end(), rhs.begin()));
-	}
+template <typename value_type, class Compare, class Alloc>
+bool operator<(const rb_tree<value_type, Compare, Alloc>& lhs,
+			   const rb_tree<value_type, Compare, Alloc>& rhs) {
+	return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+									rhs.end()));
+}
 
-    template< typename value_type, class Compare, class Alloc >
-    bool operator<( const rb_tree<value_type,Compare,Alloc>& lhs,
-                    const rb_tree<value_type,Compare,Alloc>& rhs ) {
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-	}
-
-    template< typename value_type, class Compare, class Alloc >
-    void swap( rb_tree<value_type,Compare,Alloc>& lhs,
-			   rb_tree<value_type,Compare,Alloc>& rhs ) {
-		lhs.swap(rhs);
-	}
+template <typename value_type, class Compare, class Alloc>
+void swap(rb_tree<value_type, Compare, Alloc>& lhs,
+		  rb_tree<value_type, Compare, Alloc>& rhs) {
+	lhs.swap(rhs);
+}
 
 }  // namespace ft
 

@@ -1,11 +1,12 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-#include <iostream>
-#include <string>
-#include <exception>
 #include <cmath>
+#include <exception>
+#include <iostream>
 #include <limits>
+#include <string>
+
 #include "utils.hpp"
 
 #define RED 1
@@ -15,54 +16,52 @@ using std::cout;
 using std::endl;
 
 namespace ft {
-	template < typename value_type >
-	struct Node {
-		bool color;
-		Node *parent;
-		Node *left;
-		Node *right;
-		value_type value;
+template <typename value_type>
+struct Node {
+	bool color;
+	Node *parent;
+	Node *left;
+	Node *right;
+	value_type value;
 
-	 	Node(value_type value = value_type()) 
-			: parent(NULL), left(NULL), right(NULL), color(BLACK), value(value) { }
+	Node(value_type value = value_type())
+		: parent(NULL), left(NULL), right(NULL), color(BLACK), value(value) {}
 
-		Node(const Node &node) {
-			cout << "copy constructor " << endl;
-			if (this != &node) {
-				color = node.color;
-				parent = node.parent;
-				left = node.left;
-				right = node.right;
-				value = node.value;
-			}
+	Node(const Node &node) {
+		cout << "copy constructor " << endl;
+		if (this != &node) {
+			color = node.color;
+			parent = node.parent;
+			left = node.left;
+			right = node.right;
+			value = node.value;
 		}
+	}
 
-		Node &operator=(const Node &node) {
-			cout << "operator = " << endl;
-			if (this != &node) {
-				color = node.color;
-				parent = node.parent;
-				left = node.left;
-				right = node.right;
-				value = node.value;
-			}
-			return *this;
+	Node &operator=(const Node &node) {
+		cout << "operator = " << endl;
+		if (this != &node) {
+			color = node.color;
+			parent = node.parent;
+			left = node.left;
+			right = node.right;
+			value = node.value;
 		}
+		return *this;
+	}
 
-		virtual ~Node() { }
+	virtual ~Node() {}
 
-		bool is_root() const {
-			if (this->parent->parent == NULL)
-				return 1;
-			return 0;
-		}
+	bool is_root() const {
+		if (this->parent->parent == NULL) return 1;
+		return 0;
+	}
 
-		bool is_leaf() const {
-			if (this->parent == NULL)
-				return 1;
-			return 0;
-		}
-	};
-}
+	bool is_leaf() const {
+		if (this->parent == NULL) return 1;
+		return 0;
+	}
+};
+}  // namespace ft
 
-#endif	//NODE_HPP
+#endif	// NODE_HPP
