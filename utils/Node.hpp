@@ -25,7 +25,7 @@ struct Node {
 	value_type value;
 
 	Node(value_type value = value_type())
-		: parent(NULL), left(NULL), right(NULL), color(BLACK), value(value) {}
+		: color(BLACK), parent(NULL), left(NULL), right(NULL), value(value) {}
 
 	Node(const Node &node) {
 		cout << "copy constructor " << endl;

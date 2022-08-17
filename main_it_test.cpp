@@ -100,7 +100,7 @@ int main() {
 //    for(std::map<int, int>::iterator it = m2.begin(); it != m2.end(); ++it) {
 //        cout << it->first << " " << it->second << endl;
 //    }
-std::map<int, int> *m3 = new std::map<int, int>();
+//std::map<int, int> *m3 = new std::map<int, int>();
 
 
 //    m1[0] = 6;

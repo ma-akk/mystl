@@ -2,9 +2,7 @@
 #include <vector>
 #include <stack>
 #include "vector.hpp"
-#include "iterators/iterator.hpp"
 #include "stack.hpp"
-#include "utils/utils.hpp"
 
 using std::cout;
 using std::endl;
@@ -19,8 +17,7 @@ int main() {
 
 	ft::vector<int> v02(10);
 
-	ft::vector<int> v1_copy(v1);	
-	// ft::iterator_traits<char * > it;
+//	ft::vector<int> v1_copy(v1);
 	
 	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
 	// cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
@@ -41,28 +38,28 @@ int main() {
 	std::vector<int>::iterator it_end = v.end();
 	ft::vector<int>::iterator it_end1 = v1.end();
 	
-	//INSERT with empty vector
-	// v.insert(it, 10);
-	// v1.insert(it1, 10);
-	// cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << v1[0]  << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+//	INSERT with empty vector
+	 v.insert(it, 10);
+	 v1.insert(it1, 10);
+	 cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << v1[0]  << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
-	// v.insert(it, 3, 10);
-	// v1.insert(it1, 3, 10);
-	// cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 v.insert(it, 3, 10);
+	 v1.insert(it1, 3, 10);
+	 cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
 	std::vector<int>::iterator it2 = v01.begin() + 2;
 	std::vector<int>::iterator it3 = v01.begin() + 5;
 
-	// v.insert(it, it2, it3);
-	// v1.insert(it1, it2, it3);
-	// cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 v.insert(it, it2, it3);
+	 v1.insert(it1, it2, it3);
+	 cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
-	//ERASE with empty vector  - SEG_FAULT
-	// v.erase(it);
-	// v1.erase(it1);
+//	ERASE with empty vector  - SEG_FAULT
+//	 v.erase(it);
+//	 v1.erase(it1);
 	cout << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
 	cout << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 	
@@ -78,22 +75,22 @@ int main() {
 	v1.push_back(5);
 	v1.push_back(12);
 
-	// cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	// cout << "std: empty = " << v.empty() << endl << "ft:  empty = " << v1.empty() << endl;
-	// cout << "std: front = " << v.front() << endl << "ft:  front = " << v1.front() << endl;
-	// cout << "std: back = " << v.back() << endl << "ft:  back = " << v1.back() << endl;
-	// cout << "std: data = " << *(v.data()) << endl << "ft:  data = " << *(v1.data()) << endl;
+	 cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 cout << "std: empty = " << v.empty() << endl << "ft:  empty = " << v1.empty() << endl;
+	 cout << "std: front = " << v.front() << endl << "ft:  front = " << v1.front() << endl;
+	 cout << "std: back = " << v.back() << endl << "ft:  back = " << v1.back() << endl;
+	 cout << "std: data = " << *(v.data()) << endl << "ft:  data = " << *(v1.data()) << endl;
 	
-	// cout << endl << " =====   MODIFY VECTOR   ===== " << endl;
-	// int rs = 7;
-	// v.resize(rs);
-	// v1.resize(rs);
-	// cout << "RESIZE" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	// for(int i = 0; i < rs; i++) {
-	// 	cout << v[i] << " " << v1[i] << endl;
-	// }
+	 cout << endl << " =====   MODIFY VECTOR   ===== " << endl;
+	 int rs = 7;
+	 v.resize(rs);
+	 v1.resize(rs);
+	 cout << "RESIZE" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 for(int i = 0; i < rs; i++) {
+	 	cout << v[i] << " " << v1[i] << endl;
+	 }
 
 	// rs = 11;
 	// v.resize(rs, 10);
@@ -113,19 +110,19 @@ int main() {
 	// // 	cout << v[i] << " " << v1[i] << endl;
 	// // }
 
-	// rs = 18;
-	// v.resize(rs, -90);
-	// v1.resize(rs, -90);
-	// cout << "RESIZE" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	// // for(int i = 0; i < rs; i++) {
-	// // 	cout << v[i] << " " << v1[i] << endl;
-	// // }
+	 rs = 18;
+	 v.resize(rs, -90);
+	 v1.resize(rs, -90);
+	 cout << "RESIZE" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 // for(int i = 0; i < rs; i++) {
+	 // 	cout << v[i] << " " << v1[i] << endl;
+	 // }
 
-	// v.pop_back();
-	// v1.pop_back();
-	// cout << "POP_BACK" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	// cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	 v.pop_back();
+	 v1.pop_back();
+	 cout << "POP_BACK" << endl << "std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+	 cout << "ft:  size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
 	// v.clear();
 	// v1.clear();
@@ -350,7 +347,7 @@ int main() {
 	ft::vector<int>::iterator it02 = v02.begin();
 	v02.push_back(11);
 	cout  << "v(count): " << "ft: size/cap = " << v02.size() << " / " << v02.capacity() << endl;
-	for(int i = 0; i < v02.size(); i++) {
+	for(size_t i = 0; i < v02.size(); i++) {
 		cout << v02[i] << " " ;
 	}
 	ft::vector<int>::reverse_iterator it03 = v02.rbegin();

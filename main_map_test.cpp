@@ -6,7 +6,7 @@
 // #include "stack.hpp"
 // #include "utils.hpp"
 #include <map>
-// #include "map.hpp"
+#include "map.hpp"
 
 using std::cout;
 using std::endl;
@@ -42,8 +42,10 @@ int main() {
 	// cout << it->first << " " << it->second << endl;
 
 	std::map<int, int> mEmp;
-	cout << "size/count : " << mEmp.size() << " map = "  << mEmp[0] << endl; 
-	
+	cout << "size/count : " << mEmp.size() << " map = "  << mEmp[0] << endl;
+	ft::map<int, int> m5;
+	cout << "size/count : " << mEmp.size() << " map = "  << mEmp[0] << endl;
+
 
 
 }

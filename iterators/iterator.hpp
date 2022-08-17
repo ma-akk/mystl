@@ -18,14 +18,14 @@ struct remove_const<const T> {
 	typedef T type;
 };
 
-template <class Iter>
+template <class Iterator>
 class iterator_traits {
    public:
-	typedef typename Iter::iterator_category iterator_category;
-	typedef typename Iter::value_type value_type;
-	typedef typename Iter::difference_type difference_type;
-	typedef typename Iter::pointer pointer;
-	typedef typename Iter::reference reference;
+	typedef typename Iterator::iterator_category iterator_category;
+	typedef typename Iterator::value_type value_type;
+	typedef typename Iterator::difference_type difference_type;
+	typedef typename Iterator::pointer pointer;
+	typedef typename Iterator::reference reference;
 };
 
 template <class T>
@@ -94,8 +94,8 @@ void advance(InIt& iter, typename iterator_traits<InIt>::difference_type n) {
 }
 
 template <class InIt>
-typename iterator_traits<InIt>::difference_type distance(InIt& first,
-														 InIt& last) {
+typename iterator_traits<InIt>::difference_type
+distance(InIt& first, InIt& last) {
 	return distance_impl(
 		first, last, typename ft::iterator_traits<InIt>::iterator_category());
 }

@@ -45,14 +45,6 @@ bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2,
 	return true;
 }
 
-template <bool condition, typename T>
-struct enable_if;
-
-template <typename T>
-struct enable_if<true, T> {
-	typedef T type;
-};
-
 template <class T, bool v>
 struct integral_constant {
 	static const bool value = v;
@@ -75,8 +67,6 @@ struct is_integral<unsigned char> : public integral_constant<bool, true> {};
 template <>
 struct is_integral<wchar_t> : public integral_constant<bool, true> {};
 template <>
-struct is_integral<uint16_t> : public integral_constant<bool, true> {};
-template <>
 struct is_integral<short> : public integral_constant<bool, true> {};
 template <>
 struct is_integral<unsigned short> : public integral_constant<bool, true> {};
@@ -93,7 +83,7 @@ struct is_integral<long long> : public integral_constant<bool, true> {};
 template <>
 struct is_integral<unsigned long long> : public integral_constant<bool, true> {};
 
-template <bool B, class T, class F>
+template <bool condition, class T, class F>
 struct conditional {
 	typedef F type;
 };
@@ -101,6 +91,14 @@ struct conditional {
 template <class T, class F>
 struct conditional<true, T, F> {
 	typedef T type;
+};
+
+template <bool condition, typename T>
+struct enable_if;
+
+template <typename T>
+struct enable_if<true, T> {
+  typedef T type;
 };
 
 // testing file is in Standart p.65

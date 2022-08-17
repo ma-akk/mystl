@@ -11,6 +11,7 @@
 #include "iterators/iterator.hpp"
 #include "iterators/ran_it.hpp"
 #include "iterators/reverse_it.hpp"
+#include "utils/utils.hpp"
 
 using std::allocator;
 using std::cout;
@@ -34,7 +35,7 @@ class vector {
 	typedef reverse_it<iterator> reverse_iterator;
 	typedef reverse_it<const iterator> const_reverse_iterator;
 
-	/*constructors*/
+	/* constructors */
 	vector() : _size(0), _cap(0) {
 		_array = NULL;
 		_first = NULL;
@@ -55,7 +56,7 @@ class vector {
 					const Allocator& alloc = Allocator())
 		: _size(count), _cap(count), _alloc(alloc) {
 		_array = _alloc.allocate(count);
-		for (int i = 0; i < count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			_alloc.construct(_array + i, value);
 		}
 		_first = _array;
@@ -96,7 +97,7 @@ class vector {
 	~vector() {
 		cout << "destructor. size = " << this->size() << endl;
 		if (_array != NULL) {
-			for (int i = 0; i < _size; i++) {
+			for (size_t i = 0; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 			_alloc.deallocate(_array, _cap);
@@ -126,14 +127,14 @@ class vector {
 
 	void assign(size_t count, const T& value) {
 		if (count < _size) {
-			for (int i = count; i < _size; i++) {
+			for (size_t i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else if (count > _cap) {
 			this->reserve(count);
 		}
 
-		for (int i = 0; i < count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			_alloc.destroy(_array + i);
 			_alloc.construct(_array + i, value);
 		}
@@ -147,7 +148,7 @@ class vector {
 		ptrdiff_t count = ft::distance(first, last);
 		cout << "count = " << count << endl;
 		if (count < _size) {
-			for (int i = count; i < _size; i++) {
+			for (size_t i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else if (count > _cap) {
@@ -163,7 +164,7 @@ class vector {
 		_last = _array + _size;
 	}
 
-	/*capacity*/
+	/* capacity */
 	size_t size() const { return _size; }
 
 	size_t capacity() const { return _cap; }
@@ -270,7 +271,8 @@ class vector {
 	}
 
 	template <class InputIt>
-	void insert(iterator pos, InputIt first, InputIt last) {
+	void insert(iterator pos, InputIt first, InputIt last,
+				typename enable_if<!is_integral<InputIt>::value>::type* = 0) { //typename enable_if<!is_integral<InputIt>::value>::type* = 0
 		ptrdiff_t ipos = &(*pos) - _first;
 		ptrdiff_t count = ft::distance(first, last);
 		if ((_size + count) >= _cap) {
@@ -285,7 +287,7 @@ class vector {
 			_alloc.destroy(ptr);
 		}
 		for (InputIt tmp = first; tmp != last; ++tmp, ++ptr) {
-			_alloc.construct(ptr, *tmp);
+			_alloc.construct(ptr, (*tmp));
 		}
 		_size += count;
 		_first = _array;
@@ -324,14 +326,14 @@ class vector {
 	void resize(size_t n,
 				const T& val = T()) {  //заполняет только "пустые" элементы
 		if (n < _size) {
-			for (int i = n; i < _size; i++) {
+			for (size_t i = n; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else {
 			if (n > _cap) {
 				this->reserve(n);
 			}
-			for (int i = _size; i < n; i++) {
+			for (size_t i = _size; i < n; i++) {
 				_alloc.construct(_array + i, val);
 			}
 		}
@@ -346,32 +348,6 @@ class vector {
 		std::swap(this->_alloc, other._alloc);
 		std::swap(this->_first, other._first);
 		std::swap(this->_last, other._last);
-		//			if (this != &other && !(this->empty() || other.empty())) {
-		//				T* tmp_ptr = _array;
-		//				_array = other._array;
-		//				other._array = tmp_ptr;
-		//
-		//				tmp_ptr = _last;
-		//				_last = other._last;
-		//				other._last = tmp_ptr;
-		//
-		//				_first = _array;
-		//				other._first = other._array;
-		//
-		//				size_t tmp = _size;
-		//				_size = other._size;
-		//				other._size = tmp;
-		//
-		//				tmp = _cap;
-		//				_cap = other._cap;
-		//				other._cap = tmp;
-		//			} else if(this->empty()) {
-		//				*this = other;
-		//				other.clear();
-		//			} else if(other.empty()) {
-		//				other = *this;
-		//				this->clear();
-		//			}
 	}
 
 	void push_back(const T& value) {
@@ -424,7 +400,7 @@ template <class T, class Allocator>
 bool operator==(const vector<T, Allocator>& lhs,
 				const vector<T, Allocator>& rhs) {
 	if (lhs.size() == rhs.size()) {
-		for (int i = 0; i < rhs.size(); i++) {
+		for (size_t i = 0; i < rhs.size(); i++) {
 			if (lhs[i] != rhs[i]) return false;
 		}
 		return true;
