@@ -37,7 +37,7 @@ class tree_it {
 
 	reference operator*() const { return *(_node->value); }
 
-	pointer operator->() const { return _node->value; }
+	pointer operator->() const { return &(_node->value); }
 
 	tree_it& operator++() {
 		if (_node->right && !_node->right->is_leaf()) {

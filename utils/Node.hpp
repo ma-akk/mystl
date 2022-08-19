@@ -27,14 +27,13 @@ struct Node {
 	Node(value_type value = value_type())
 		: color(BLACK), parent(NULL), left(NULL), right(NULL), value(value) {}
 
-	Node(const Node &node) {
+	Node(const Node &node) :  value(node.value) {
 		cout << "copy constructor " << endl;
 		if (this != &node) {
 			color = node.color;
 			parent = node.parent;
 			left = node.left;
 			right = node.right;
-			value = node.value;
 		}
 	}
 

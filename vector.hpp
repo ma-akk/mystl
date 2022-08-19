@@ -271,8 +271,8 @@ class vector {
 	}
 
 	template <class InputIt>
-	void insert(iterator pos, InputIt first, InputIt last,
-				typename enable_if<!is_integral<InputIt>::value>::type* = 0) { //typename enable_if<!is_integral<InputIt>::value>::type* = 0
+	void insert(iterator pos, InputIt first,
+				typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
 		ptrdiff_t ipos = &(*pos) - _first;
 		ptrdiff_t count = ft::distance(first, last);
 		if ((_size + count) >= _cap) {

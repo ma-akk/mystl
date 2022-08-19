@@ -51,6 +51,8 @@ int main() {
 
 	std::vector<int>::iterator it2 = v01.begin() + 2;
 	std::vector<int>::iterator it3 = v01.begin() + 5;
+	ft::vector<int>::iterator it4 = v1.begin() + 2;
+	ft::vector<int>::iterator it5 = v1.begin() + 5;
 
 	 v.insert(it, it2, it3);
 	 v1.insert(it1, it2, it3);

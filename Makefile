@@ -10,7 +10,7 @@ CC			= c++
 
 NAME		= ft_containers
 
-FLAGS		= -std=c++98 -g -Wall -Wextra -Werror
+FLAGS		= -std=c++98 -g
 
 .cpp.o:
 		${CC} ${FLAGS} -c $< -o ${<:.cpp=.o}

@@ -72,16 +72,11 @@ class rb_tree {
 		for (; it != last; ++it) insert(*it);
 	}
 
-	rb_tree(const rb_tree& value) {
+	rb_tree(const rb_tree& value) : _root(value._root),
+	_nil(value._nil), _value_alloc(value._value_alloc),
+  	_node_alloc(value._node_alloc), _compare(value._compare),
+  	_size(value._size) {
 		cout << "copy constructor " << endl;
-		if (this != &value) {
-			_root = value._root;
-			_nil = value._nil;
-			_value_alloc = value._value_alloc;
-			_node_alloc = value._node_alloc;
-			_compare = value._compare;
-			_size = value._size;
-		}
 	}
 
 	rb_tree& operator=(const rb_tree& value) {

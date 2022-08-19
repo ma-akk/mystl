@@ -63,9 +63,9 @@ int main() {
 //    cout << "tree->max = " << tree->rb_max(tree->get_root())->value.first << " color = " << tree->rb_max(tree->get_root())->color << endl;
 //    cout << "tree->get_root() = " << tree->get_root()->value.first << " color = " << tree->get_root()->color << endl;
 
-//    ft::rb_tree<value>::iterator it = tree->begin();
-//    cout << "iterator:first = " << it.get_node()->value.first << " second = " << it.get_node()->value.second << endl;
-//    cout << it->first << endl;
+    ft::rb_tree<value>::iterator it = tree->begin();
+    cout << "iterator:first = " << it.get_node()->value.first << " second = " << it.get_node()->value.second << endl;
+    cout << it->first << endl;
 
 //    cout << "lower_bound = " << tree->lower_bound(vKey).get_node()->value.first << endl;
 //    cout << "lower_bound = " << tree->lower_bound(v3).get_node()->value.first << endl;
