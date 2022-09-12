@@ -6,6 +6,7 @@
 
 using std::cout;
 using std::endl;
+using std::string;
 
 int main() {
 	std::vector<int> v;
@@ -87,10 +88,8 @@ int main() {
 	cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
 	cout << endl << " =========  ITERATORS  ========= " << endl;
-	// std::vector<int>::iterator it = v.begin();
 	it1 = v1.begin();
 	ft::vector<int>::iterator it2 = v1.begin() + 2;
-	// std::vector<int>::iterator it_end = v.end();
 	ft::vector<int>::iterator it_end1 = v1.end();
 	ft::vector<int>::iterator it_end2 = v1.end();
 
@@ -115,6 +114,24 @@ int main() {
 	} else {
 		cout << "ft:v more v01" << endl; 
 	}
+
+
+	std::vector<string> vStr = {"test", "test", "test"};
+	ft::vector<string> v1Str; // = {"test", "test", "test"};
+
+	for(int i = 0; i < 15; i++) {
+		// vStr.push_back("test");
+		v1Str.push_back("test");
+	}
+
+	for(int i = 0; i < vStr.size(); i++) {
+	 	cout << vStr[i] << " " ;
+	 }
+	 cout << endl;
+	 for(int i = 0; i < v1Str.size(); i++) {
+	 	cout << v1Str[i] << " " ;
+	 }
+	 cout << endl;
 
 
 //	INSERT with empty vector

@@ -55,33 +55,35 @@ struct integral_constant {
 };
 
 template <class T>
-struct is_integral : public integral_constant<T, false> {};
+struct is_integral : public ft::integral_constant<T, false> {};
 template <>
-struct is_integral<bool> : public integral_constant<bool, true> {};
+struct is_integral<bool> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<char> : public integral_constant<bool, true> {};
+struct is_integral<char> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<signed char> : public integral_constant<bool, true> {};
+struct is_integral<signed char> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<unsigned char> : public integral_constant<bool, true> {};
+struct is_integral<unsigned char> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<wchar_t> : public integral_constant<bool, true> {};
+struct is_integral<wchar_t> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<short> : public integral_constant<bool, true> {};
+struct is_integral<char16_t>: public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<unsigned short> : public integral_constant<bool, true> {};
+struct is_integral<short> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<int> : public integral_constant<bool, true> {};
+struct is_integral<unsigned short> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<unsigned int> : public integral_constant<bool, true> {};
+struct is_integral<int> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<long> : public integral_constant<bool, true> {};
+struct is_integral<unsigned int> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<unsigned long> : public integral_constant<bool, true> {};
+struct is_integral<long> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<long long> : public integral_constant<bool, true> {};
+struct is_integral<unsigned long> : public ft::integral_constant<bool, true> {};
 template <>
-struct is_integral<unsigned long long> : public integral_constant<bool, true> {};
+struct is_integral<long long> : public ft::integral_constant<bool, true> {};
+template <>
+struct is_integral<unsigned long long> : public ft::integral_constant<bool, true> {};
 
 template <bool condition, class T, class F>
 struct conditional {
@@ -94,7 +96,7 @@ struct conditional<true, T, F> {
 };
 
 template <bool condition, typename T>
-struct enable_if;
+struct enable_if {};
 
 template <typename T>
 struct enable_if<true, T> {

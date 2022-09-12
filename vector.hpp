@@ -25,6 +25,7 @@ class vector {
    public:
 	typedef T value_type;
 	typedef size_t size_type;
+	typedef Allocator allocator_type;
 	typedef std::ptrdiff_t difference_type;
 	typedef T* pointer;
 	typedef T& reference;
@@ -64,18 +65,19 @@ class vector {
 	}
 
 	//~DELETE
-	// explicit vector(size_type count) : _size(count), _cap(count) {
-	// 	_array = _alloc.allocate(count);
-	// 	for(int i = 0; i < count; i++) {
-	// 		_alloc.construct(_array + i, T());
-	// 	}
-	// 	_first = _array;
-	// 	_last = _array + count;
-	// }
+	explicit vector(size_type count) : _size(count), _cap(count) {
+		_array = _alloc.allocate(count);
+		for(int i = 0; i < count; i++) {
+			_alloc.construct(_array + i, T());
+		}
+		_first = _array;
+		_last = _array + count;
+	}
 
 	// NOT TESTED
 	template <class InputIt>
-	vector(InputIt first, InputIt last, const Allocator& alloc = Allocator())
+	vector(typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+					InputIt last, const Allocator& alloc = Allocator())
 		: _alloc(alloc) {
 		this->assign(first, last);
 	}
@@ -123,7 +125,7 @@ class vector {
 		return *this;
 	}
 
-	Allocator get_allocator() const { return _alloc; }
+	allocator_type get_allocator() const { return _alloc; }
 
 	void assign(size_type count, const T& value) {
 		if (count < _size) {
