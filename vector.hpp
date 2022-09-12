@@ -41,7 +41,7 @@ class vector {
 		_first = NULL;
 		_last = _first;
 
-		cout << "default construct " << endl;
+		// cout << "default construct " << endl;
 	}
 
 	explicit vector(const Allocator& alloc) : _alloc(alloc) {
@@ -52,7 +52,7 @@ class vector {
 		_last = _first;
 	}
 
-	explicit vector(size_t count, const T& value = T(),
+	explicit vector(size_type count, const T& value = T(),
 					const Allocator& alloc = Allocator())
 		: _size(count), _cap(count), _alloc(alloc) {
 		_array = _alloc.allocate(count);
@@ -64,7 +64,7 @@ class vector {
 	}
 
 	//~DELETE
-	// explicit vector(size_t count) : _size(count), _cap(count) {
+	// explicit vector(size_type count) : _size(count), _cap(count) {
 	// 	_array = _alloc.allocate(count);
 	// 	for(int i = 0; i < count; i++) {
 	// 		_alloc.construct(_array + i, T());
@@ -82,11 +82,11 @@ class vector {
 
 	/*copy constructor*/
 	vector(const vector& value) {
-		cout << "copy constructor " << endl;
+		// cout << "copy constructor " << endl;
 		_size = value.size();
 		_cap = value.capacity();
 		_array = _alloc.allocate(_cap);
-		for (size_t i = 0; i < _size; ++i) {
+		for (size_type i = 0; i < _size; ++i) {
 			_alloc.construct(_array + i, value[i]);
 		}
 		_first = _array;
@@ -95,9 +95,9 @@ class vector {
 
 	/*destructor*/
 	~vector() {
-		cout << "destructor. size = " << this->size() << endl;
+		// cout << "destructor. size = " << this->size() << endl;
 		if (_array != NULL) {
-			for (size_t i = 0; i < _size; i++) {
+			for (size_type i = 0; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 			_alloc.deallocate(_array, _cap);
@@ -105,7 +105,7 @@ class vector {
 	}
 
 	vector& operator=(const vector& value) {
-		cout << "operator = " << endl;
+		// cout << "operator = " << endl;
 		if (this != &value) {
 			if (_array != NULL) {
 				clear();
@@ -114,7 +114,7 @@ class vector {
 			_size = value.size();
 			_cap = value.capacity();
 			_array = _alloc.allocate(_cap);
-			for (size_t i = 0; i < _size; ++i) {
+			for (size_type i = 0; i < _size; ++i) {
 				_alloc.construct(_array + i, value[i]);
 			}
 			_first = _array;
@@ -125,16 +125,16 @@ class vector {
 
 	Allocator get_allocator() const { return _alloc; }
 
-	void assign(size_t count, const T& value) {
+	void assign(size_type count, const T& value) {
 		if (count < _size) {
-			for (size_t i = count; i < _size; i++) {
+			for (size_type i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else if (count > _cap) {
 			this->reserve(count);
 		}
 
-		for (size_t i = 0; i < count; i++) {
+		for (size_type i = 0; i < count; i++) {
 			_alloc.destroy(_array + i);
 			_alloc.construct(_array + i, value);
 		}
@@ -144,11 +144,11 @@ class vector {
 	}
 
 	template <class InputIt>
-	void assign(InputIt first, InputIt last) {
+	void assign(typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+				InputIt last) {
 		ptrdiff_t count = ft::distance(first, last);
-		cout << "count = " << count << endl;
 		if (count < _size) {
-			for (size_t i = count; i < _size; i++) {
+			for (size_type i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else if (count > _cap) {
@@ -165,20 +165,19 @@ class vector {
 	}
 
 	/* capacity */
-	size_t size() const { return _size; }
+	size_type size() const { return _size; }
 
-	size_t capacity() const { return _cap; }
+	size_type capacity() const { return _cap; }
 
 	bool empty() const { return _size == 0 ? 1 : 0; }
 
-	void reserve(size_t n) {
+	void reserve(size_type n) {
 		if (n > _cap) {
-			cout << "reserve: n = " << n << " cap = " << _cap << endl;
 			T* newarr = _alloc.allocate(n);
-			for (size_t i = 0; i < _cap; i++) {
+			for (size_type i = 0; i < _cap; i++) {
 				_alloc.construct(newarr + i, _array[i]);
 			}
-			for (size_t i = 0; i < _cap; i++) {
+			for (size_type i = 0; i < _cap; i++) {
 				_alloc.destroy(_array + i);
 			}
 			if (_array != NULL) {
@@ -191,21 +190,21 @@ class vector {
 		}
 	}
 
-	size_t max_size() const { return _alloc.max_size(); }
+	size_type max_size() const { return _alloc.max_size(); }
 
 	/*access*/
-	T& operator[](size_t n) { return _array[n]; }
+	reference operator[](size_type n) { return _array[n]; }
 
-	const T& operator[](size_t n) const { return _array[n]; }
+  	const_reference operator[](size_type n) const { return _array[n]; }
 
-	T& at(size_t n) {
-		if (n > _size || n < 0)
+  	reference at(size_type n) {
+		if (n > _size)
 			throw std::out_of_range("range_check it >= size");
 		return _array[n];
 	}
 
-	const T& at(size_t n) const {
-		if (n > _size || n < 0)
+  	const_reference at(size_type n) const {
+		if (n > _size)
 			throw std::out_of_range("range_check it >= size");
 		return _array[n];
 	}
@@ -224,7 +223,7 @@ class vector {
 
 	/*modify*/
 	void clear() {
-		for (size_t i = 0; i < _size; ++i) {
+		for (size_type i = 0; i < _size; ++i) {
 			_alloc.destroy(_array + i);
 		}
 		_size = 0;
@@ -307,7 +306,7 @@ class vector {
 
 	iterator erase(iterator first, iterator last) {
 		iterator p;
-		size_t count = 0;
+		size_type count = 0;
 		for (p = first; p != last; ++p) {
 			_alloc.destroy(&(*p));
 			++count;
@@ -323,17 +322,17 @@ class vector {
 		return first;
 	}
 
-	void resize(size_t n,
+	void resize(size_type n,
 				const T& val = T()) {  //заполняет только "пустые" элементы
 		if (n < _size) {
-			for (size_t i = n; i < _size; i++) {
+			for (size_type i = n; i < _size; i++) {
 				_alloc.destroy(_array + i);
 			}
 		} else {
 			if (n > _cap) {
 				this->reserve(n);
 			}
-			for (size_t i = _size; i < n; i++) {
+			for (size_type i = _size; i < n; i++) {
 				_alloc.construct(_array + i, val);
 			}
 		}
@@ -344,7 +343,7 @@ class vector {
 	void swap(vector& other) {
 		std::swap(this->_array, other._array);
 		std::swap(this->_size, other._size);
-		std::swap(this->_cap, other._size);
+		std::swap(this->_cap, other._cap);
 		std::swap(this->_alloc, other._alloc);
 		std::swap(this->_first, other._first);
 		std::swap(this->_last, other._last);
@@ -388,8 +387,8 @@ class vector {
 
    private:
 	T* _array;
-	size_t _size;
-	size_t _cap;
+	size_type _size;
+	size_type _cap;
 	Allocator _alloc;
 	T* _first;
 	T* _last;
@@ -417,7 +416,7 @@ bool operator!=(const vector<T, Allocator>& lhs,
 template <class T, class Allocator>
 bool operator<(const vector<T, Allocator>& lhs,
 			   const vector<T, Allocator>& rhs) {
-	return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
 									rhs.end()));
 }
 

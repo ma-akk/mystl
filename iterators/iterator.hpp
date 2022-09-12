@@ -53,7 +53,7 @@ class iterator_traits<const T*> {
 namespace {
 	template <class InIt>
 	void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n,
-					std::input_iterator_tag) {  //РАБОТАЕТ ТОЛЬКО С STD!!!!!!!!!!
+					std::input_iterator_tag) {
 		cout << "it is InIt" << endl;
 		for (int i = 0; i < n; i++) {
 			++iter;
@@ -63,14 +63,12 @@ namespace {
 	template <class InIt>
 	void advance_impl(InIt& iter, typename iterator_traits<InIt>::difference_type n,
 					std::random_access_iterator_tag) {
-		cout << "it is RanIt" << endl;
 		iter += n;
 	}
 
 	template <class InIt>
 	typename iterator_traits<InIt>::difference_type distance_impl(
 		InIt& first, InIt& last, std::input_iterator_tag) {
-		cout << "impl common" << endl;
 		typename iterator_traits<InIt>::difference_type n;
 		InIt tmp = first;
 		for (n = 0; tmp != last; n++) {
@@ -82,7 +80,6 @@ namespace {
 	template <class InIt>
 	typename iterator_traits<InIt>::difference_type distance_impl(
 		InIt& first, InIt& last, std::random_access_iterator_tag) {
-		cout << "impl ran_it" << endl;
 		return last - first;
 	}
 };	// namespace
