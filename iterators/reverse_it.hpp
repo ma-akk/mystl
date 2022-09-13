@@ -8,82 +8,77 @@
 
 namespace ft {
 
-template <class ran_it>
-class reverse_it
-	: public std::iterator<typename iterator_traits<ran_it>::iterator_category,
-						   typename iterator_traits<ran_it>::value_type,
-						   typename iterator_traits<ran_it>::difference_type,
-						   typename iterator_traits<ran_it>::pointer,
-						   typename iterator_traits<ran_it>::reference> {
-   public:
-	typedef reverse_it<ran_it> rev_it;
-	typedef typename iterator_traits<ran_it>::difference_type D;
-	typedef typename iterator_traits<ran_it>::pointer Ptr;
-	typedef typename iterator_traits<ran_it>::reference Ref;
-	typedef ran_it iterator_type;
+template <class T>
+class reverse_it {
+ public:
+  typedef typename ft::iterator_traits<T*>::iterator_category iterator_category;
+  typedef typename ft::iterator_traits<T*>::value_type value_type;
+  typedef typename ft::iterator_traits<T*>::difference_type difference_type;
+  typedef T* pointer;
+  typedef T& reference;
+  typedef pointer iterator_type;
 
-	reverse_it() {}
+	reverse_it() : current(NULL) {}
 
 	explicit reverse_it(iterator_type x) : current(x) {}
 
-	template <class U>
-	reverse_it(const reverse_it<U> &value) : current(value.base()) {}
+	template <class V>
+	reverse_it(const reverse_it<V> &value) : current(&(*value)) {}
 
-	template <class U>
-	reverse_it &operator=(const reverse_it<U> &value) {
+	template<class V>
+	reverse_it &operator=(const reverse_it<V> &value) {
 		if (this != &value) {
 			current = value.base();
 		}
 		return *this;
 	}
 
-	ran_it base() const { return current; }
+	pointer base() const { return current; }
 
-	Ref operator*() const {
-		ran_it tmp = current;
-		return (*--tmp);
+	reference operator*() const {
+		return (*current);
 	}
 
-	Ptr operator->() const { return (&**this); }
+	pointer operator->() const { return &(this->operator*()); }
 
-	Ref operator[](D n) const { return *(*this + n); }
+	reference operator[](difference_type n) const { return *(*this + n); }
 
-	rev_it &operator++() {
+	reverse_it &operator++() {
 		--current;
 		return *this;
 	}
 
-	rev_it &operator--() {
+	reverse_it &operator--() {
 		++current;
 		return *this;
 	}
 
-	rev_it operator++(int) {
-		rev_it tmp = *this;
+	reverse_it operator++(int) {
+		reverse_it tmp = *this;
 		--current;
 		return tmp;
 	}
 
-	rev_it operator--(int) {
-		rev_it tmp = *this;
+	reverse_it operator--(int) {
+		reverse_it tmp = *this;
 		++current;
 		return tmp;
 	}
-	rev_it operator+(D n) const { return rev_it(current - n); }
+	reverse_it operator+(difference_type n) const { return reverse_it(current - n); }
 
-	rev_it operator-(D n) const { return rev_it(current + n); }
+	reverse_it operator-(difference_type n) const { return reverse_it(current + n); }
 
-	rev_it &operator+=(D n) {
+	reverse_it &operator+=(difference_type n) {
 		current -= n;
 		return *this;
 	}
-	rev_it &operator-=(D n) {
+	reverse_it &operator-=(difference_type n) {
 		current += n;
 		return *this;
 	}
 
    protected:
-	ran_it current;
+	pointer current;
 };
 
 // non-member function

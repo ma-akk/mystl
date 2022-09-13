@@ -16,6 +16,7 @@
 using std::allocator;
 using std::cout;
 using std::endl;
+using std::cerr;
 
 #define MAXSIZE std::numeric_limits<size_t>::max()
 
@@ -31,10 +32,10 @@ class vector {
 	typedef T& reference;
 	typedef const T* const_pointer;
 	typedef const T& const_reference;
-	typedef ran_it<T> iterator;
-	typedef ran_it<const T> const_iterator;
-	typedef reverse_it<iterator> reverse_iterator;
-	typedef reverse_it<const iterator> const_reverse_iterator;
+	typedef ft::ran_it<T> iterator;
+	typedef ft::ran_it<const T> const_iterator;
+	typedef ft::reverse_it<T> reverse_iterator;
+	typedef ft::reverse_it<const T> const_reverse_iterator;
 
 	/* constructors */
 	vector() : _size(0), _cap(0) {
@@ -45,18 +46,17 @@ class vector {
 		// cout << "default construct " << endl;
 	}
 
-	explicit vector(const Allocator& alloc) : _alloc(alloc) {
-		_size = 0;
-		_cap = 0;
-		_array = NULL;
-		_first = NULL;
-		_last = _first;
-	}
+	explicit vector(const Allocator& alloc) : _alloc(alloc), _size(0), _cap(0),
+			_array(NULL), _first(NULL), _last(_first) {	}
 
 	explicit vector(size_type count, const T& value = T(),
 					const Allocator& alloc = Allocator())
-		: _size(count), _cap(count), _alloc(alloc) {
+		: _size(count), _cap(count), _alloc(alloc), _array(NULL) {
+		try { 
 		_array = _alloc.allocate(count);
+		} catch (std::bad_alloc) {
+			cerr << "Bad allocate exception" << endl;
+		}
 		for (size_t i = 0; i < count; i++) {
 			_alloc.construct(_array + i, value);
 		}
@@ -64,30 +64,22 @@ class vector {
 		_last = _array + count;
 	}
 
-	//~DELETE
-	explicit vector(size_type count) : _size(count), _cap(count) {
-		_array = _alloc.allocate(count);
-		for(int i = 0; i < count; i++) {
-			_alloc.construct(_array + i, T());
-		}
-		_first = _array;
-		_last = _array + count;
-	}
-
 	// NOT TESTED
 	template <class InputIt>
-	vector(typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+	vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 					InputIt last, const Allocator& alloc = Allocator())
-		: _alloc(alloc) {
+		: _alloc(alloc), _array(NULL) {
 		this->assign(first, last);
 	}
 
 	/*copy constructor*/
-	vector(const vector& value) {
+	vector(const vector& value) : _size(value.size()), _cap(value.capacity()), _array(NULL) {
 		// cout << "copy constructor " << endl;
-		_size = value.size();
-		_cap = value.capacity();
-		_array = _alloc.allocate(_cap);
+		try {
+			_array = _alloc.allocate(_cap);	
+		} catch (std::bad_alloc) {
+			cerr << "Bad allocate exception" << endl;
+		}
 		for (size_type i = 0; i < _size; ++i) {
 			_alloc.construct(_array + i, value[i]);
 		}
@@ -99,9 +91,7 @@ class vector {
 	~vector() {
 		// cout << "destructor. size = " << this->size() << endl;
 		if (_array != NULL) {
-			for (size_type i = 0; i < _size; i++) {
-				_alloc.destroy(_array + i);
-			}
+			clear();
 			_alloc.deallocate(_array, _cap);
 		}
 	}
@@ -146,9 +136,9 @@ class vector {
 	}
 
 	template <class InputIt>
-	void assign(typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+	void assign(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				InputIt last) {
-		ptrdiff_t count = ft::distance(first, last);
+		difference_type count = ft::distance(first, last);
 		if (count < _size) {
 			for (size_type i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
@@ -175,7 +165,12 @@ class vector {
 
 	void reserve(size_type n) {
 		if (n > _cap) {
-			T* newarr = _alloc.allocate(n);
+			T* newarr = NULL;
+			try {
+				newarr = _alloc.allocate(n);
+			} catch (std::bad_alloc) {
+				cerr << "Bad allocate exception" << endl;
+			}
 			for (size_type i = 0; i < _cap; i++) {
 				_alloc.construct(newarr + i, _array[i]);
 			}
@@ -234,7 +229,7 @@ class vector {
 	}
 
 	iterator insert(iterator pos, const T& value) {
-		ptrdiff_t ipos = &(*pos) - _first;
+		difference_type ipos = &(*pos) - _first;
 		if (_size == _cap) {
 			reserve(_cap == 0 ? 1 : _cap * 2);
 		}
@@ -251,7 +246,7 @@ class vector {
 	}
 
 	void insert(iterator pos, size_type count, const T& value) {
-		ptrdiff_t ipos = &(*pos) - _first;
+		difference_type ipos = &(*pos) - _first;
 		if ((_size + count) >= _cap) {
 			reserve(_cap == 0 ? count : _cap * 2);
 		}
@@ -273,9 +268,9 @@ class vector {
 
 	template <class InputIt>
 	void insert(iterator pos, InputIt first,
-				typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
-		ptrdiff_t ipos = &(*pos) - _first;
-		ptrdiff_t count = ft::distance(first, last);
+				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last) {
+		difference_type ipos = &(*pos) - _first;
+		difference_type count = ft::distance(first, last);
 		if ((_size + count) >= _cap) {
 			reserve(_cap == 0 ? count : _cap * 2);
 		}
@@ -375,31 +370,31 @@ class vector {
 
 	const_iterator end() const { return _last; }
 
-	reverse_iterator rbegin() { return reverse_iterator(end()); }
+	reverse_iterator rbegin() { return reverse_iterator(_last - 1); }
 
 	const_reverse_iterator rbegin() const {
-		return const_reverse_iterator(end());
+		return const_reverse_iterator(_last - 1);
 	}
 
-	reverse_iterator rend() { return reverse_iterator(begin()); }
+	reverse_iterator rend() { return reverse_iterator(_first - 1); }
 
 	const_reverse_iterator rend() const {
-		return const_reverse_iterator(begin());
+		return const_reverse_iterator(_first - 1);
 	}
 
    private:
-	T* _array;
+	pointer _array;
 	size_type _size;
 	size_type _cap;
 	Allocator _alloc;
-	T* _first;
-	T* _last;
+	pointer _first;
+	pointer _last;
 };
 
 // non-member function
 template <class T, class Allocator>
-bool operator==(const vector<T, Allocator>& lhs,
-				const vector<T, Allocator>& rhs) {
+bool operator==(const ft::vector<T, Allocator>& lhs,
+				const ft::vector<T, Allocator>& rhs) {
 	if (lhs.size() == rhs.size()) {
 		for (size_t i = 0; i < rhs.size(); i++) {
 			if (lhs[i] != rhs[i]) return false;
@@ -410,38 +405,38 @@ bool operator==(const vector<T, Allocator>& lhs,
 }
 
 template <class T, class Allocator>
-bool operator!=(const vector<T, Allocator>& lhs,
-				const vector<T, Allocator>& rhs) {
+bool operator!=(const ft::vector<T, Allocator>& lhs,
+				const ft::vector<T, Allocator>& rhs) {
 	return !(lhs == rhs);
 }
 
 template <class T, class Allocator>
-bool operator<(const vector<T, Allocator>& lhs,
-			   const vector<T, Allocator>& rhs) {
+bool operator<(const ft::vector<T, Allocator>& lhs,
+			   const ft::vector<T, Allocator>& rhs) {
 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
 									rhs.end()));
 }
 
 template <class T, class Allocator>
-bool operator<=(const vector<T, Allocator>& lhs,
-				const vector<T, Allocator>& rhs) {
+bool operator<=(const ft::vector<T, Allocator>& lhs,
+				const ft::vector<T, Allocator>& rhs) {
 	return (lhs < rhs || lhs == rhs);
 }
 
 template <class T, class Allocator>
-bool operator>(const vector<T, Allocator>& lhs,
-			   const vector<T, Allocator>& rhs) {
+bool operator>(const ft::vector<T, Allocator>& lhs,
+			   const ft::vector<T, Allocator>& rhs) {
 	return !(lhs < rhs || lhs == rhs);
 }
 
 template <class T, class Allocator>
-bool operator>=(const vector<T, Allocator>& lhs,
-				const vector<T, Allocator>& rhs) {
+bool operator>=(const ft::vector<T, Allocator>& lhs,
+				const ft::vector<T, Allocator>& rhs) {
 	return !(lhs < rhs);
 }
 
 template <class T, class Allocator>
-void swap(vector<T, Allocator>& lhs, vector<T, Allocator>& rhs) {
+void swap(ft::vector<T, Allocator>& lhs, ft::vector<T, Allocator>& rhs) {
 	lhs.swap(rhs);
 }
 }  // namespace ft
