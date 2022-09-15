@@ -14,11 +14,12 @@ template <class T>
 class tree_it {
    public:
 	typedef std::bidirectional_iterator_tag iterator_category;
-	typedef typename ft::iterator_traits<T*>::value_type value_type;
-	typedef typename ft::iterator_traits<T*>::reference reference;
-	typedef typename ft::iterator_traits<T*>::pointer pointer;
-	typedef typename ft::iterator_traits<T*>::difference_type difference_type;
-	typedef Node<typename remove_const<value_type>::type>* node_pointer;
+	typedef typename ft::iterator_traits<Node<T>* >::value_type value_type;
+	typedef typename ft::iterator_traits<Node<T>* >::reference reference;
+	typedef typename ft::iterator_traits<Node<typename remove_const<value_type>::type>* >::pointer pointer;
+	typedef typename ft::iterator_traits<Node<T>* >::difference_type difference_type;
+	typedef Node<T>* node_pointer;
+	typedef Node<T>* iterator_type;
 
 	tree_it() {}
 
@@ -109,7 +110,7 @@ class tree_it {
 
 	node_pointer tree_max(node_pointer node) {
 		node_pointer tmp = node;
-		while (!tmp->rigth->is_leaf()) tmp = tmp->rigth;
+		while (!tmp->right->is_leaf()) tmp = tmp->right;
 		return tmp;
 	}
 };

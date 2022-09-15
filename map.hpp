@@ -24,13 +24,11 @@ class map {
 	typedef const value_type& const_reference;
 	typedef tree_it<value_type> iterator;
 	typedef tree_it<const value_type> const_iterator;
-	typedef reverse_it<iterator> reverse_iterator;
-	typedef reverse_it<const iterator> const_reverse_iterator;
-
-	typedef rb_tree<value_type, key_compare, Allocator> map_tree;
+	typedef reverse_it<value_type> reverse_iterator;
+	typedef reverse_it<const value_type> const_reverse_iterator;
 
 	class value_compare {
-	   protected:
+	   public:
 		Compare _comp;
 		value_compare(Compare c) : _comp(c) {}
 
@@ -39,16 +37,16 @@ class map {
 		}
 	};
 
-	/*constructors*/
-	map() : _tree(map_tree()) {}
+	typedef rb_tree<value_type, value_compare, allocator_type> map_tree;
 
-	explicit map(const Compare& comp, const Allocator& alloc = Allocator())
-		: _tree(set_tree(comp, alloc)) {}
+	/*constructors*/
+	explicit map(const key_compare& comp = key_compare(), const Allocator& alloc = Allocator())
+		: _tree(map_tree(comp, alloc)) {}
 
 	template <class InputIt>
 	map(InputIt first, InputIt last, const Compare& comp = Compare(),
 		const Allocator& alloc = Allocator())
-		: _tree(set_tree(first, last, comp, alloc)) {}
+		: _tree(map_tree(first, last, comp, alloc)) {}
 
 	map(const map& other) { this->_tree = map_tree(other._tree); }
 
@@ -82,7 +80,7 @@ class map {
 
 	// NEED TESTED
 	T& operator[](const Key& key) {
-		return insert(std::make_pair(key, T())).first->second;
+		return insert(const ft::make_pair(key, T())).first->second;
 	}
 
 	/* iterators */
@@ -109,7 +107,7 @@ class map {
 	size_t max_size() const { return _tree.max_size(); }
 
 	/*modify*/
-	void clear() { _tree.clear_tree(); }
+	void clear() { _tree.clear(); }
 
 	pair<iterator, bool> insert(const value_type& value) {
 		return _tree.insert(value);
@@ -124,9 +122,9 @@ class map {
 		_tree.insert(first, last);
 	}
 
-	iterator erase(iterator pos) { return _tree.erase(pos); }
+	void erase(iterator pos) { return _tree.erase(pos); }
 
-	iterator erase(iterator first, iterator last) {
+	void erase(iterator first, iterator last) {
 		return _tree.erase(first, last);
 	}
 

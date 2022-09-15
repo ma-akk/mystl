@@ -56,8 +56,6 @@ class rb_tree {
 	}
 
 	/* consructors */
-	rb_tree() : _size(0) { init_tree(); }
-
 	explicit rb_tree(const Compare& comp, const Allocator& alloc = Allocator())
 		: _node_alloc(alloc), _compare(comp), _size(0) {
 		init_tree();
@@ -345,6 +343,10 @@ class rb_tree {
 		}
 	}
 
+	void clear() {
+		clear_tree(_root);
+	}
+
 	node_pointer tree_search(node_pointer root, value_type key) const {
 		if (root == _nil ||
 			(!_compare(key, root->value) && !_compare(root->value, key))) {
@@ -378,15 +380,15 @@ class rb_tree {
 
 	/*modify*/
 	// when do i need increase size???
-	pair<iterator, bool> insert(const value_type& value) {
+	ft::pair<iterator, bool> insert(const value_type& value) {
 		iterator res = find(value);
 		if (res.get_node() != _nil)
-			return pair<iterator, bool>(res, false);
+			return ft::pair<iterator, bool>(res, false);
 		else {
 			node_pointer node = init_node(value);
 			rb_insert_node(node);
 			++_size;
-			return pair<iterator, bool>(iterator(node), true);
+			return ft::pair<iterator, bool>(iterator(node), true);
 		}
 	}
 
@@ -394,7 +396,7 @@ class rb_tree {
 	template <class InputIt>
 	void insert(InputIt first, InputIt last) {
 		for (InputIt it = first; it != last; ++it) {
-			insert(const_cast<value_type>(*it));
+			insert(*it);
 		}
 	}
 
@@ -430,7 +432,7 @@ class rb_tree {
 	}
 
 	size_t erase(const value_type& key) {
-		node_pointer node = tree_search(_root, key);
+		const node_pointer node = tree_search(_root, key);
 		return erase_node(node);
 	}
 
@@ -456,13 +458,13 @@ class rb_tree {
 		return const_iterator(tree_search(_root, key));
 	}
 
-	pair<iterator, iterator> equal_range(const value_type& key) {
-		return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+	ft::pair<iterator, iterator> equal_range(const value_type& key) {
+		return ft::pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 	}
 
-	pair<const_iterator, const_iterator> equal_range(
+	ft::pair<const_iterator, const_iterator> equal_range(
 		const value_type& key) const {
-		return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+		return ft::pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 	}
 
 	iterator lower_bound(const value_type& key) {
