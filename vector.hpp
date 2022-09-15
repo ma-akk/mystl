@@ -18,8 +18,6 @@ using std::cout;
 using std::endl;
 using std::cerr;
 
-#define MAXSIZE std::numeric_limits<size_t>::max()
-
 namespace ft {
 template <class T, class Allocator = std::allocator<T> >
 class vector {
@@ -69,7 +67,16 @@ class vector {
 	vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 					InputIt last, const Allocator& alloc = Allocator())
 		: _alloc(alloc), _array(NULL) {
-		this->assign(first, last);
+		difference_type n = last - first;
+			if (n < 0)
+				throw std::length_error("vector");
+			if (n == 0)
+				return;
+			_size = n;
+			_cap = n;
+			_array = _alloc.allocate(n);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&_array[i], *first++);
 	}
 
 	/*copy constructor*/
@@ -233,7 +240,7 @@ class vector {
 		if (_size == _cap) {
 			reserve(_cap == 0 ? 1 : _cap * 2);
 		}
-		T* ptr = _array + _size;
+		pointer ptr = _array + _size;
 		for (; ptr != _array + ipos; --ptr) {
 			_alloc.construct(ptr, *(ptr - 1));
 			_alloc.destroy(ptr - 1);
@@ -248,10 +255,10 @@ class vector {
 	void insert(iterator pos, size_type count, const T& value) {
 		difference_type ipos = &(*pos) - _first;
 		if ((_size + count) >= _cap) {
-			reserve(_cap == 0 ? count : _cap * 2);
+			reserve((_cap == 0 || (_size + count > _cap * 2)) ? _size + count : _cap * 2);
 		}
-		T* last_free_ptr = _array + _size + count;
-		T* ptr = _array + _size;
+		pointer last_free_ptr = _array + _size + count;
+		pointer ptr = _array + _size;
 		while (ptr != _array + ipos) {
 			--last_free_ptr;
 			--ptr;
@@ -267,15 +274,15 @@ class vector {
 	}
 
 	template <class InputIt>
-	void insert(iterator pos, InputIt first,
-				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last) {
+	void insert(iterator pos, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
+				 InputIt last) {
 		difference_type ipos = &(*pos) - _first;
 		difference_type count = ft::distance(first, last);
 		if ((_size + count) >= _cap) {
 			reserve(_cap == 0 ? count : _cap * 2);
 		}
-		T* last_free_ptr = _array + _size + count;
-		T* ptr = _array + _size;
+		pointer last_free_ptr = _array + _size + count;
+		pointer ptr = _array + _size;
 		while (ptr != _array + ipos) {
 			--last_free_ptr;
 			--ptr;

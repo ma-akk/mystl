@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <cstddef>
-// #include "../utils/utils.hpp"
 
 #include "iterator.hpp"
 
@@ -15,24 +14,24 @@ namespace ft {
 template <class T>
 class ran_it {
    public:
-	typedef typename ft::iterator_traits<T*>::iterator_category iterator_category;
+	typedef typename std::random_access_iterator_tag iterator_category;
 	typedef typename ft::iterator_traits<T*>::value_type value_type;
 	typedef typename ft::iterator_traits<T*>::difference_type difference_type;
 	typedef typename ft::iterator_traits<T*>::pointer pointer;
 	typedef typename ft::iterator_traits<T*>::reference reference;
-	typedef T iterator_type;
+	typedef pointer iterator_type;
 
-	ran_it() : _element(NULL) {}
+	ran_it() : _element(NULL) {
+		_element = 0;
+	}
 
 	ran_it(pointer elem) : _element(elem) {}
 
-	template <class V>
-	ran_it(const ran_it<V> & value) : _element(&(*value)) {}
+	ran_it(const ran_it<typename ft::remove_const<value_type>::type > & value) : _element(&(*value)) {}
 
-	~ran_it() {}
+	virtual ~ran_it() {}
 
-	template <class V>
-	ran_it& operator=(const ran_it<V>& value) {
+	ran_it& operator=(const ran_it<typename ft::remove_const<value_type>::type >& value) {
 		if (this != &value) {
 			_element = value._element;
 		}
@@ -45,7 +44,7 @@ class ran_it {
 
 	pointer operator->() const { return &(this->operator*()); }
 
-	reference operator[](difference_type n) const { return *(*this + n); }
+	reference operator[](difference_type n) const { return *(_element + n); }
 
 	ran_it& operator++() {
 		++_element;
@@ -69,9 +68,9 @@ class ran_it {
 		return tmp;
 	}
 
-	ran_it operator+(difference_type n) const { return ran_it(_element + n); }
+	ran_it operator+(const difference_type n) const { return _element + n; }
 
-	ran_it operator-(difference_type n) const { return ran_it(_element - n); }
+	ran_it operator-(const difference_type n) const { return _element - n; }
 
 	ran_it& operator+=(difference_type n) {
 		_element += n;
@@ -83,51 +82,56 @@ class ran_it {
 		return *this;
 	}
 
+	friend bool operator==(const ran_it<T>& lhs, const ran_it<T>& rhs) {
+		return (lhs._element == rhs._element);
+	}
+
+	friend bool operator!=(const ran_it<T>& lhs, const ran_it<T>& rhs) {
+		return (lhs._element != rhs._element);
+	}
+
+	bool operator>(const ran_it<T>& value) const {
+		return _element > value._element;
+	};
+
+	bool operator>=(const ran_it<T>& value) const {
+		return _element >= value._element;
+	};
+
+	difference_type operator-(const ran_it<T> value) const {
+		return (_element - value._element);
+	};
+
+	difference_type operator+(const ran_it<T> value) const {
+		return (_element + value._element);
+	};
+
+	bool operator<(const ran_it<T>& value) const {
+		return _element < value._element;
+	};
+
+	bool operator<=(const ran_it<T>& value) const {
+		return _element <= value._element;
+	};
+
    protected:
 	pointer _element;
 };
 
 template <typename T>
-bool operator==(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return (lhs.get_pointer() == rhs.get_pointer());
+ran_it<T> operator-(int n, const ran_it<T> &value)
+{
+	ran_it<T> tmp(value._element - n);
+	return (tmp);
 }
 
 template <typename T>
-bool operator!=(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return (lhs.get_pointer() != rhs.get_pointer());
+ran_it<T> operator+(int n, const ran_it<T> &value)
+{
+	ran_it<T> tmp(value._element + n);
+	return (tmp);
 }
 
-template <typename T>
-bool operator<(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return lhs.get_pointer() < rhs.get_pointer();
-};
-
-template <typename T>
-bool operator<=(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return lhs.get_pointer() <= rhs.get_pointer();
-};
-
-template <typename T>
-bool operator>(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return lhs.get_pointer() > rhs.get_pointer();
-};
-
-template <typename T>
-bool operator>=(const ran_it<T> lhs, const ran_it<T> rhs) {
-	return lhs.get_pointer() >= rhs.get_pointer();
-};
-
-template <typename T>
-typename ran_it<T>::difference_type operator-(const ran_it<T> lhs,
-											  const ran_it<T> rhs) {
-	return (lhs.get_pointer() - rhs.get_pointer());
-};
-
-template <typename T>
-typename ran_it<T>::difference_type operator+(const ran_it<T> lhs,
-											  const ran_it<T> rhs) {
-	return (lhs.get_pointer() + rhs.get_pointer());
-};
 
 };	// namespace ft
 
