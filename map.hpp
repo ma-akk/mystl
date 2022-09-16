@@ -24,8 +24,8 @@ class map {
 	typedef const value_type& const_reference;
 	typedef tree_it<value_type> iterator;
 	typedef tree_it<const value_type> const_iterator;
-	typedef reverse_it<value_type> reverse_iterator;
-	typedef reverse_it<const value_type> const_reverse_iterator;
+	typedef reverse_tree_it<value_type> reverse_iterator;
+	typedef reverse_tree_it<const value_type> const_reverse_iterator;
 
 	class value_compare {
 	   public:
@@ -41,18 +41,18 @@ class map {
 
 	/*constructors*/
 	explicit map(const key_compare& comp = key_compare(), const Allocator& alloc = Allocator())
-		: _tree(map_tree(comp, alloc)) {}
+		: _tree(map_tree(value_compare(comp), alloc)), _compare(comp) {}
 
 	template <class InputIt>
 	map(InputIt first, InputIt last, const Compare& comp = Compare(),
 		const Allocator& alloc = Allocator())
-		: _tree(map_tree(first, last, comp, alloc)) {}
+		: _tree(map_tree(first, last, value_compare(comp), alloc)), _compare(comp) {}
 
-	map(const map& other) { this->_tree = map_tree(other._tree); }
+	map(const map& other) : _tree(map_tree(other._tree)), _compare(other._compare) { }
 
 	map& operator=(const map& other) {
 		if (this != &other) {
-			_tree.clear_tree();
+			_tree.clear();
 			this->_tree = map_tree(other._tree);
 		}
 		return *this;
@@ -62,7 +62,9 @@ class map {
 	~map() { _tree.clear_tree(_tree.get_root()); }
 
 	/*access*/
-	Allocator get_allocator() const {}
+	Allocator get_allocator() const {
+		return _tree.get_allocator();
+	}
 
 	T& at(const Key& key) {
 		iterator it = _tree.find(make_pair(key, mapped_type()));
@@ -80,7 +82,7 @@ class map {
 
 	// NEED TESTED
 	T& operator[](const Key& key) {
-		return insert(const ft::make_pair(key, T())).first->second;
+		return insert(ft::make_pair(key, T())).first->second;
 	}
 
 	/* iterators */
@@ -122,15 +124,21 @@ class map {
 		_tree.insert(first, last);
 	}
 
-	void erase(iterator pos) { return _tree.erase(pos); }
+	void erase(iterator pos) { _tree.erase(pos); }
 
 	void erase(iterator first, iterator last) {
 		return _tree.erase(first, last);
 	}
 
-	size_type erase(const Key& key) { return _tree.erase(key); }
+	size_type erase(const Key& key) {
+		iterator pos = find(key);
+		return _tree.erase(pos);
+	}
 
-	void swap(map& other) { _tree.swap(other); }
+	void swap(map& other) { 
+		_tree.swap(other._tree);
+		std::swap(this->_compare, other._compare);
+	}
 
 	/* lookup */
 	size_type count(const Key& key) const {

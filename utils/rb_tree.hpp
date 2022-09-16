@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../iterators/reverse_it.hpp"
+#include "../iterators/reverse_tree_it.hpp"
 #include "../iterators/tree_it.hpp"
 #include "utils.hpp"
 
@@ -17,6 +17,7 @@ namespace ft {
 template <typename value_type, class Compare = std::less<value_type>,
 		  class Allocator = std::allocator<value_type> >
 class rb_tree {
+
    public:
 	typedef size_t size_type;
 	typedef std::ptrdiff_t difference_type;
@@ -31,9 +32,17 @@ class rb_tree {
 	typedef typename allocator_type::const_reference const_reference;
 	typedef tree_it<value_type> iterator;
 	typedef tree_it<const value_type> const_iterator;
-	typedef reverse_it<iterator> reverse_iterator;
-	typedef reverse_it<const_iterator> const_reverse_iterator;
+	typedef reverse_tree_it<value_type> reverse_iterator;
+	typedef reverse_tree_it<const value_type> const_reverse_iterator;
+ private:
+	node_pointer _root;
+	node_pointer _nil;
+	allocator_type _value_alloc;
+	node_allocator _node_alloc;
+	value_compare _compare;
+	size_type _size;
 
+ public:
 	node_pointer init_node(value_type v = value_type()) {
 		//требуется ли выделять память для value???
 		node_pointer node = _node_alloc.allocate(1);
@@ -56,6 +65,8 @@ class rb_tree {
 	}
 
 	/* consructors */
+	rb_tree() {}
+
 	explicit rb_tree(const Compare& comp, const Allocator& alloc = Allocator())
 		: _node_alloc(alloc), _compare(comp), _size(0) {
 		init_tree();
@@ -74,11 +85,11 @@ class rb_tree {
 	_nil(value._nil), _value_alloc(value._value_alloc),
   	_node_alloc(value._node_alloc), _compare(value._compare),
   	_size(value._size) {
-		cout << "copy constructor " << endl;
+		// cout << "copy constructor " << endl;
 	}
 
 	rb_tree& operator=(const rb_tree& value) {
-		cout << "operator = " << endl;
+		// cout << "operator = " << endl;
 		if (this != &value) {
 			_root = value._root;
 			_nil = value._nil;
@@ -366,16 +377,16 @@ class rb_tree {
 
 	const_iterator end() const { return ++const_iterator(rb_max(_root)); }
 
-	reverse_iterator rbegin() { return reverse_iterator(end()); }
+	reverse_iterator rbegin() { return reverse_iterator(rb_max(_root)); }
 
 	const_reverse_iterator rbegin() const {
-		return const_reverse_iterator(end());
+		return const_reverse_iterator(rb_max(_root));
 	}
 
-	reverse_iterator rend() { return reverse_iterator(begin()); }
+	reverse_iterator rend() { return reverse_iterator(rb_min(_root)); }
 
 	const_reverse_iterator rend() const {
-		return const_reverse_iterator(begin());
+		return const_reverse_iterator(rb_min(_root));
 	}
 
 	/*modify*/
@@ -420,20 +431,15 @@ class rb_tree {
 		return 1;
 	}
 
-	void erase(iterator pos) {
+	size_t erase(iterator pos) {
 		node_pointer node = pos.get_node();
-		erase_node(node);
+		return erase_node(node);
 	}
 
 	void erase(iterator first, iterator last) {
 		for (iterator it = first; it != last; ++it) {
 			erase(it);
 		}
-	}
-
-	size_t erase(const value_type& key) {
-		const node_pointer node = tree_search(_root, key);
-		return erase_node(node);
 	}
 
 	void swap(rb_tree& other) {
@@ -505,14 +511,6 @@ class rb_tree {
 	}
 
 	value_compare value_comp() const { return _compare; }
-
-   private:
-	node_pointer _root;
-	node_pointer _nil;
-	allocator_type _value_alloc;
-	node_allocator _node_alloc;
-	value_compare _compare;
-	size_type _size;
 };
 
 template <typename value_type, class Compare, class Alloc>

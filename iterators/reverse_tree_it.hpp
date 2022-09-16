@@ -1,5 +1,5 @@
-#ifndef TREE_IT_HPP
-#define TREE_IT_HPP
+#ifndef REVERSE_TREE_IT_HPP
+#define REVERSE_TREE_IT_HPP
 
 #include <iostream>
 #include <string>
@@ -11,7 +11,7 @@
 namespace ft {
 
 template <class T>
-class tree_it {
+class reverse_tree_it {
    public:
    	typedef std::bidirectional_iterator_tag iterator_category;
 	typedef typename ft::iterator_traits<T*>::value_type value_type;
@@ -21,16 +21,16 @@ class tree_it {
 	typedef Node<typename remove_const<value_type>::type>* node_pointer;
 	typedef Node<T>* iterator_type;
 
-	tree_it() {}
+	reverse_tree_it() {}
 
-	tree_it(void* node) : _node(static_cast<node_pointer>(node)) {}
+	reverse_tree_it(void* node) : _node(static_cast<node_pointer>(node)) {}
 
-	tree_it(const tree_it<typename remove_const<value_type>::type>& value) {
+	reverse_tree_it(const reverse_tree_it<typename remove_const<value_type>::type>& value) {
 		*this = value;
 	}
 
-	tree_it& operator=(
-		const tree_it<typename remove_const<value_type>::type>& value) {
+	reverse_tree_it& operator=(
+		const reverse_tree_it<typename remove_const<value_type>::type>& value) {
 		if (this != &value) this->_node = value._node;
 		return *this;
 	}
@@ -41,21 +41,7 @@ class tree_it {
 
 	pointer operator->() const { return &(_node->value); }
 
-	tree_it& operator++() {
-		if (_node->right && !_node->right->is_leaf()) {
-			_node = tree_min(_node->right);
-		} else {
-			node_pointer tmp = _node->parent;
-			while (!tmp->is_leaf() && _node == tmp->right) {
-				_node = tmp;
-				tmp = tmp->parent;
-			}
-			_node = tmp;
-		}
-		return *this;
-	}
-
-	tree_it& operator--() {
+	reverse_tree_it& operator++() {
 		if (_node->left && !_node->left->is_leaf()) {
 			_node = tree_max(_node->left);
 		} else {
@@ -69,13 +55,27 @@ class tree_it {
 		return *this;
 	}
 
-	tree_it operator++(int) {
-		tree_it<value_type> new_it = *this;
+	reverse_tree_it& operator--() {
 		if (_node->right && !_node->right->is_leaf()) {
 			_node = tree_min(_node->right);
 		} else {
 			node_pointer tmp = _node->parent;
 			while (!tmp->is_leaf() && _node == tmp->right) {
+				_node = tmp;
+				tmp = tmp->parent;
+			}
+			_node = tmp;
+		}
+		return *this;
+	}
+
+	reverse_tree_it operator++(int) {
+		reverse_tree_it<value_type> new_it = *this;
+		if (_node->left && !_node->left->is_leaf()) {
+			_node = tree_max(_node->left);
+		} else {
+			node_pointer tmp = _node->parent;
+			while (!tmp->is_leaf() && _node == tmp->left) {
 				_node = tmp;
 				tmp = tmp->parent;
 			}
@@ -84,13 +84,13 @@ class tree_it {
 		return new_it;
 	}
 
-	tree_it operator--(int) {
-		tree_it<value_type> new_it = *this;
-		if (_node->left && !_node->left->is_leaf()) {
-			_node = tree_max(_node->left);
+	reverse_tree_it operator--(int) {
+		reverse_tree_it<value_type> new_it = *this;
+		if (_node->right && !_node->right->is_leaf()) {
+			_node = tree_min(_node->right);
 		} else {
 			node_pointer tmp = _node->parent;
-			while (!tmp->is_leaf() && _node == tmp->left) {
+			while (!tmp->is_leaf() && _node == tmp->right) {
 				_node = tmp;
 				tmp = tmp->parent;
 			}
@@ -116,15 +116,15 @@ class tree_it {
 };
 
 template <typename T>
-bool operator==(const tree_it<T> lhs, const tree_it<T> rhs) {
+bool operator==(const reverse_tree_it<T> lhs, const reverse_tree_it<T> rhs) {
 	return (lhs.get_node() == rhs.get_node());
 }
 
 template <typename T>
-bool operator!=(const tree_it<T> lhs, const tree_it<T> rhs) {
+bool operator!=(const reverse_tree_it<T> lhs, const reverse_tree_it<T> rhs) {
 	return (lhs.get_node() != rhs.get_node());
 }
 
 };	// namespace ft
 
-#endif	// TREE_IT_HPP
+#endif	// REVERSE_TREE_IT_HPP
