@@ -416,7 +416,7 @@ void	reverse_iterator()
 	for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit)
 		std::cout << rit->first << " => " << rit->second << '\n';
 }
-
+/*
 void	bool_check()
 {
 	ft::map<char, int> foo, bar, moo;
@@ -452,7 +452,7 @@ void	bool_check()
 	if (foo >= moo)
 		std::cout << "foo is greater than or equal to moo\n";
 }
-
+*/
 void	non_member_swap()
 {
 	ft::map<char, int> foo, bar;
@@ -496,7 +496,7 @@ int		main()
 	value_comp();
 	construct();
 	reverse_iterator();
-	bool_check();
+	// bool_check();
 	non_member_swap();
 	std::cout << "TEST IS FINISHED\n";
 	// while (1);
