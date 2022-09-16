@@ -8,19 +8,67 @@ using std::cout;
 using std::endl;
 using std::string;
 
+	void	testInsertMine()
+	{
+		ft::vector<int> myvector(5, 100);
+		ft::vector<int>::iterator it = myvector.begin();
+
+		it = myvector.begin();
+		std::cout << "Capacity before insert: " << myvector.capacity() << std::endl;
+		it = myvector.insert ( it , 200 );
+
+		std::cout << "After Insert 1 elem:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+		std::cout << '\n';
+
+		std::cout << "it pos after insert: " << *it << std::endl;
+		myvector.insert (myvector.begin(), 50, 42);
+		for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+		std::cout << '\n';
+		myvector.insert (it, 50, 42);
+		std::cout << "After Insert 50 elems:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+		std::cout << '\n';
+
+		myvector.insert (it,2,300);
+
+		std::cout << "After Insert 2 elems with 300 val:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+		std::cout << '\n';
+
+		// "it" no longer valid, get a new one:
+		it = myvector.begin();
+
+		ft::vector<int> anothervector (2,400);
+		myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+		int myarray [] = { 501,502,503 };
+		myvector.insert (myvector.begin(), myarray, myarray+3);
+
+		std::cout << "myvector contains:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+		std::cout << '\n';
+	}
+
 int main() {
 	std::vector<int> v;
 	ft::vector<int> v1;
 	std::vector<int> v01;
+	ft::vector<int> v02;
 	std::vector<int>::iterator it;
 	ft::vector<int>::iterator it1;
 	for(int i = 0; i < 15; i++) {
 		v01.push_back(100 + i);
 	}
 
-	// ft::vector<int> v02(10);
-
-	// ft::vector<int> v1_copy(v1);
+	for(int i = 0; i < 15; i++) {
+		v02.push_back(100 + i);
+	}
 
 	cout << "std: empty = " << v.empty() << endl << "ft:  empty = " << v1.empty() << endl;
 	cout << "std: max_size = " << v.max_size() << endl << "ft:  max_size = " << v1.max_size() << endl;
@@ -29,140 +77,132 @@ int main() {
 	// cout << "std: data = " << *(v.data()) << endl << "ft:  data = " << *(v1.data()) << endl;
 
 	cout << endl << " =========  ASSIGN  ========= ";
-	cout << endl << " =========  TEST#1  ========= " << endl;
-	v.assign(10, 15);
-	v1.assign(10, 15);
-	 for(int i = 0; i < v.size(); i++) {
-	 	cout << v[i] << " " ;
-	 }
-	 cout << endl;
-	 for(int i = 0; i < v1.size(); i++) {
-	 	cout << v1[i] << " " ;
-	 }
-	 cout << endl;
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
-	cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	cout << endl << " =========  TEST#2  ========= " << endl;
-	v.assign(7, 100);
-	v1.assign(7, 100);
-	for(int i = 0; i < v.size(); i++) {
-	 	cout << v[i] << " " ;
-	 }
-	 cout << endl;
-	 for(int i = 0; i < v1.size(); i++) {
-	 	cout << v1[i] << " " ;
-	 }
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
-	cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	{
+		cout << endl << " =========  TEST#1  ========= " << endl;
+		v.assign(10, 15);
+		v1.assign(10, 15);
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
+		cout << endl;
+		cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
+		cout << endl << "std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		cout << endl << " =========  TEST#2  ========= " << endl;
+		v.assign(7, 100);
+		v1.assign(7, 100);
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
+		cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
+		cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
-	std::vector<int> v3;
-	for(int i = 0; i < 15; i++) {
-		v3.push_back(101 + i);
-	}
-	std::vector<int>::iterator it_3 = v3.begin();
-	cout << endl << " =========  TEST#3  ========= " << endl;
-	v.assign(it_3, it_3 + 5);
-	v1.assign(it_3, it_3 + 5);
-	cout << endl;
-	for(int i = 0; i < v.size(); i++) {
-	 	cout << v[i] << " " ;
-	 }
-	 cout << endl;
-	 for(int i = 0; i < v1.size(); i++) {
-	 	cout << v1[i] << " " ;
-	 }
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
-	cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-	cout << endl << " =========  TEST#4  ========= " << endl;
-	v.assign(it_3, it_3 + 12);
-	v1.assign(it_3, it_3 + 12);
-	cout << endl;
-	for(int i = 0; i < v.size(); i++) {
-	 	cout << v[i] << " " ;
-	 }
-	 cout << endl;
-	 for(int i = 0; i < v1.size(); i++) {
-	 	cout << v1[i] << " " ;
-	 }
-	cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
-	cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		std::vector<int> v3;
+		for(int i = 0; i < 15; i++) {
+			v3.push_back(101 + i);
+		}
+		std::vector<int>::iterator it_3 = v3.begin();
+		cout << endl << " =========  TEST#3  ========= " << endl;
+		v.assign(it_3, it_3 + 5);
+		v1.assign(it_3, it_3 + 5);
+		cout << endl;
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
+		cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
+		cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		cout << endl << " =========  TEST#4  ========= " << endl;
+		v.assign(it_3, it_3 + 12);
+		v1.assign(it_3, it_3 + 12);
+		cout << endl;
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
+		cout << endl << "std: size/cap = " << v.size() << " / " << v.capacity();
+		cout << endl << "ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+	};
 
 	cout << endl << " =========  ITERATORS  ========= " << endl;
-	// it1 = v1.begin();
-	// ft::vector<int>::iterator it2 = v1.begin() + 2;
-	// ft::vector<int>::iterator it_end1 = v1.end();
-	// ft::vector<int>::iterator it_end2 = v1.end();
+	{
+		ft::vector<int>::iterator it2 = v1.begin() + 2;
+		ft::vector<int>::iterator it_end1 = v1.end();
+		ft::vector<int>::iterator it_end2 = v1.end();
+		cout << endl << "it = " << *it2 << endl;
 
-	ft::vector<int> vec;
-	for (int i = 0; i < 10; i++)
-		vec.push_back(i + 1);
-	std::cout << "capacity: " << vec.capacity() << std::endl;
-	ft::vector<int>::iterator it = vec.begin();
-	ft::vector<int>::iterator it2 = it;
-	ft::vector<int>::iterator ite = vec.end();
-	it2 = it + 2;
-	std::cout << *it2 << std::endl;
-	it += 3;
-	std::cout << *it << std::endl;
-	it -= 2;
-	std::cout << *it << std::endl;
-	
-	// cout << endl << " =========  LESS  ========= " << endl;
-	// ft::vector<int> v1_1;
-	// for(int i = 0; i < 15; i++) {
-	// 	v1_1.push_back(100 + i);
-	// }
-	// if (v1 < v1_1) {
-	// 	cout << "ft:v1 less v1_1" << endl; 
-	// } else {./a	
+		v.clear();
+		v1.clear();
+	};
 
-	// 	cout << "ft:v1 more v1_1" << endl; 
-	// }
-	// if (v < v01) {
-	// 	cout << "ft:v less v01" << endl; 
-	// } else {
-	// 	cout << "ft:v more v01" << endl; 
-	// }
+	cout << endl << " =========  INSERT ========= " << endl;
+	{
+		cout << endl << " =========  TEST#1  ========= " << endl;
+		cout << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+		cout << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		it = v.begin();
+		it1 = v1.begin();
+		v.insert(it, 15);
+		v1.insert(it1, 15);
+		cout << endl;
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
+		cout << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+		cout << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
 
+		cout << endl << " =========  TEST#2  ========= " << endl;
+		it = v.begin() + 1;
+		it1 = v1.begin() + 1;
+		v.insert(it, 3, 10);
+		v1.insert(it1, 3, 10);
+		cout << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+		cout << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
 
-	// std::vector<string> vStr = {"test", "test", "test"};
-	// ft::vector<string> v1Str; // = {"test", "test", "test"};
+		cout << endl << " =========  TEST#3  ========= " << endl;
+		auto it2 = v01.begin() + 2;
+		auto it3 = v01.begin() + 5;
+		ft::vector<int>::iterator it4 = v02.begin() + 2;
+		ft::vector<int>::iterator it5 = v02.begin() + 5;
+		v.insert(it, it2, it3);
+		v1.insert(it1, it2, it3);
+		cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
+		cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		for(int i = 0; i < v.size(); i++) {
+			cout << v[i] << " " ;
+		}
+		cout << endl;
+		for(int i = 0; i < v1.size(); i++) {
+			cout << v1[i] << " " ;
+		}
 
-	// for(int i = 0; i < 15; i++) {
-	// 	// vStr.push_back("test");
-	// 	v1Str.push_back("test");
-	// }
-
-	// for(int i = 0; i < vStr.size(); i++) {
-	//  	cout << vStr[i] << " " ;
-	//  }
-	//  cout << endl;
-	//  for(int i = 0; i < v1Str.size(); i++) {
-	//  	cout << v1Str[i] << " " ;
-	//  }
-	//  cout << endl;
-
-
-//	INSERT with empty vector
-	//  v.insert(it, 10);
-	//  v1.insert(it1, 10);
-	//  cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	//  cout << v1[0]  << " std: size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-
-	//  v.insert(it, 3, 10);
-	//  v1.insert(it1, 3, 10);
-	//  cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-	//  cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
-
-	// auto it2 = v01.begin() + 2;
-	// auto it3 = v01.begin() + 5;
-	// ft::vector<int>::iterator it4 = v1.begin() + 2;
-	// ft::vector<int>::iterator it5 = v1.begin() + 5;
-
-// 	 v.insert(it, it2, it3);
-// 	 v1.insert(it1, it2, it3);
-// 	 cout << v[0] << " std: size/cap = " << v.size() << " / " << v.capacity() << endl;
-// 	 cout << v1[0]  << " ft : size/cap = " << v1.size() << " / " << v1.capacity() << endl;
+		cout << endl << " =========  TEST#3  ========= " << endl;
+		testInsertMine();
+	}
 
 //	ERASE with empty vector  - SEG_FAULT
 	//  v.erase(it);
