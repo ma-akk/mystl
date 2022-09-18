@@ -28,7 +28,6 @@ struct Node {
 		: color(BLACK), parent(NULL), left(NULL), right(NULL), value(value) {}
 
 	Node(const Node &node) :  value(node.value) {
-		cout << "copy constructor " << endl;
 		if (this != &node) {
 			color = node.color;
 			parent = node.parent;
@@ -38,7 +37,6 @@ struct Node {
 	}
 
 	Node &operator=(const Node &node) {
-		cout << "operator = " << endl;
 		if (this != &node) {
 			color = node.color;
 			parent = node.parent;
@@ -49,15 +47,14 @@ struct Node {
 		return *this;
 	}
 
-	virtual ~Node() {}
-
-	bool is_root() const {
-		if (this->parent->parent == NULL) return 1;
-		return 0;
+	virtual ~Node() {
+		// cout << "destructor node" << endl;
 	}
 
 	bool is_leaf() const {
-		if (this->parent == NULL) return 1;
+		if (this->left == NULL && this->right == NULL) {
+			return 1;
+		}
 		return 0;
 	}
 };

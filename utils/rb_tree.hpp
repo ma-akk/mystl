@@ -18,10 +18,10 @@ template <typename value_type, class Compare = std::less<value_type>,
 		  class Allocator = std::allocator<value_type> >
 class rb_tree {
 
-   public:
+ public:
 	typedef size_t size_type;
 	typedef std::ptrdiff_t difference_type;
-	typedef Compare value_compare;
+	typedef Compare key_compare;
 	typedef Allocator allocator_type;
 	typedef typename Allocator::template rebind<Node<value_type> >::other
 		node_allocator;
@@ -34,12 +34,13 @@ class rb_tree {
 	typedef tree_it<const value_type> const_iterator;
 	typedef reverse_tree_it<value_type> reverse_iterator;
 	typedef reverse_tree_it<const value_type> const_reverse_iterator;
+
  private:
 	node_pointer _root;
 	node_pointer _nil;
 	allocator_type _value_alloc;
 	node_allocator _node_alloc;
-	value_compare _compare;
+  	key_compare _compare;
 	size_type _size;
 
  public:
@@ -47,14 +48,14 @@ class rb_tree {
 		//требуется ли выделять память для value???
 		node_pointer node = _node_alloc.allocate(1);
 		_node_alloc.construct(node, Node<value_type>(v));
-		//		_value_alloc.destroy(&(node->value));
-		//		_value_alloc.deallocate(&(node->value), 1);
+		// _value_alloc.destroy(&(node->value));
+		// _value_alloc.deallocate(&(node->value), 1);
 		return node;
 	}
 
 	void free_node(node_pointer node) {
-		_value_alloc.destroy(&(node->value));
-		_value_alloc.deallocate(&(node->value), 1);
+		// _value_alloc.destroy(&(node->value));
+		// _value_alloc.deallocate(&(node->value), 1);
 		_node_alloc.destroy(node);
 		_node_alloc.deallocate(node, 1);
 	}
@@ -81,22 +82,24 @@ class rb_tree {
 		for (; it != last; ++it) insert(*it);
 	}
 
-	rb_tree(const rb_tree& value) : _root(value._root),
-	_nil(value._nil), _value_alloc(value._value_alloc),
-  	_node_alloc(value._node_alloc), _compare(value._compare),
-  	_size(value._size) {
-		// cout << "copy constructor " << endl;
-	}
+	// rb_tree(const rb_tree& value) : _root(value._root),
+	// _nil(value._nil), _value_alloc(value._value_alloc),
+  	// _node_alloc(value._node_alloc), _compare(value._compare),
+  	// _size(value._size) {
+	// 	// cout << "copy constructor " << endl;
+	// }
 
 	rb_tree& operator=(const rb_tree& value) {
 		// cout << "operator = " << endl;
 		if (this != &value) {
-			_root = value._root;
-			_nil = value._nil;
+			clear();
 			_value_alloc = value._value_alloc;
 			_node_alloc = value._node_alloc;
 			_compare = value._compare;
 			_size = value._size;
+			for(const_iterator it = value.begin(); it != value.end(); ++it) {
+				insert(*it);
+			}
 		}
 		return *this;
 	}
@@ -105,6 +108,7 @@ class rb_tree {
 	virtual ~rb_tree() {
 		clear_tree(_root);
 		free_node(_nil);
+		cout << "destructor rb_tree" << endl;
 	}
 
 	/* methods of rotate around node */
@@ -159,6 +163,7 @@ class rb_tree {
 		node->left = _nil;
 		node->right = _nil;
 		node->color = RED;
+		++_size;
 		rb_insert_balance(node);
 	}
 
@@ -239,6 +244,7 @@ class rb_tree {
 			tmp->left->parent = tmp;
 			tmp->color = node->color;
 		}
+		--_size;
 		if (tmp_orig_color == BLACK) rb_delete_balance(x);
 	}
 
@@ -312,15 +318,15 @@ class rb_tree {
 	// method for debug; remove after finish project
 	node_pointer get_leaf() const { return _nil; }
 
-	node_pointer rb_min(node_pointer node) {
+	node_pointer rb_min(node_pointer node) const {
 		node_pointer tmp = node;
-		while (tmp->left != _nil) tmp = tmp->left;
+		while (tmp != _nil && tmp->left != _nil) tmp = tmp->left;
 		return tmp;
 	}
 
-	node_pointer rb_max(node_pointer node) {
+	node_pointer rb_max(node_pointer node) const {
 		node_pointer tmp = node;
-		while (tmp->right != _nil) tmp = tmp->right;
+		while (tmp != _nil && tmp->right != _nil) tmp = tmp->right;
 		return tmp;
 	}
 
@@ -347,9 +353,10 @@ class rb_tree {
 	void printTree() { printBT("", _root, false); }
 
 	void clear_tree(node_pointer node) {
-		if (node != _nil) {
+		if (node != _nil && node->left != NULL && node->right != NULL) {
 			clear_tree(node->left);
 			clear_tree(node->right);
+			rb_delete(node);
 			free_node(node);
 		}
 	}
@@ -398,12 +405,10 @@ class rb_tree {
 		else {
 			node_pointer node = init_node(value);
 			rb_insert_node(node);
-			++_size;
 			return ft::pair<iterator, bool>(iterator(node), true);
 		}
 	}
 
-	// when do i need increase size???
 	template <class InputIt>
 	void insert(InputIt first, InputIt last) {
 		for (InputIt it = first; it != last; ++it) {
@@ -412,13 +417,12 @@ class rb_tree {
 	}
 
 	iterator insert(iterator hint, const value_type& value) {
-		node_pointer node = tree_search(hint.get_node(), value);
+		node_pointer node = tree_search(_root, value);
 		if (node != _nil)
 			return iterator(node);
 		else {
 			node = init_node(value);
 			rb_insert_node(node);
-			++_size;
 			return iterator(node);
 		}
 	}
@@ -427,7 +431,6 @@ class rb_tree {
 		if (node == _nil) return 0;
 		rb_delete(node);
 		free_node(node);
-		--_size;
 		return 1;
 	}
 
@@ -475,9 +478,7 @@ class rb_tree {
 
 	iterator lower_bound(const value_type& key) {
 		iterator it = begin();
-		while (it != end() &&
-			   _compare(it.get_node()->value,
-						key))  //использовать *it, find error in tree_it!!!
+		while (it != end() && _compare(*it, key))  //использовать *it, find error in tree_it!!!
 			++it;
 		return it;
 	}
@@ -485,7 +486,7 @@ class rb_tree {
 	const_iterator lower_bound(const value_type& key) const {
 		const_iterator it = begin();
 		while (it != end() &&
-			   _compare(it.get_node()->value, key))	 //использовать *it
+			   _compare(*it, key))	 //использовать *it
 			++it;
 		return it;
 	}
@@ -493,7 +494,7 @@ class rb_tree {
 	iterator upper_bound(const value_type& key) {
 		iterator it = begin();
 		while (it != end() &&
-			   _compare(it.get_node()->value, key))	 //использовать *it
+			   _compare(*it, key))	 //использовать *it
 			++it;
 		if (!(_compare(it.get_node()->value, key) ||
 			  _compare(key, it.get_node()->value)))
@@ -505,25 +506,37 @@ class rb_tree {
 		const_iterator it = begin();
 		while (it != end() &&
 			   (_compare(it.get_node()->value, key) ||
-				_compare(key, it.get_node()->value)))  //использовать *it
+				_compare(key, *it)))  //использовать *it
 			++it;
 		return it;
 	}
 
-	value_compare value_comp() const { return _compare; }
+  	key_compare value_comp() const { return _compare; }
+
+	friend bool operator<(const rb_tree<value_type, Compare, Allocator>& lhs,
+			   const rb_tree<value_type, Compare, Allocator>& rhs) {
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+									rhs.end()));
+	}
+
+	friend bool operator==(const rb_tree<value_type, Compare, Allocator>& lhs,
+				const rb_tree<value_type, Compare, Allocator>& rhs) {
+		return (lhs.size() == rhs.size() &&
+			ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
 };
 
 template <typename value_type, class Compare, class Alloc>
 bool operator==(const rb_tree<value_type, Compare, Alloc>& lhs,
 				const rb_tree<value_type, Compare, Alloc>& rhs) {
 	return (lhs.size() == rhs.size() &&
-			equal(lhs.begin(), lhs.end(), rhs.begin()));
+			ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 template <typename value_type, class Compare, class Alloc>
 bool operator<(const rb_tree<value_type, Compare, Alloc>& lhs,
 			   const rb_tree<value_type, Compare, Alloc>& rhs) {
-	return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
 									rhs.end()));
 }
 

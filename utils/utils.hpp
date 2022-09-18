@@ -150,7 +150,7 @@ struct pair {
 
 	pair(const pair& p) : first(p.first), second(p.second) {}
 
-	~pair() {}
+	virtual ~pair() {}
 
 	pair& operator=(const pair& value) {
 		if (*this != value) {
@@ -179,8 +179,7 @@ bool operator!=(const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs) {
 
 template <class T1, class T2>
 bool operator<(const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs) {
-	return lhs.first < rhs.first || !(rhs.first < lhs.first && lhs.second <
-								    rhs.second);
+	return lhs.first < rhs.first; //|| !(rhs.first < lhs.first && lhs.second < rhs.second);
 };
 
 template <class T1, class T2>

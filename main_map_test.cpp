@@ -13,6 +13,7 @@ using std::endl;
 
 void	testInsert()
 {
+	cout << "================= INSERT =========================" << endl;
 	ft::map<char, int> mymap;
 
 	// first insert function version (single parameter):
@@ -51,6 +52,7 @@ void	testInsert()
 
 void	operatorSquare()
 {
+	cout << "================= operator [] =========================" << endl;
 	ft::map<char, std::string> mymap;
 
 	mymap['a'] = "an element";
@@ -67,6 +69,7 @@ void	operatorSquare()
 
 void	clear()
 {
+	cout << "================= CLEAR =========================" << endl;
 	ft::map<char, int> mymap;
 
 	mymap['x'] = 100;
@@ -88,6 +91,7 @@ void	clear()
 
 void	count()
 {
+	cout << "================= COUNT =========================" << endl;
 	ft::map<char, int> mymap;
 	char c;
 
@@ -107,6 +111,7 @@ void	count()
 
 void	empty()
 {
+	cout << "================= EMPTY =========================" << endl;
 	ft::map<char, int> mymap;
 
 	mymap['a'] = 10;
@@ -122,6 +127,7 @@ void	empty()
 
 void	erase()
 {
+	cout << "================= ERASE =========================" << endl;
 	ft::map<char, int> mymap;
 	ft::map<char, int>::iterator it;
 
@@ -135,19 +141,27 @@ void	erase()
 
 	it = mymap.find('b');
 	mymap.erase(it); // erasing by iterator
-
+	cout << "After erase mymap['b'] : " << endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+	
 	mymap.erase('c'); // erasing by key
-
+	cout << "After erase mymap['c'] : " << endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+	
 	it = mymap.find('e');
 	mymap.erase(it, mymap.end()); // erasing by range
 
 	// show content:
+	cout << "After erase mymap['e']-['f'] : " << endl;
 	for (it = mymap.begin(); it != mymap.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
 }
 
 void	find()
 {
+	cout << "================= FIND =========================" << endl;
 	ft::map<char, int> mymap;
 	ft::map<char, int>::iterator it;
 
@@ -169,6 +183,7 @@ void	find()
 
 void	equal_range()
 {
+	cout << "================= EQUAL_RANGE =========================" << endl;
 	ft::map<char, int> mymap;
 
 	mymap['a'] = 10;
@@ -188,6 +203,7 @@ void	equal_range()
 
 void	get_allocator()
 {
+	cout << "================= GET ALLOCATOR =========================" << endl;
 	int psize;
 	ft::map<char, int> mymap;
 	ft::pair<const char, int> *p;
@@ -205,6 +221,7 @@ void	get_allocator()
 
 void	key_comp()
 {
+	cout << "================= KEY_COMPARE =========================" << endl;
 	ft::map<char, int> mymap;
 
 	ft::map<char, int>::key_compare mycomp = mymap.key_comp();
@@ -228,6 +245,7 @@ void	key_comp()
 
 void	lower_bound()
 {
+	cout << "================= LOWER_UPPER_BOUND =========================" << endl;
 	ft::map<char, int> mymap;
 	ft::map<char, int>::iterator itlow, itup;
 
@@ -236,6 +254,10 @@ void	lower_bound()
 	mymap['c'] = 60;
 	mymap['d'] = 80;
 	mymap['e'] = 100;
+
+	cout << "Start with : " << endl;
+	for (ft::map<char, int>::iterator it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
 
 	itlow=mymap.lower_bound ('b');  // itlow points to b
 	itup=mymap.upper_bound ('d');   // itup points to e (not d!)
@@ -249,6 +271,7 @@ void	lower_bound()
 
 void	stress_test()
 {
+	cout << "================= STRESS =========================" << endl;
 	ft::map<int, int> mymap;
 	for (int i = 0; i < 10000000; ++i)
 	{
@@ -261,6 +284,7 @@ void	stress_test()
 
 void	max_size()
 {
+	cout << "================= MAX_SIZE =========================" << endl;
 	int i;
 	ft::map<int, int> mymap;
 
@@ -276,6 +300,7 @@ void	max_size()
 
 void	operatorEqual()
 {
+	cout << "================= operator = =========================" << endl;
 	ft::map<char, int> first;
 	ft::map<char, int> second;
 
@@ -292,6 +317,7 @@ void	operatorEqual()
 
 void	size()
 {
+	cout << "================= SIZE =========================" << endl;
 	ft::map<char, int> mymap;
 	mymap['a'] = 101;
 	mymap['b'] = 202;
@@ -302,6 +328,7 @@ void	size()
 
 void	swap()
 {
+	cout << "================= SWAP =========================" << endl;
 	ft::map<char, int> foo, bar;
 
 	foo['x'] = 100;
@@ -324,21 +351,22 @@ void	swap()
 
 void	value_comp()
 {
-	// ft::map<char, int> mymap;
+	cout << "================= VALUE_COMPARE =========================" << endl;
+	ft::map<char, int> mymap;
 
-	// mymap['x'] = 1001;
-	// mymap['y'] = 2002;
-	// mymap['z'] = 3003;
+	mymap['x'] = 1001;
+	mymap['y'] = 2002;
+	mymap['z'] = 3003;
 
-	// std::cout << "mymap contains:\n";
+	std::cout << "mymap contains:\n";
 
-	// ft::pair<char, int> highest = *--mymap.end(); // last element
+	ft::pair<char, int> highest = *--mymap.end(); // last element
 
-	// ft::map<char, int>::iterator it = mymap.begin();
-	// do
-	// {
-	// 	std::cout << it->first << " => " << it->second << '\n';
-	// } while (mymap.value_comp()(*it++, highest));
+	ft::map<char, int>::iterator it = mymap.begin();
+	do
+	{
+		std::cout << it->first << " => " << it->second << '\n';
+	} while (mymap.value_comp()(*it++, highest));
 }
 
 bool fncomp(char lhs, char rhs) { return lhs < rhs; }
@@ -353,6 +381,7 @@ struct classcomp
 
 void	construct()
 {
+	cout << "================= CONSTRUCTOR =========================" << endl;
 	ft::map<char, int> first;
 
 	first['a'] = 10;
@@ -394,17 +423,18 @@ void	construct()
 	std::cout << "third contains: \n";
 	for (ft::map<char, int>::iterator it = third.begin(); it != third.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
-	std::cout << "fourth contains: \n";
-	for (ft::map<char, int, classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-		std::cout << it->first << " => " << it->second << '\n';
-	std::cout << "fifth contains: \n";
-	for (ft::map<char, int, bool (*)(char, char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-		std::cout << it->first << " => " << it->second << '\n';
+	// std::cout << "fourth contains: \n";
+	// for (ft::map<char, int, classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+	// 	std::cout << it->first << " => " << it->second << '\n';
+	// std::cout << "fifth contains: \n";
+	// for (ft::map<char, int, bool (*)(char, char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+	// 	std::cout << it->first << " => " << it->second << '\n';
 	std::cout << "asd\n";
 }
 
 void	reverse_iterator()
 {
+	cout << "================= REVERS_ITERATOR =========================" << endl;
 	ft::map<char, int> mymap;
 
 	mymap['x'] = 100;
@@ -416,9 +446,10 @@ void	reverse_iterator()
 	for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit)
 		std::cout << rit->first << " => " << rit->second << '\n';
 }
-/*
+
 void	bool_check()
 {
+	cout << "================= BOOL OPERATIONS =========================" << endl;
 	ft::map<char, int> foo, bar, moo;
 	foo['a'] = 100;
 	foo['b'] = 1000;
@@ -452,9 +483,10 @@ void	bool_check()
 	if (foo >= moo)
 		std::cout << "foo is greater than or equal to moo\n";
 }
-*/
+
 void	non_member_swap()
 {
+	cout << "================= SWAP_II =========================" << endl;
 	ft::map<char, int> foo, bar;
 
 	foo['x'] = 100;
@@ -487,7 +519,7 @@ int		main()
 	equal_range();
 	get_allocator();
 	key_comp();
-	lower_bound();
+	lower_bound(); // it uses erase()
 	// stress_test();
 	max_size();
 	operatorEqual();
@@ -496,7 +528,7 @@ int		main()
 	value_comp();
 	construct();
 	reverse_iterator();
-	// bool_check();
+	bool_check();
 	non_member_swap();
 	std::cout << "TEST IS FINISHED\n";
 	// while (1);

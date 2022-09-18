@@ -10,7 +10,7 @@ namespace ft {
 template <class Key, class T, class Compare = std::less<Key>,
 		  class Allocator = std::allocator<ft::pair<const Key, T> > >
 class map {
-   public:
+ public:
 	typedef Key key_type;
 	typedef T mapped_type;
 	typedef pair<const Key, T> value_type;
@@ -39,27 +39,39 @@ class map {
 
 	typedef rb_tree<value_type, value_compare, allocator_type> map_tree;
 
+ private:
+	map_tree _tree;
+	Compare _compare;
+
+ public:
+
 	/*constructors*/
 	explicit map(const key_compare& comp = key_compare(), const Allocator& alloc = Allocator())
-		: _tree(map_tree(value_compare(comp), alloc)), _compare(comp) {}
+		: _tree(value_compare(comp), alloc), _compare(comp) {}
 
 	template <class InputIt>
 	map(InputIt first, InputIt last, const Compare& comp = Compare(),
 		const Allocator& alloc = Allocator())
-		: _tree(map_tree(first, last, value_compare(comp), alloc)), _compare(comp) {}
+		: _tree(first, last, value_compare(comp), alloc), _compare(comp) {}
 
-	map(const map& other) : _tree(map_tree(other._tree)), _compare(other._compare) { }
+	map(const map& other) : _tree(other._compare) {
+		_tree = other._tree;
+		_compare = other._compare; 
+	}
 
 	map& operator=(const map& other) {
 		if (this != &other) {
-			_tree.clear();
-			this->_tree = map_tree(other._tree);
+
+			this->_tree = other._tree;
+			_compare = other._compare;
 		}
 		return *this;
 	}
 
 	/*destructor*/
-	~map() { _tree.clear_tree(_tree.get_root()); }
+	~map() {
+		cout << "=== destructor map ===" << endl;
+	}
 
 	/*access*/
 	Allocator get_allocator() const {
@@ -180,46 +192,37 @@ class map {
 	key_compare key_comp() const { return _compare; }
 	map::value_compare value_comp() const { return _tree.value_comp(); }
 
-   private:
-	map_tree _tree;
-	Compare _compare;
+
+	friend bool operator==(const map<Key, T, Compare, Allocator>& lhs,
+					const map<Key, T, Compare, Allocator>& rhs) {
+		return lhs._tree == rhs._tree;
+	}
+
+	friend bool operator!=(const map<Key, T, Compare, Allocator>& lhs,
+					const map<Key, T, Compare, Allocator>& rhs) {
+		return !(lhs._tree == rhs._tree);
+	}
+
+	friend bool operator<(const map<Key, T, Compare, Allocator>& lhs,
+				const map<Key, T, Compare, Allocator>& rhs) {
+		return lhs._tree < rhs._tree;
+	}
+
+	friend bool operator<=(const map<Key, T, Compare, Allocator>& lhs,
+					const map<Key, T, Compare, Allocator>& rhs) {
+		return lhs._tree < rhs._tree || lhs._tree == rhs._tree;
+	}
+
+	friend bool operator>(const map<Key, T, Compare, Allocator>& lhs,
+				const map<Key, T, Compare, Allocator>& rhs) {
+		return !(lhs._tree < rhs._tree || lhs._tree == rhs._tree);
+	}
+
+	friend bool operator>=(const map<Key, T, Compare, Allocator>& lhs,
+					const map<Key, T, Compare, Allocator>& rhs) {
+		return !(lhs._tree < rhs._tree);
+	}
 };
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator==(const map<Key, T, Compare, Alloc>& lhs,
-				const map<Key, T, Compare, Alloc>& rhs) {
-	return lhs._tree == rhs._tree;
-}
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator!=(const map<Key, T, Compare, Alloc>& lhs,
-				const map<Key, T, Compare, Alloc>& rhs) {
-	return !(lhs._tree == rhs._tree);
-}
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator<(const map<Key, T, Compare, Alloc>& lhs,
-			   const map<Key, T, Compare, Alloc>& rhs) {
-	return lhs._tree < rhs._tree;
-}
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator<=(const map<Key, T, Compare, Alloc>& lhs,
-				const map<Key, T, Compare, Alloc>& rhs) {
-	return lhs._tree < rhs._tree || lhs._tree == rhs._tree;
-}
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator>(const map<Key, T, Compare, Alloc>& lhs,
-			   const map<Key, T, Compare, Alloc>& rhs) {
-	return !(lhs._tree < rhs._tree || lhs._tree == rhs._tree);
-}
-
-template <class Key, class T, class Compare, class Alloc>
-bool operator>=(const map<Key, T, Compare, Alloc>& lhs,
-				const map<Key, T, Compare, Alloc>& rhs) {
-	return !(lhs._tree < rhs._tree);
-}
 
 template <class Key, class T, class Compare, class Alloc>
 void swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs) {

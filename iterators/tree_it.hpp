@@ -29,6 +29,8 @@ class tree_it {
 		*this = value;
 	}
 
+	virtual ~tree_it() { }
+
 	tree_it& operator=(
 		const tree_it<typename remove_const<value_type>::type>& value) {
 		if (this != &value) this->_node = value._node;
@@ -42,7 +44,10 @@ class tree_it {
 	pointer operator->() const { return &(_node->value); }
 
 	tree_it& operator++() {
-		if (_node->right && !_node->right->is_leaf()) {
+		if (_node->is_leaf()) {
+			return *this;
+		}
+		if (_node->right != NULL && !_node->right->is_leaf()) {
 			_node = tree_min(_node->right);
 		} else {
 			node_pointer tmp = _node->parent;
@@ -56,7 +61,10 @@ class tree_it {
 	}
 
 	tree_it& operator--() {
-		if (_node->left && !_node->left->is_leaf()) {
+		if (_node->is_leaf()) {
+			return *this;
+		}
+		if (_node->left != NULL && !_node->left->is_leaf()) {
 			_node = tree_max(_node->left);
 		} else {
 			node_pointer tmp = _node->parent;
@@ -71,7 +79,10 @@ class tree_it {
 
 	tree_it operator++(int) {
 		tree_it<value_type> new_it = *this;
-		if (_node->right && !_node->right->is_leaf()) {
+		if (_node->is_leaf()) {
+			return new_it;
+		}
+		if (_node->right != NULL && !_node->right->is_leaf()) {
 			_node = tree_min(_node->right);
 		} else {
 			node_pointer tmp = _node->parent;
@@ -86,7 +97,10 @@ class tree_it {
 
 	tree_it operator--(int) {
 		tree_it<value_type> new_it = *this;
-		if (_node->left && !_node->left->is_leaf()) {
+		if (_node->is_leaf()) {
+			return new_it;
+		}
+		if (_node->left != NULL && !_node->left->is_leaf()) {
 			_node = tree_max(_node->left);
 		} else {
 			node_pointer tmp = _node->parent;
@@ -104,13 +118,13 @@ class tree_it {
 
 	node_pointer tree_min(node_pointer node) {
 		node_pointer tmp = node;
-		while (!tmp->left->is_leaf()) tmp = tmp->left;
+		while (!tmp->is_leaf() && !tmp->left->is_leaf()) tmp = tmp->left;
 		return tmp;
 	}
 
 	node_pointer tree_max(node_pointer node) {
 		node_pointer tmp = node;
-		while (!tmp->right->is_leaf()) tmp = tmp->right;
+		while (!tmp->is_leaf() && !tmp->right->is_leaf()) tmp = tmp->right;
 		return tmp;
 	}
 };
