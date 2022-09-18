@@ -61,7 +61,6 @@ class map {
 
 	map& operator=(const map& other) {
 		if (this != &other) {
-
 			this->_tree = other._tree;
 			_compare = other._compare;
 		}
@@ -69,9 +68,7 @@ class map {
 	}
 
 	/*destructor*/
-	~map() {
-		cout << "=== destructor map ===" << endl;
-	}
+	~map() {}
 
 	/*access*/
 	Allocator get_allocator() const {
@@ -92,7 +89,6 @@ class map {
 		return it->second;
 	}
 
-	// NEED TESTED
 	T& operator[](const Key& key) {
 		return insert(ft::make_pair(key, T())).first->second;
 	}
@@ -139,7 +135,7 @@ class map {
 	void erase(iterator pos) { _tree.erase(pos); }
 
 	void erase(iterator first, iterator last) {
-		return _tree.erase(first, last);
+		_tree.erase(first, last);
 	}
 
 	size_type erase(const Key& key) {

@@ -47,9 +47,7 @@ struct Node {
 		return *this;
 	}
 
-	virtual ~Node() {
-		// cout << "destructor node" << endl;
-	}
+	virtual ~Node() {}
 
 	bool is_leaf() const {
 		if (this->left == NULL && this->right == NULL) {

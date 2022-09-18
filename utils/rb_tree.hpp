@@ -45,17 +45,12 @@ class rb_tree {
 
  public:
 	node_pointer init_node(value_type v = value_type()) {
-		//требуется ли выделять память для value???
 		node_pointer node = _node_alloc.allocate(1);
 		_node_alloc.construct(node, Node<value_type>(v));
-		// _value_alloc.destroy(&(node->value));
-		// _value_alloc.deallocate(&(node->value), 1);
 		return node;
 	}
 
 	void free_node(node_pointer node) {
-		// _value_alloc.destroy(&(node->value));
-		// _value_alloc.deallocate(&(node->value), 1);
 		_node_alloc.destroy(node);
 		_node_alloc.deallocate(node, 1);
 	}
@@ -82,15 +77,7 @@ class rb_tree {
 		for (; it != last; ++it) insert(*it);
 	}
 
-	// rb_tree(const rb_tree& value) : _root(value._root),
-	// _nil(value._nil), _value_alloc(value._value_alloc),
-  	// _node_alloc(value._node_alloc), _compare(value._compare),
-  	// _size(value._size) {
-	// 	// cout << "copy constructor " << endl;
-	// }
-
 	rb_tree& operator=(const rb_tree& value) {
-		// cout << "operator = " << endl;
 		if (this != &value) {
 			clear();
 			_value_alloc = value._value_alloc;
@@ -108,7 +95,6 @@ class rb_tree {
 	virtual ~rb_tree() {
 		clear_tree(_root);
 		free_node(_nil);
-		cout << "destructor rb_tree" << endl;
 	}
 
 	/* methods of rotate around node */
@@ -312,12 +298,6 @@ class rb_tree {
 
 	size_t size() const { return _size; }
 
-	// method for debug; remove after finish project
-	node_pointer get_root() const { return _root; }
-
-	// method for debug; remove after finish project
-	node_pointer get_leaf() const { return _nil; }
-
 	node_pointer rb_min(node_pointer node) const {
 		node_pointer tmp = node;
 		while (tmp != _nil && tmp->left != _nil) tmp = tmp->left;
@@ -397,7 +377,6 @@ class rb_tree {
 	}
 
 	/*modify*/
-	// when do i need increase size???
 	ft::pair<iterator, bool> insert(const value_type& value) {
 		iterator res = find(value);
 		if (res.get_node() != _nil)
@@ -478,7 +457,7 @@ class rb_tree {
 
 	iterator lower_bound(const value_type& key) {
 		iterator it = begin();
-		while (it != end() && _compare(*it, key))  //использовать *it, find error in tree_it!!!
+		while (it != end() && _compare(*it, key))
 			++it;
 		return it;
 	}
@@ -486,7 +465,7 @@ class rb_tree {
 	const_iterator lower_bound(const value_type& key) const {
 		const_iterator it = begin();
 		while (it != end() &&
-			   _compare(*it, key))	 //использовать *it
+			   _compare(*it, key))
 			++it;
 		return it;
 	}
@@ -494,7 +473,7 @@ class rb_tree {
 	iterator upper_bound(const value_type& key) {
 		iterator it = begin();
 		while (it != end() &&
-			   _compare(*it, key))	 //использовать *it
+			   _compare(*it, key))
 			++it;
 		if (!(_compare(it.get_node()->value, key) ||
 			  _compare(key, it.get_node()->value)))
@@ -506,7 +485,7 @@ class rb_tree {
 		const_iterator it = begin();
 		while (it != end() &&
 			   (_compare(it.get_node()->value, key) ||
-				_compare(key, *it)))  //использовать *it
+				_compare(key, *it)))
 			++it;
 		return it;
 	}

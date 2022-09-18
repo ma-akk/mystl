@@ -96,7 +96,6 @@ class vector {
 
 	/*destructor*/
 	~vector() {
-		// cout << "destructor. size = " << this->size() << endl;
 		if (_array != NULL) {
 			clear();
 			_alloc.deallocate(_array, _cap);
@@ -104,7 +103,6 @@ class vector {
 	}
 
 	vector& operator=(const vector& value) {
-		// cout << "operator = " << endl;
 		if (this != &value) {
 			if (_array != NULL) {
 				clear();

@@ -20,6 +20,7 @@ class ran_it {
 	typedef typename ft::iterator_traits<T*>::pointer pointer;
 	typedef typename ft::iterator_traits<T*>::reference reference;
 	typedef pointer iterator_type;
+	pointer _element;
 
 	ran_it() : _element(NULL) {
 		_element = 0;
@@ -31,7 +32,7 @@ class ran_it {
 
 	virtual ~ran_it() {}
 
-	ran_it& operator=(const ran_it<typename ft::remove_const<value_type>::type >& value) {
+	ran_it& operator=(const ran_it<T>& value) {
 		if (this != &value) {
 			_element = value._element;
 		}
@@ -113,25 +114,19 @@ class ran_it {
 	bool operator<=(const ran_it<T>& value) const {
 		return _element <= value._element;
 	};
-
-   protected:
-	pointer _element;
 };
 
 template <typename T>
-ran_it<T> operator-(int n, const ran_it<T> &value)
-{
+ran_it<T> operator-(int n, const ran_it<T> &value) {
 	ran_it<T> tmp(value._element - n);
 	return (tmp);
 }
 
 template <typename T>
-ran_it<T> operator+(int n, const ran_it<T> &value)
-{
+ran_it<T> operator+(int n, const ran_it<T> &value) {
 	ran_it<T> tmp(value._element + n);
 	return (tmp);
 }
-
 
 };	// namespace ft
 
