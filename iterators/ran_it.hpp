@@ -43,7 +43,7 @@ class ran_it {
 
 	reference operator*() const { return *_element; }
 
-	pointer operator->() const { return &(this->operator*()); }
+	pointer operator->() const { return &(*_element); }
 
 	reference operator[](difference_type n) const { return *(_element + n); }
 
@@ -69,9 +69,15 @@ class ran_it {
 		return tmp;
 	}
 
-	ran_it operator+(const difference_type n) const { return _element + n; }
+	ran_it operator+(const difference_type n) const {
+		ran_it tmp(_element + n);
+		return tmp;
+	}
 
-	ran_it operator-(const difference_type n) const { return _element - n; }
+	ran_it operator-(const difference_type n) const { 
+		ran_it tmp(_element - n);
+		return tmp;
+	}
 
 	ran_it& operator+=(difference_type n) {
 		_element += n;

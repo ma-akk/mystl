@@ -12,7 +12,7 @@
 namespace ft {
 
 template <class Key, class Compare = std::less<Key>,
-		  class Allocator = std::allocator<Key>>
+		  class Allocator = std::allocator<Key> >
 class set {
    public:
 	typedef Key key_type;

@@ -83,7 +83,6 @@ class rb_tree {
 			_value_alloc = value._value_alloc;
 			_node_alloc = value._node_alloc;
 			_compare = value._compare;
-			_size = value._size;
 			for(const_iterator it = value.begin(); it != value.end(); ++it) {
 				insert(*it);
 			}
@@ -153,7 +152,6 @@ class rb_tree {
 		rb_insert_balance(node);
 	}
 
-	//проверить, как работает else {}
 	void rb_insert_balance(node_pointer node) {
 		node_pointer tmp = _root;
 		while (node->parent->color == RED) {
@@ -360,9 +358,9 @@ class rb_tree {
 
 	const_iterator begin() const { return const_iterator(rb_min(_root)); }
 
-	iterator end() { return ++iterator(rb_max(_root)); }
+	iterator end() { return iterator(_nil); }
 
-	const_iterator end() const { return ++const_iterator(rb_max(_root)); }
+	const_iterator end() const { return const_iterator(_nil); }
 
 	reverse_iterator rbegin() { return reverse_iterator(rb_max(_root)); }
 
@@ -370,10 +368,10 @@ class rb_tree {
 		return const_reverse_iterator(rb_max(_root));
 	}
 
-	reverse_iterator rend() { return reverse_iterator(rb_min(_root)); }
+	reverse_iterator rend() { return reverse_iterator(_nil); }
 
 	const_reverse_iterator rend() const {
-		return const_reverse_iterator(rb_min(_root));
+		return const_reverse_iterator(_nil);
 	}
 
 	/*modify*/
@@ -396,6 +394,7 @@ class rb_tree {
 	}
 
 	iterator insert(iterator hint, const value_type& value) {
+		(void)hint;
 		node_pointer node = tree_search(_root, value);
 		if (node != _nil)
 			return iterator(node);
@@ -419,8 +418,8 @@ class rb_tree {
 	}
 
 	void erase(iterator first, iterator last) {
-		for (iterator it = first; it != last; ++it) {
-			erase(it);
+		for (iterator it = first; it != last; ) {
+			erase((it++));
 		}
 	}
 

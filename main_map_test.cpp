@@ -1,10 +1,4 @@
 #include <iostream>
-#include <vector>
-#include <stack>
-// #include "vector.hpp"
-// #include "iterators/iterator.hpp"
-// #include "stack.hpp"
-// #include "utils.hpp"
 #include <map>
 #include "map.hpp"
 
@@ -360,7 +354,7 @@ void	value_comp()
 
 	std::cout << "mymap contains:\n";
 
-	ft::pair<char, int> highest = *--mymap.end(); // last element
+	ft::pair<char, int> highest = *mymap.rbegin(); // last element
 
 	ft::map<char, int>::iterator it = mymap.begin();
 	do
@@ -423,12 +417,12 @@ void	construct()
 	std::cout << "third contains: \n";
 	for (ft::map<char, int>::iterator it = third.begin(); it != third.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
-	// std::cout << "fourth contains: \n";
-	// for (ft::map<char, int, classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-	// 	std::cout << it->first << " => " << it->second << '\n';
-	// std::cout << "fifth contains: \n";
-	// for (ft::map<char, int, bool (*)(char, char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-	// 	std::cout << it->first << " => " << it->second << '\n';
+	std::cout << "fourth contains: \n";
+	for (ft::map<char, int, classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+	std::cout << "fifth contains: \n";
+	for (ft::map<char, int, bool (*)(char, char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
 	std::cout << "asd\n";
 }
 

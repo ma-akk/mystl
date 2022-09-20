@@ -199,32 +199,6 @@ void	get_allocator()
 	myset.get_allocator().deallocate(p, 5);
 }
 
-// void	key_comp()
-// {
-// 	cout << "================= KEY_COMPARE =========================" << endl;
-// 	ft::set<int> myset;
-
-// 	ft::set<int>::key_compare mycomp = myset.key_comp();
-
-// 	myset.insert(200);
-// 	myset.insert(300);
-// 	myset.insert(400);
-// 	myset.insert(500);
-// 	myset.insert(600);
-
-// 	std::cout << "myset contains:\n";
-
-// 	char highest = 400; // key value of last element
-
-// 	ft::set<int>::iterator it = myset.begin();
-// 	do
-// 	{
-// 		std::cout << *it << '\n';
-// 	} while (mycomp((*it++).first, highest));
-
-// 	std::cout << '\n';
-// }
-
 void	lower_bound()
 {
 	cout << "================= LOWER_UPPER_BOUND =========================" << endl;
@@ -323,26 +297,6 @@ void	swap()
 	for (ft::set<int>::iterator it = bar.begin(); it != bar.end(); ++it)
 		std::cout <<  *it <<  " ";
 }
-
-// void	value_comp()
-// {
-// 	cout << "================= VALUE_COMPARE =========================" << endl;
-// 	ft::set<char, int> myset;
-
-// 	myset.insert(22);
-// 	myset.insert(55);
-// 	myset.insert(66);
-
-// 	std::cout << "myset contains:\n";
-
-// 	ft::pair<char, int> highest = *--myset.end(); // last element
-
-// 	ft::set<char, int>::iterator it = myset.begin();
-// 	do
-// 	{
-// 		std::cout << it->first << " => " << it->second << '\n';
-// 	} while (myset.value_comp()(*it++, highest));
-// }
 
 bool fncomp(char lhs, char rhs) { return lhs < rhs; }
 
@@ -476,24 +430,24 @@ void	non_member_swap()
 int		main()
 {
 	testInsert();
-	// clear();
-	// count();
-	// empty();
-	// erase();
-	// find();
-	// equal_range();
-	// get_allocator();
-	// lower_bound(); // it uses erase()
-	// // stress_test();
-	// max_size();
-	// operatorEqual();
-	// size();
-	// swap();
-	// construct();
-	// reverse_iterator();
-	// bool_check();
-	// non_member_swap();
-	// std::cout << "TEST IS FINISHED\n";
+	clear();
+	count();
+	empty();
+	erase();
+	find();
+	equal_range();
+	get_allocator();
+	lower_bound();
+	// stress_test();
+	max_size();
+	operatorEqual();
+	size();
+	swap();
+	construct();
+	reverse_iterator();
+	bool_check();
+	non_member_swap();
+	std::cout << "TEST IS FINISHED\n";
 	// while (1);
 	return 0;
 }

@@ -21,12 +21,29 @@ class tree_it {
 	typedef Node<typename remove_const<value_type>::type>* node_pointer;
 	typedef Node<T>* iterator_type;
 
-	tree_it() {}
+   private:
+	node_pointer _node;
+
+	node_pointer tree_min(node_pointer node) {
+		node_pointer tmp = node;
+		while (tmp != NULL && !tmp->left->is_leaf()) tmp = tmp->left;
+		return tmp;
+	}
+
+	node_pointer tree_max(node_pointer node) {
+		node_pointer tmp = node;
+		while (tmp != NULL && !tmp->right->is_leaf()) tmp = tmp->right;
+		return tmp;
+	}
+
+   public:
+
+	tree_it() : _node(NULL) {}
 
 	tree_it(void* node) : _node(static_cast<node_pointer>(node)) {}
 
 	tree_it(const tree_it<typename remove_const<value_type>::type>& value) {
-		*this = value;
+		_node = value._node;
 	}
 
 	virtual ~tree_it() { }
@@ -39,6 +56,14 @@ class tree_it {
 
 	node_pointer get_node() const { return _node; }
 
+	// node_pointer get_root() const {
+	// 	node_pointer root = _node;
+	// 	while(root != NULL && root->parent != NULL && !root->parent->is_leaf()) {
+	// 		root = root->parent;
+	// 	}
+	// 	return root;
+	// }
+
 	reference operator*() const { return _node->value; }
 
 	pointer operator->() const { return &(_node->value); }
@@ -50,7 +75,8 @@ class tree_it {
 		if (_node->right != NULL && !_node->right->is_leaf()) {
 			_node = tree_min(_node->right);
 		} else {
-			node_pointer tmp = _node->parent;
+			node_pointer tmp;
+			tmp = _node->parent;
 			while (!tmp->is_leaf() && _node == tmp->right) {
 				_node = tmp;
 				tmp = tmp->parent;
@@ -62,17 +88,19 @@ class tree_it {
 
 	tree_it& operator--() {
 		if (_node->is_leaf()) {
+			
 			return *this;
 		}
 		if (_node->left != NULL && !_node->left->is_leaf()) {
 			_node = tree_max(_node->left);
 		} else {
-			node_pointer tmp = _node->parent;
+			node_pointer tmp;
+			tmp = _node->parent;
 			while (!tmp->is_leaf() && _node == tmp->left) {
 				_node = tmp;
 				tmp = tmp->parent;
 			}
-			_node = tmp;
+			_node = _node->parent;
 		}
 		return *this;
 	}
@@ -85,12 +113,13 @@ class tree_it {
 		if (_node->right != NULL && !_node->right->is_leaf()) {
 			_node = tree_min(_node->right);
 		} else {
-			node_pointer tmp = _node->parent;
+			node_pointer tmp;
+			tmp = _node->parent;
 			while (!tmp->is_leaf() && _node == tmp->right) {
 				_node = tmp;
 				tmp = tmp->parent;
 			}
-			_node = tmp;
+			_node = _node->parent;
 		}
 		return new_it;
 	}
@@ -113,19 +142,12 @@ class tree_it {
 		return new_it;
 	}
 
-   private:
-	node_pointer _node;
-
-	node_pointer tree_min(node_pointer node) {
-		node_pointer tmp = node;
-		while (!tmp->is_leaf() && !tmp->left->is_leaf()) tmp = tmp->left;
-		return tmp;
+	bool operator==(const tree_it<T> value) {
+		return (_node == value._node);
 	}
 
-	node_pointer tree_max(node_pointer node) {
-		node_pointer tmp = node;
-		while (!tmp->is_leaf() && !tmp->right->is_leaf()) tmp = tmp->right;
-		return tmp;
+	bool operator!=(const tree_it<T> value) {
+		return (_node != value._node);
 	}
 };
 

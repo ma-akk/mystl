@@ -35,13 +35,21 @@ class vector {
 	typedef ft::reverse_it<T> reverse_iterator;
 	typedef ft::reverse_it<const T> const_reverse_iterator;
 
+   private:
+    Allocator _alloc;
+	size_type _size;
+	size_type _cap;
+	pointer _array;
+	pointer _first;
+	pointer _last;
+
+   public:
+
 	/* constructors */
 	vector() : _size(0), _cap(0) {
 		_array = NULL;
 		_first = NULL;
 		_last = _first;
-
-		// cout << "default construct " << endl;
 	}
 
 	explicit vector(const Allocator& alloc) : _alloc(alloc), _size(0), _cap(0),
@@ -49,10 +57,10 @@ class vector {
 
 	explicit vector(size_type count, const T& value = T(),
 					const Allocator& alloc = Allocator())
-		: _size(count), _cap(count), _alloc(alloc), _array(NULL) {
+		: _alloc(alloc), _size(count), _cap(count), _array(NULL), _first(NULL), _last(_first) {
 		try { 
 		_array = _alloc.allocate(count);
-		} catch (std::bad_alloc) {
+		} catch (std::bad_alloc const&) {
 			cerr << "Bad allocate exception" << endl;
 		}
 		for (size_t i = 0; i < count; i++) {
@@ -62,11 +70,10 @@ class vector {
 		_last = _array + count;
 	}
 
-	// NOT TESTED
 	template <class InputIt>
 	vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 					InputIt last, const Allocator& alloc = Allocator())
-		: _alloc(alloc), _array(NULL) {
+		: _alloc(alloc), _size(0), _cap(0), _array(NULL), _first(NULL), _last(_first) {
 		difference_type n = last - first;
 			if (n < 0)
 				throw std::length_error("vector");
@@ -74,17 +81,22 @@ class vector {
 				return;
 			_size = n;
 			_cap = n;
-			_array = _alloc.allocate(n);
+			try {
+				_array = _alloc.allocate(n);
+			} catch (std::bad_alloc const&) {
+				cerr << "Bad allocate exception" << endl;
+			}
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(&_array[i], *first++);
+			_first = _array;
+			_last = _array + _size;
 	}
 
 	/*copy constructor*/
-	vector(const vector& value) : _size(value.size()), _cap(value.capacity()), _array(NULL) {
-		// cout << "copy constructor " << endl;
+	vector(const vector& value) : _size(value.size()), _cap(_size), _array(NULL) {
 		try {
 			_array = _alloc.allocate(_cap);	
-		} catch (std::bad_alloc) {
+		} catch (std::bad_alloc const&) {
 			cerr << "Bad allocate exception" << endl;
 		}
 		for (size_type i = 0; i < _size; ++i) {
@@ -109,8 +121,12 @@ class vector {
 				_alloc.deallocate(_array, _cap);
 			}
 			_size = value.size();
-			_cap = value.capacity();
-			_array = _alloc.allocate(_cap);
+			_cap = _size;
+			try {
+				_array = _alloc.allocate(_cap);
+			} catch (std::bad_alloc const&) {
+				cerr << "Bad allocate exception" << endl;
+			}
 			for (size_type i = 0; i < _size; ++i) {
 				_alloc.construct(_array + i, value[i]);
 			}
@@ -143,7 +159,7 @@ class vector {
 	template <class InputIt>
 	void assign(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				InputIt last) {
-		difference_type count = ft::distance(first, last);
+		size_type count = (size_type)ft::distance(first, last);
 		if (count < _size) {
 			for (size_type i = count; i < _size; i++) {
 				_alloc.destroy(_array + i);
@@ -173,7 +189,7 @@ class vector {
 			T* newarr = NULL;
 			try {
 				newarr = _alloc.allocate(n);
-			} catch (std::bad_alloc) {
+			} catch (std::bad_alloc const&) {
 				cerr << "Bad allocate exception" << endl;
 			}
 			for (size_type i = 0; i < _cap; i++) {
@@ -275,7 +291,7 @@ class vector {
 	void insert(iterator pos, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				 InputIt last) {
 		difference_type ipos = &(*pos) - _first;
-		difference_type count = ft::distance(first, last);
+		size_type count = (size_type)ft::distance(first, last);
 		if ((_size + count) >= _cap) {
 			reserve(_cap == 0 ? count : _cap * 2);
 		}
@@ -386,14 +402,6 @@ class vector {
 	const_reverse_iterator rend() const {
 		return const_reverse_iterator(_first - 1);
 	}
-
-   private:
-	pointer _array;
-	size_type _size;
-	size_type _cap;
-	Allocator _alloc;
-	pointer _first;
-	pointer _last;
 };
 
 // non-member function
