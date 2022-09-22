@@ -12,6 +12,7 @@
 
 using std::cout;
 using std::endl;
+using std::cerr;
 
 namespace ft {
 template <typename value_type, class Compare = std::less<value_type>,
@@ -36,8 +37,8 @@ class rb_tree {
 	typedef reverse_tree_it<const value_type> const_reverse_iterator;
 
  private:
-	node_pointer _root;
 	node_pointer _nil;
+	node_pointer _root;
 	allocator_type _value_alloc;
 	node_allocator _node_alloc;
   	key_compare _compare;
@@ -45,44 +46,61 @@ class rb_tree {
 
  public:
 	node_pointer init_node(value_type v = value_type()) {
-		node_pointer node = _node_alloc.allocate(1);
+		node_pointer node = NULL;
+		try {
+			node = _node_alloc.allocate(1);
+		} catch (std::bad_alloc const&) {
+			cerr << "Bad allocate exception" << endl;
+		}
 		_node_alloc.construct(node, Node<value_type>(v));
 		return node;
 	}
 
 	void free_node(node_pointer node) {
-		_node_alloc.destroy(node);
-		_node_alloc.deallocate(node, 1);
+		if (node != NULL) {
+			_node_alloc.destroy(node);
+			_node_alloc.deallocate(node, 1);
+			node = NULL;
+		}
 	}
 
 	void init_tree() {
 		_nil = init_node();
 		_root = _nil;
+		_root->parent = _nil;
 	}
 
 	/* consructors */
-	rb_tree() {}
+	rb_tree() : _size(0) {
+        init_tree();
+    }
 
 	explicit rb_tree(const Compare& comp, const Allocator& alloc = Allocator())
 		: _node_alloc(alloc), _compare(comp), _size(0) {
-		init_tree();
+        init_tree();
 	}
 
 	template <class InputIt>
 	rb_tree(InputIt first, InputIt last, const Compare& comp = Compare(),
 			const Allocator& alloc = Allocator())
-		: _node_alloc(alloc), _compare(comp) {
+		: _node_alloc(alloc), _compare(comp), _size(0) {
 		init_tree();
 		InputIt it = first;
 		for (; it != last; ++it) insert(*it);
 	}
 
+    rb_tree(const rb_tree& value) : _node_alloc(value._node_alloc),
+            _compare(value._compare), _size(value._size) {
+        *this = value;
+    }
+
 	rb_tree& operator=(const rb_tree& value) {
 		if (this != &value) {
 			clear();
-			_value_alloc = value._value_alloc;
-			_node_alloc = value._node_alloc;
-			_compare = value._compare;
+            _value_alloc = value._value_alloc;
+            _node_alloc = value._node_alloc;
+            _compare = value._compare;
+            _size = value._size;
 			for(const_iterator it = value.begin(); it != value.end(); ++it) {
 				insert(*it);
 			}
@@ -91,7 +109,7 @@ class rb_tree {
 	}
 
 	/* destructor */
-	virtual ~rb_tree() {
+	~rb_tree() {
 		clear_tree(_root);
 		free_node(_nil);
 	}
@@ -331,16 +349,19 @@ class rb_tree {
 	void printTree() { printBT("", _root, false); }
 
 	void clear_tree(node_pointer node) {
-		if (node != _nil && node->left != NULL && node->right != NULL) {
+		if (_nil != NULL && node != _nil) {
 			clear_tree(node->left);
 			clear_tree(node->right);
 			rb_delete(node);
 			free_node(node);
+            node = NULL;
 		}
 	}
 
 	void clear() {
 		clear_tree(_root);
+        _root = _nil;
+        _root->parent = _nil;
 	}
 
 	node_pointer tree_search(node_pointer root, value_type key) const {
@@ -378,11 +399,11 @@ class rb_tree {
 	ft::pair<iterator, bool> insert(const value_type& value) {
 		iterator res = find(value);
 		if (res.get_node() != _nil)
-			return ft::pair<iterator, bool>(res, false);
+			return ft::make_pair<iterator, bool>(res, false);
 		else {
 			node_pointer node = init_node(value);
 			rb_insert_node(node);
-			return ft::pair<iterator, bool>(iterator(node), true);
+			return ft::make_pair<iterator, bool>(iterator(node), true);
 		}
 	}
 
@@ -504,19 +525,19 @@ class rb_tree {
 	}
 };
 
-template <typename value_type, class Compare, class Alloc>
-bool operator==(const rb_tree<value_type, Compare, Alloc>& lhs,
-				const rb_tree<value_type, Compare, Alloc>& rhs) {
-	return (lhs.size() == rhs.size() &&
-			ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-}
+// template <typename value_type, class Compare, class Alloc>
+// bool operator==(const rb_tree<value_type, Compare, Alloc>& lhs,
+// 				const rb_tree<value_type, Compare, Alloc>& rhs) {
+// 	return (lhs.size() == rhs.size() &&
+// 			ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+// }
 
-template <typename value_type, class Compare, class Alloc>
-bool operator<(const rb_tree<value_type, Compare, Alloc>& lhs,
-			   const rb_tree<value_type, Compare, Alloc>& rhs) {
-	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
-									rhs.end()));
-}
+// template <typename value_type, class Compare, class Alloc>
+// bool operator<(const rb_tree<value_type, Compare, Alloc>& lhs,
+// 			   const rb_tree<value_type, Compare, Alloc>& rhs) {
+// 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+// 									rhs.end()));
+// }
 
 template <typename value_type, class Compare, class Alloc>
 void swap(rb_tree<value_type, Compare, Alloc>& lhs,
