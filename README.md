@@ -11,3 +11,6 @@ make && ./ft_containers RANDOM_INTEGER
 
 For test all methods of each container change SRCS on main class of container, then compile and run program \
 make && ./ft_containers RANDOM_INTEGER
+
+For cheak leaks use \
+ valgrind --leak-check=full ./ft_containers
