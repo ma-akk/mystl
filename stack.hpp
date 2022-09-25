@@ -7,7 +7,9 @@ namespace ft {
 template <class T, class Container = ft::vector<T> >
 class stack {
    public:
-	explicit stack(const Container& cont = Container()) : _cont(cont) {}
+    typedef Container container_type;
+
+	explicit stack(const Container& cont = Container()) : c(cont) {}
 
 	~stack() {}
 
@@ -15,25 +17,25 @@ class stack {
 
 	stack& operator=(const stack& value) {
 		if (this != &value) {
-			_cont = value._cont;
+			c = value.c;
 		}
 		return *this;
 	}
 
-	size_t size() const { return _cont.size(); }
+	size_t size() const { return c.size(); }
 
-	bool empty() const { return _cont.empty(); }
+	bool empty() const { return c.empty(); }
 
-	T& top() { return _cont.back(); }
+	T& top() { return c.back(); }
 
-	const T& top() const { return _cont.back(); }
+	const T& top() const { return c.back(); }
 
-	void push(const T& value) { _cont.push_back(value); }
+	void push(const T& value) { c.push_back(value); }
 
-	void pop() { _cont.pop_back(); }
+	void pop() { c.pop_back(); }
 
-   private:
-	Container _cont;
+   protected:
+	Container c;
 };
 }  // namespace ft
 

@@ -341,7 +341,7 @@ class vector {
 	}
 
 	void resize(size_type n,
-				const T& val = T()) {  //заполняет только "пустые" элементы
+				const T& val = T()) {
 		if (n < _size) {
 			for (size_type i = n; i < _size; i++) {
 				_alloc.destroy(_array + i);
@@ -404,7 +404,7 @@ class vector {
 	}
 };
 
-// non-member function
+/* non-member function */
 template <class T, class Allocator>
 bool operator==(const ft::vector<T, Allocator>& lhs,
 				const ft::vector<T, Allocator>& rhs) {

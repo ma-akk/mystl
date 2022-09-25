@@ -1,7 +1,3 @@
-//
-// Created by maakk on 14.07.22.
-//
-
 #ifndef SET_HPP
 #define SET_HPP
 

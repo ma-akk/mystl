@@ -1,10 +1,13 @@
 # mystl
 study_project
 
-TO DO
-1. проверить все комментарии (удалить лишние);
-2. протестировать методы set, map, stack;
-3. В pair, stack - проверить, что раскомментированы нужный функции;
-	после отключить не нужные библиотеки
-4. протестировать с tester-ом
-5. 
+In this project implements a few container types of the C++ standard template
+library (the C++98 standard) - vector, stack, map, set.
+
+For each container adds themself main class main_CONTAINER_test.cpp 
+
+For compile and run program \
+make && ./ft_containers RANDOM_INTEGER
+
+For test all methods of each container change SRCS on main class of container, then compile and run program \
+make && ./ft_containers RANDOM_INTEGER
