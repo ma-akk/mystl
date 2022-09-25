@@ -1,5 +1,4 @@
 #include <iostream>
-#include <set>
 #include "set.hpp"
 
 using std::cout;
@@ -156,7 +155,7 @@ void	find()
 	std::cout << "elements in myset:" << '\n';
 	std::cout << *myset.find('a')<< " ";
 	std::cout << *myset.find('c') << " ";
-	std::cout << *myset.find('x') << " ";
+	std::cout << *myset.find('x') << " " << std::endl;
 }
 
 void	equal_range()
@@ -172,13 +171,13 @@ void	equal_range()
 	myset.insert(60);
 
 	ft::pair<ft::set<int>::iterator, ft::set<int>::iterator> ret;
-	ret = myset.equal_range('c');
+	ret = myset.equal_range(50);
 
 	std::cout << "lower bound points to: ";
-	std::cout << *(ret.first) << " " << *(ret.second) << '\n';
+	std::cout << *(ret.first) << '\n';
 
 	std::cout << "upper bound points to: ";
-	std::cout << *(ret.first) << " " << *(ret.second) << '\n';
+	std::cout << *(ret.second) << '\n';
 }
 
 void	get_allocator()

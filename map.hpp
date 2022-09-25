@@ -55,8 +55,7 @@ class map {
 		: _tree(first, last, value_compare(comp), alloc), _compare(comp) {}
 
 	map(const map& other) : _tree(other._compare) {
-		_tree = other._tree;
-		_compare = other._compare; 
+        *this = other;
 	}
 
 	map& operator=(const map& other) {

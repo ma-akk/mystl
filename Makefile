@@ -1,4 +1,4 @@
-SRCS		= main_stack_test.cpp
+SRCS		= main.cpp
 
 OBJS		= ${SRCS:.cpp=.o}
 

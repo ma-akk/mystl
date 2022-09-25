@@ -49,14 +49,13 @@ class set {
 		: _tree(first, last, comp, alloc) {}
 
 	set(const set& other) : _tree(other._compare) { 
-		_tree = other._tree;
-		_compare = other._compare;
+		*this = other;
 	}
 
 	set& operator=(const set& other) {
 		if (this != &other) {
-			_tree.clear();
-			this->_tree = set_tree(other._tree);
+			_tree = other._tree;
+			_compare = other._compare;
 		}
 		return *this;
 	}

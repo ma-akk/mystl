@@ -84,7 +84,6 @@ int main()
 	size();
 	top();
 	std::cout << "TEST FINISHED\n";
-	// bool_check();
 	// while(1);
 	return 0;
 }
