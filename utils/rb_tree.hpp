@@ -524,20 +524,6 @@ class rb_tree {
 	}
 };
 
-// template <typename value_type, class Compare, class Alloc>
-// bool operator==(const rb_tree<value_type, Compare, Alloc>& lhs,
-// 				const rb_tree<value_type, Compare, Alloc>& rhs) {
-// 	return (lhs.size() == rhs.size() &&
-// 			ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-// }
-
-// template <typename value_type, class Compare, class Alloc>
-// bool operator<(const rb_tree<value_type, Compare, Alloc>& lhs,
-// 			   const rb_tree<value_type, Compare, Alloc>& rhs) {
-// 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
-// 									rhs.end()));
-// }
-
 template <typename value_type, class Compare, class Alloc>
 void swap(rb_tree<value_type, Compare, Alloc>& lhs,
 		  rb_tree<value_type, Compare, Alloc>& rhs) {
